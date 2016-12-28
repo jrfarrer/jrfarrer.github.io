@@ -1,21 +1,21 @@
 # skills section data
-- name: Python
+- name: R
   percentage: 85
 
-- name: HTML/CSS
-  percentage: 65
+- name: SQL
+  percentage: 85
 
-- name: Linux/Shell
+- name: Shiny
   percentage: 75
 
-- name: jQuery
-  percentage: 85
-
-- name: AngularJS
-  percentage: 80
-
-- name: Ionic
-  percentage: 70
-
-- name: Vuejs
+- name: HighCharts
   percentage: 65
+
+- name: Python
+  percentage: 40
+
+- name: d3.js
+  percentage: 30
+
+- name: MongoDB
+  percentage: 25

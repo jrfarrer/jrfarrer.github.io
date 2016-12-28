@@ -1,56 +1,81 @@
 # careers section data
 - name:
-    detail: Nextcode
-    i18n: nextcode
+    detail: Wharton Business School
+    detail2: https://mba.wharton.upenn.edu/
+    i18n: a
   desc:
-    detail: Now I am in Nextcode and develop website with Python code for genetic analysis.
-    i18n: nextcode_des
+    detail: First-year majoring in business analytics.
+    i18n: a
   date:
-    detail: Apr. 2016
-    i18n: nextcode_date
+    detail: 2016-2018
+    i18n: a
   job:
-    detail: Python Developer
-    i18n: nextcode_job
-  icon: fa-plus-square
+    detail: MBA Student
+    detail2: Philadelphia
+    i18n: a
+  icon: fa-university
 
 - name:
-    detail: Netease Game
-    i18n: netease
+    detail: Maple
+    detail2: https://maple.com/
+    i18n: a
   desc:
-    detail: In Netease game, I learned game service system and use Python code for ops.
-    i18n: netease_des
+    detail: Built meal forecasting model and meal scoring system to make demand predictions.
+    i18n: a
   date:
-    detail: Jun. 2015
-    i18n: nextcode_date
+    detail: Summer 2016
+    i18n: a
   job:
-    detail: Dev Ops
-    i18n: netease_job
-  icon: fa-gamepad
+    detail: Analytics Intern, Pre-MBA
+    detail2: New York
+    i18n: a
+  icon: fa-cutlery
 
 - name:
-    detail: Ucloud
-    i18n: ucloud
+    detail: Uber
+    detail2: https://www.uber.com
+    i18n: a
   desc:
-    detail: In ucloud, I started to deal with servers and Linux system and use shell scripts to manage massive server.
-    i18n: ucloud_des
+    detail: Performed analyses and built tools to improve operations in all Uber cities. Founded the Analytics & Strategy team in Singapore during 6-month assignment.  
+    i18n: a
   date:
-    detail: Sep. 2013
-    i18n: ucloud_date
+    detail: 2015-2016
+    i18n: a
   job:
-    detail: Dev Ops
-    i18n: ucloud_job
-  icon: fa-cloud
+    detail: Global Data Analyst I & II
+    detail2: San Francisco & Singapore
+    i18n: a
+  icon: fa-car
 
 - name:
-    detail: Graduation
-    i18n: college
+    detail: Deloitte
+    detail2: www.deloitte.com
+    i18n: a
   desc:
-    detail: At July 2013,I graduated from college and started my IT technology tour.
-    i18n: college_des
+    detail: Designed segmentations and implmented risk rating models for financial services clients.
+    i18n: a
   date:
-    detail: Jul. 2013
-    i18n: college_date
+    detail: 2013-2015
+    i18n: a
   job:
-    detail: Student
-    i18n: college_job
-  icon: fa-book
+    detail: Data Analytics Associate
+    detail2: New York
+    i18n: a
+  icon: fa-area-chart
+
+- name:
+    detail: Fulbright Grant
+    detail2: https://us.fulbrightonline.org/
+    i18n: a
+  desc:
+    detail: Taught English to 250 students at a public high school.
+    i18n: a
+  date:
+    detail: 2012-2013
+    i18n: a
+  job:
+    detail: English Teaching Assistantship
+    detail2: Pontianak, Indonesia
+    i18n: a
+  icon: fa-graduation-cap
+

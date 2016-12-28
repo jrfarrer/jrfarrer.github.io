@@ -6,8 +6,8 @@
   css: ''
 
 - id: 'career'
-  i18n: 'nav.career'
-  name: 'Career'
+  i18n: ''
+  name: 'Experience'
   tpl: 'career.html'
   css: 'timeline'
 
