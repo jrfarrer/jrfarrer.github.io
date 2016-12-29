@@ -22,8 +22,8 @@ author:
 
 
 # blog img path
-#img_path: 'http://jrfarrer.github.io/static/img/blog'
-img_path: '/Users/Jordan/Dropbox/Blog/jalpc_jekyll_theme/static/img/blog/'
+img_path: 'https://github.com/jrfarrer/jrfarrer.github.io/blob/master/static/img/blog/'
+#img_path: '/Users/Jordan/Dropbox/Blog/jalpc_jekyll_theme/static/img/blog/'
 
 # google analytics
 ga:
