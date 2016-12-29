@@ -183,7 +183,7 @@ To see all images
 sudo docker images
 ```
 
-<img style="border:1px solid #000000;display: block;margin-left: auto;margin-right: auto;" src="{{site.img_path}}/lightsail/lightsail_12.png" width="500px">
+<img style="border:1px solid #000000;display: block;margin-left: auto;margin-right: auto;" src="{{site.img_path}}/lightsail/lightsail_12.png" width="400px">
 
 You should see **rocker/hadleyverse** and your new container. Now, kill your original container and start the new one. The command below actually kills all open containers.
 
@@ -219,7 +219,7 @@ tar -xvf Python-2.7.12.tgz
 cd Python-2.7.12
 ```
 
-(3) Perform the installation. For the last line ```checkinstall``, you'll need to respond to a lot of question and it will take a bit.
+(3) Perform the installation. For the last line ```checkinstall```, you'll need to respond to a lot of question and it will take a bit.
 
 ```
 ./configure
@@ -233,7 +233,7 @@ sudo checkinstall
 python -V
 ```
 
-<img style="border:1px solid #000000;display: block;margin-left: auto;margin-right: auto;" src="{{site.img_path}}/lightsail/lightsail_13.png" width="500px">
+<img style="border:1px solid #000000;display: block;margin-left: auto;margin-right: auto;" src="{{site.img_path}}/lightsail/lightsail_13.png" width="200px">
 
 ## Install Dropbox
 
@@ -246,11 +246,11 @@ cd ~ && wget -O - "https://www.dropbox.com/download?plat=lnx.x86_64" | tar xzf -
 
 After the last command you'll see
 
-<img style="border:1px solid #000000;display: block;margin-left: auto;margin-right: auto;" src="{{site.img_path}}/lightsail/lightsail_14.png" width="500px">
+<img style="border:1px solid #000000;display: block;margin-left: auto;margin-right: auto;" src="{{site.img_path}}/lightsail/lightsail_14.png" width="400px">
 
 Take the URL and paste it into the browser to connect to your Dropbox account.
 
-<img style="border:1px solid #000000;display: block;margin-left: auto;margin-right: auto;" src="{{site.img_path}}/lightsail/lightsail_15.png" width="500px">
+<img style="border:1px solid #000000;display: block;margin-left: auto;margin-right: auto;" src="{{site.img_path}}/lightsail/lightsail_15.png" width="450px">
 
 (2) Download dropbox's python script to control dropbox
 
@@ -271,6 +271,8 @@ Now with Dropbox set up, you can use the -v switch to attach the Dropbox folder 
 ```
 sudo docker run -d -e ROOT=TRUE -v /home/ubuntu/Dropbox:/home/rstudio/Dropbox -p 8787:8787 rstudio2
 ```
+
+Now, you can see the Dropbox folder in the **Files** pane.
 
 <img style="border:1px solid #000000;display: block;margin-left: auto;margin-right: auto;" src="{{site.img_path}}/lightsail/lightsail_16.png" width="500px">
 
