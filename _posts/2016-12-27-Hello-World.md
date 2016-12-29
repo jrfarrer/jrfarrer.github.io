@@ -1,13 +1,15 @@
 ---
 layout: post
 title:  "How to Setup RStudio on AWS Lightsail"
-desc: "Hello World"
-keywords: "hello,world"
+desc: "Setting up "
+keywords: "r,lightsail,vps,rstudio"
 date: 2016-12-27
 categories: [R]
 tags: [R]
 icon: fa-bookmark-o
 ---
+
+*[This post is based on the guide from [SAS and R](http://sas-and-r.blogspot.com/2016/12/rstudio-in-cloud-with-amazon-lightsail.html)]*
 
 In this post we'll use the new [Amazon Lightsail](https://lightsail.aws.amazon.com/) to create an always-on RStudio enviornment in the cloud. With a older Macbook Air, the migration from local to cloud data processing and analysis allowed me to forget about resource constraints.
 
