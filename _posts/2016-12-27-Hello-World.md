@@ -23,7 +23,7 @@ Lightsail is Amazon's virtual private servers (VPS) offerring that make spinning
 
 2. Select **Base OS** and **Ubuntu**
 
-![alt-text]({{ site.img_path }}/lightsail/lightsail_2.png 'Title text')
+![alt-text]({{site.img_path}}lightsail/lightsail_2.png 'Title text')
 
 3. (Optional) I encourage you to use public key rather than a key from Amazon for ease of SSH'ing to your VPS. If you're on OSX, you public key is likely in
 
