@@ -11,7 +11,7 @@ icon: fa-bookmark-o
 
 In this post we'll use the new [Amazon Lightsail](https://lightsail.aws.amazon.com/) to create an always-on RStudio enviornment in the cloud. With a older Macbook Air, the migration from local to cloud data processing and analysis allowed me to forget about resource constraints.
 
-<img style="border:1px solid #000000;display: block;margin-left: auto;margin-right: auto;" src="{{site.img_path}}/lightsail/lightsail_0.png" width="600px">
+<img style="border:1px solid #000000;display: block;margin-left: auto;margin-right: auto;" src="{{site.img_path}}/lightsail/lightsail_0.gif" width="600px">
 
 # Setup Lightsail Instance
 
