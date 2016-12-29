@@ -6,7 +6,7 @@ description: "Jordan's github blog"
 keywords: "Jordan,Farrer,Wharton,Uber,Maple,Deloitte,Fulbright"
 baseurl: "/"
 url: "http://jrfarrer.github.io"
-# url: "http://127.0.0.1:4000"
+#url: "http://127.0.0.1:4000"
 
 # author
 author:
@@ -22,7 +22,8 @@ author:
 
 
 # blog img path
-img_path: 'http://jrfarrer.github.io/static/img/blog'
+#img_path: 'http://jrfarrer.github.io/static/img/blog'
+img_path: '/Users/Jordan/Dropbox/Blog/jalpc_jekyll_theme/static/img/blog/'
 
 # google analytics
 ga:
