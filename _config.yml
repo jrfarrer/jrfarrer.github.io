@@ -22,7 +22,7 @@ author:
 
 
 # blog img path
-img_path: 'https://raw.githubusercontent.com/jrfarrer/jrfarrer.github.io/blob/master/static/img/blog/'
+img_path: 'https://raw.githubusercontent.com/jrfarrer/jrfarrer.github.io/master/static/img/blog'
 #img_path: '/Users/Jordan/Dropbox/Blog/jalpc_jekyll_theme/static/img/blog/'
 
 # google analytics

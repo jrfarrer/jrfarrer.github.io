@@ -3,6 +3,11 @@
 .animation - text - box p,.faq - item.tag - item,.file - manager h5,.landing - page.carousel - caption h1,.landing - page.carousel - caption p,.text - uppercase,.ui - widget - header,button.dim {
     text - transform:uppercase
 }
+img.displayed {
+    display: block;
+    margin-left: auto;
+    margin-right: auto 
+}
 .chat - element,.chat - photo,.fc - button,.media - body {
     overflow:hidden
 }
