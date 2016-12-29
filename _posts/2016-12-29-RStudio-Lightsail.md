@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "How to Setup RStudio on AWS Lightsail"
+title:  "How to Setup RStudio on Amazon Lightsail"
 desc: "Setting up "
 keywords: "r,lightsail,vps,rstudio"
 date: 2016-12-27
