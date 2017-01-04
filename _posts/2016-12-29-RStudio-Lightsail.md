@@ -33,18 +33,18 @@ Lightsail is Amazon's virtual private server (VPS) offering that makes spinning 
 
 (3) I encourage you to use your own public key rather than a key from Amazon for ease of SSH'ing to your VPS. If you're on OSX, your public key is likely in the following location:
 
-```
+{% highlight shell %}
 ~/.ssh/id_rsa.pub
-```
+{% endhighlight %}
 
 If you haven't setup a SSH key yet, the [Github guide](https://help.github.com/articles/generating-an-ssh-key/) is a good place to go.
 
 For some reason, Amazon makes this difficult by using a regular file browser. You need to make hidden files viewable in Finder by running the two commands:
 
-```
+{% highlight shell %}
 defaults write com.apple.finder AppleShowAllFiles YES
 killall Finder
-```
+{% endhighlight %}
 
 Finder will automatically relaunch. Navigate to `~/.ssh` and drag that folder into the **Upload a key pair** file dialog. 
 
@@ -52,10 +52,10 @@ Finder will automatically relaunch. Navigate to `~/.ssh` and drag that folder in
 
 Once the key pair is uploaded, run the following commands to hide hidden files again in Finder.
 
-```
+{% highlight shell %}
 defaults write com.apple.finder AppleShowAllFiles N
 killall Finder
-```
+{% endhighlight %}
 
 (4) Select the $5/month plan (that comes with a month free), name your instance anything (I chose *RStudio*), and click **Create**.
 
@@ -70,11 +70,11 @@ killall Finder
 <img class = "custom" src="{{site.img_path}}/lightsail/lightsail_6.png" width="50%">
 
 
-```
+{% highlight shell %}
 ssh ubuntu@54.209.145.59
-```
+{% endhighlight %}
 
-Say ```yes```  to the recognition of your SSH key. You are now connected!   
+Say `yes`  to the recognition of your SSH key. You are now connected!   
 
 # Swap Space
 
@@ -82,28 +82,28 @@ The installation of some R packages can be very memory intensive (e.g. [tidytext
 
 On the VPS, run the `free` command to see that currently there is no swap memory.
 
-```
+{% highlight shell %}
 free -h
-```
+{% endhighlight %}
 
 <img class = "custom" src="{{site.img_path}}/lightsail/lightsail_7.png" width="45%">
 
 Run the following commands to create a swap file called **swap.img**, size it to be 2GB (2048k) and turn it on.
 
-```
+{% highlight shell %}
 cd /var
 sudo touch swap.img
 sudo chmod 600 swap.img
 sudo dd if=/dev/zero of=/var/swap.img bs=2048k count=1000
 sudo mkswap /var/swap.img
 sudo swapon /var/swap.img
-```
+{% endhighlight %}
 
 Now run `free` again to see the 2GB is now swap space.
 
-```
+{% highlight shell %}
 free -h
-```
+{% endhighlight %}
 
 <img class = "custom" src="{{site.img_path}}/lightsail/lightsail_8.png" width="45%">
 
@@ -111,21 +111,21 @@ free -h
 
 (1) Download [Docker](https://www.docker.com/) by running and clicking **Y** to install.
 
-```
+{% highlight shell %}
 sudo apt-get install docker.io
-```
+{% endhighlight %}
 
 (2) Start the Docker service by running
 
-```
+{% highlight shell %}
 sudo service docker start
-```
+{% endhighlight %}
 
 (3) Run the following command to start the [Rocker](https://hub.docker.com/u/rocker/) file
 
-```
+{% highlight shell %}
 sudo docker run -d -p 8787:8787 -e ROOT=TRUE rocker/hadleyverse
-```
+{% endhighlight %}
 
 The first time, this will require a download and extraction of the file:
 
@@ -153,31 +153,31 @@ If there are external dependencies (i.e. for [Rattle](https://cran.r-project.org
 
 (1) To view active containers, run
 
-```
+{% highlight shell %}
 sudo docker ps
-```
+{% endhighlight %}
 
 <img class = "custom" src="{{site.img_path}}/lightsail/lightsail_11.png" width="45%">
 
 (2) To start bash shell for the container, run the following command replacing the `<container-id>` with the string found above.
 
-```
+{% highlight shell %}
 sudo docker exec -it <container-id> bash
-```
+{% endhighlight %}
 
 (3) Install libgtk2.0-dev, by running typing **Y** after the second command:
 
-```
+{% highlight shell %}
 sudo apt-get update
 sudo apt-get install wajig 
 sudo wajig install libgtk2.0-dev
-```
+{% endhighlight %}
 
 (4) You are now set to install **rattle** in R in RStudio
 
-```r
+{% highlight r %}
 install.packages('rattle')
-```
+{% endhighlight %}
 
 ## Saving a Container
 
@@ -185,30 +185,30 @@ You do not need to close the Docker container, but it's a good idea to save the 
 
 To the save your current container, find the container id and run the commit command:
 
-```
+{% highlight shell %}
 sudo docker ps
 sudo docker commit -m "tidyverse + my packages" <container id>  rstudio2
-```
+{% endhighlight %}
 
 To see all images
 
-```
+{% highlight shell %}
 sudo docker images
-```
+{% endhighlight %}
 
 <img class = "custom" src="{{site.img_path}}/lightsail/lightsail_12.png" width="45%">
 
 You should see **rocker/hadleyverse** and your new container. Now, kill your original container and start the new one. The command below actually kills all open containers.
 
-```
+{% highlight shell %}
 sudo docker stop $(sudo docker ps -a -q)
-```
+{% endhighlight %}
 
 Then start your newly saved container:
 
-```
+{% highlight shell %}
 sudo docker run -d -p 8787:8787 -e ROOT=TRUE rstudio2
-```
+{% endhighlight %}
 
 # Headless Dropbox
 
@@ -220,33 +220,33 @@ We need to install python2.7 because the [python script](http://www.dropboxwiki.
 
 (1) Install a bunch of dependencies:
 
-```
+{% highlight shell %}
 sudo apt-get update
 sudo apt-get install build-essential checkinstall
 sudo apt-get install libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev
-```
+{% endhighlight %}
 
 (2) Download and extract python2.7
 
-```
+{% highlight shell %}
 wget https://www.python.org/ftp/python/2.7.12/Python-2.7.12.tgz
 tar -xvf Python-2.7.12.tgz
 cd Python-2.7.12
-```
+{% endhighlight %}
 
 (3) Perform the installation. For the last line `checkinstall`, you'll need to respond to a lot of questions and it will take a bit.
 
-```
+{% highlight shell %}
 ./configure
 make
 sudo checkinstall
-```
+{% endhighlight %}
 
 (4) Check that the default python version is now 2.7
 
-```
+{% highlight shell %}
 python -V
-```
+{% endhighlight %}
 
 <img class = "custom" src="{{site.img_path}}/lightsail/lightsail_13.png" width="20%">
 
@@ -254,10 +254,10 @@ python -V
 
 (1) Download and start the daemon
 
-```
+{% highlight shell %}
 cd ~ && wget -O - "https://www.dropbox.com/download?plat=lnx.x86_64" | tar xzf -
 ~/.dropbox-dist/dropboxd
-```
+{% endhighlight %}
 
 After the last command you'll see
 
@@ -269,13 +269,13 @@ Take the URL and paste it into the browser to connect to your Dropbox account.
 
 (2) Download Dropbox's python script to control Dropbox:
 
-```
+{% highlight shell %}
 mkdir -p ~/bin
 wget -O ~/bin/dropbox.py "https://www.dropbox.com/download?dl=packages/dropbox.py"
 chmod +x ~/bin/dropbox.py
 python2.7 ~/bin/dropbox.py start
 python2.7 ~/bin/dropbox.py autostart y
-```
+{% endhighlight %}
 
 You'll now see the Dropbox folder in your **ubuntu** directory.
 
@@ -283,9 +283,9 @@ You'll now see the Dropbox folder in your **ubuntu** directory.
 
 Now with Dropbox set up, you can use the -v switch to attach the Dropbox folder (i.e. volume) to your Docker container. 
 
-```
+{% highlight shell %}
 sudo docker run -d -e ROOT=TRUE -v /home/ubuntu/Dropbox:/home/rstudio/Dropbox -p 8787:8787 rstudio2
-```
+{% endhighlight %}
 
 Now, you can see the Dropbox folder in the **Files** pane.
 
