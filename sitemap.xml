@@ -257,15 +257,6 @@
     
     <url>
     
-      <loc>/project/fake_news_app/</loc>
-      <lastmod>2016-12-15T00:00:00+00:00</lastmod>
-    </url>
-    
-  
-    
-    
-    <url>
-    
       <loc>/project/stat701_hw4/</loc>
       <lastmod>2016-12-04T00:00:00+00:00</lastmod>
     </url>
@@ -343,6 +334,14 @@
       <loc>/tags/ec2/</loc>
       <lastmod>2016-12-30T00:00:00+00:00</lastmod>
       <priority>0</priority>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>/project/fake_news_app/</loc>
     </url>
     
   
