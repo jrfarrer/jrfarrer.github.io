@@ -7,8 +7,17 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2017 Jordan Farrer</copyright>
-    <lastBuildDate>Fri, 24 Nov 2017 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 12 Dec 2017 00:00:00 +0000</lastBuildDate>
     <atom:link href="/project/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>CIS519 (Machine Learning) Final Project</title>
+      <link>/project/cis519_project/</link>
+      <pubDate>Tue, 12 Dec 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/project/cis519_project/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>Spring 2018</title>
@@ -20,7 +29,7 @@
     </item>
     
     <item>
-      <title>Week 3</title>
+      <title>Week 3 to MBAs</title>
       <link>/project/sqlatlunch_week3/</link>
       <pubDate>Fri, 29 Sep 2017 00:00:00 +0000</pubDate>
       
@@ -29,7 +38,7 @@
     </item>
     
     <item>
-      <title>Week 2</title>
+      <title>Week 2 to MBAs</title>
       <link>/project/sqlatlunch_week2/</link>
       <pubDate>Tue, 19 Sep 2017 00:00:00 +0000</pubDate>
       
@@ -38,7 +47,7 @@
     </item>
     
     <item>
-      <title>Week 1</title>
+      <title>Week 1 to MBAs</title>
       <link>/project/sqlatlunch_week1/</link>
       <pubDate>Fri, 08 Sep 2017 00:00:00 +0000</pubDate>
       
@@ -56,92 +65,83 @@
     </item>
     
     <item>
-      <title>Exploratory Data Analysis Lecture</title>
-      <link>/project/stat701_eda_lecture/</link>
-      <pubDate>Thu, 19 Jan 2017 00:00:00 +0000</pubDate>
+      <title>Project 2</title>
+      <link>/project/mktg776_p2/</link>
+      <pubDate>Wed, 05 Apr 2017 00:00:00 +0000</pubDate>
       
-      <guid>/project/stat701_eda_lecture/</guid>
+      <guid>/project/mktg776_p2/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Final Project on Fake News</title>
-      <link>/project/stat701_fake_news/</link>
-      <pubDate>Fri, 23 Dec 2016 00:00:00 +0000</pubDate>
+      <title>Homework 7</title>
+      <link>/project/mktg776_hw7/</link>
+      <pubDate>Wed, 29 Mar 2017 00:00:00 +0000</pubDate>
       
-      <guid>/project/stat701_fake_news/</guid>
+      <guid>/project/mktg776_hw7/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Homework 4</title>
-      <link>/project/stat701_hw4/</link>
-      <pubDate>Sun, 04 Dec 2016 00:00:00 +0000</pubDate>
+      <link>/project/fnce611_hw4/</link>
+      <pubDate>Fri, 24 Mar 2017 00:00:00 +0000</pubDate>
       
-      <guid>/project/stat701_hw4/</guid>
+      <guid>/project/fnce611_hw4/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Homework 2</title>
-      <link>/project/mktg776_hw3/</link>
-      <pubDate>Tue, 15 Nov 2016 00:00:00 +0000</pubDate>
+      <title>Homework 6</title>
+      <link>/project/mktg776_hw6/</link>
+      <pubDate>Wed, 22 Mar 2017 00:00:00 +0000</pubDate>
       
-      <guid>/project/mktg776_hw3/</guid>
+      <guid>/project/mktg776_hw6/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Homework 3</title>
-      <link>/project/mktg776_hw2/</link>
-      <pubDate>Tue, 15 Nov 2016 00:00:00 +0000</pubDate>
+      <link>/project/fnce611_hw3/</link>
+      <pubDate>Fri, 24 Feb 2017 00:00:00 +0000</pubDate>
       
-      <guid>/project/mktg776_hw2/</guid>
+      <guid>/project/fnce611_hw3/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Homework 5</title>
-      <link>/project/mktg776_hw1/</link>
-      <pubDate>Mon, 14 Nov 2016 00:00:00 +0000</pubDate>
+      <link>/project/mktg776_hw5/</link>
+      <pubDate>Fri, 24 Feb 2017 00:00:00 +0000</pubDate>
       
-      <guid>/project/mktg776_hw1/</guid>
+      <guid>/project/mktg776_hw5/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Mini-Project</title>
-      <link>/project/stat701_miniproject/</link>
-      <pubDate>Mon, 14 Nov 2016 00:00:00 +0000</pubDate>
+      <title>Project 1</title>
+      <link>/project/mktg776_p1/</link>
+      <pubDate>Wed, 22 Feb 2017 00:00:00 +0000</pubDate>
       
-      <guid>/project/stat701_miniproject/</guid>
+      <guid>/project/mktg776_p1/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Homework 3</title>
-      <link>/project/stat701_hw3/</link>
-      <pubDate>Sun, 30 Oct 2016 00:00:00 +0000</pubDate>
+      <title>OIDD898 Homework 2</title>
+      <link>/project/oidd898_hw2/</link>
+      <pubDate>Thu, 16 Feb 2017 00:00:00 +0000</pubDate>
       
-      <guid>/project/stat701_hw3/</guid>
+      <guid>/project/oidd898_hw2/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Homework 2</title>
-      <link>/project/stat701_hw2/</link>
-      <pubDate>Sun, 16 Oct 2016 00:00:00 +0000</pubDate>
+      <title>Homework 4</title>
+      <link>/project/mktg776_hw4/</link>
+      <pubDate>Wed, 15 Feb 2017 00:00:00 +0000</pubDate>
       
-      <guid>/project/stat701_hw2/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Homework 1</title>
-      <link>/project/stat701_hw1/</link>
-      <pubDate>Sun, 25 Sep 2016 00:00:00 +0000</pubDate>
-      
-      <guid>/project/stat701_hw1/</guid>
+      <guid>/project/mktg776_hw4/</guid>
       <description></description>
     </item>
     
