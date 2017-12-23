@@ -1,0 +1,459 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Jordan Farrer on Jordan Farrer</title>
+    <link>/</link>
+    <description>Recent content in Jordan Farrer on Jordan Farrer</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2017 Jordan Farrer</copyright>
+    <lastBuildDate>Wed, 20 Apr 2016 00:00:00 +0000</lastBuildDate>
+    <atom:link href="/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Spring 2018</title>
+      <link>/project/coursematch_s18/</link>
+      <pubDate>Fri, 24 Nov 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/project/coursematch_s18/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Week 3</title>
+      <link>/project/sqlatlunch_week3/</link>
+      <pubDate>Fri, 29 Sep 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/project/sqlatlunch_week3/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Week 2</title>
+      <link>/project/sqlatlunch_week2/</link>
+      <pubDate>Tue, 19 Sep 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/project/sqlatlunch_week2/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Week 1</title>
+      <link>/project/sqlatlunch_week1/</link>
+      <pubDate>Fri, 08 Sep 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/project/sqlatlunch_week1/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Fall 2017</title>
+      <link>/project/coursematch_f17/</link>
+      <pubDate>Wed, 16 Aug 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/project/coursematch_f17/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Exploratory Data Analysis Lecture</title>
+      <link>/project/stat701_eda_lecture/</link>
+      <pubDate>Thu, 19 Jan 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/project/stat701_eda_lecture/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>How to Build a Mobile Shiny App in an Hour</title>
+      <link>/post/2016-12-30-news-app/</link>
+      <pubDate>Fri, 30 Dec 2016 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2016-12-30-news-app/</guid>
+      <description>
+
+&lt;p&gt;&lt;strong&gt;tl;dr&lt;/strong&gt;
+Spin up a mobile-friendly Shiny app that stores data in an hour.&lt;/p&gt;
+
+&lt;iframe style=&#34;border:1px solid #000000;display: block;margin-left: auto;margin-right: auto;&#34; width=&#34;450px&#34; height=&#34;630px&#34; align=&#34;center&#34; src=&#34;https://jordanfarrer.shinyapps.io/fake_news&#34; frameborder=&#34;1&#34; allowfullscreen&gt;&lt;/iframe&gt;
+
+&lt;p style=&#34;text-align:center;&#34;&gt;&lt;a href = &#34;https://jordanfarrer.shinyapps.io/fake_news&#34; target=&#34;_blank&#34;&gt;Direct Link&lt;/a&gt; || &lt;a href = &#34;https://github.com/jrfarrer/fake_news_app&#34; target=&#34;_blank&#34;&gt;Github&lt;/a&gt;&lt;/p&gt;
+    
+
+&lt;p&gt;&lt;em&gt;[This project was inspired by a section of &lt;a href=&#34;http://yihui.name/&#34; target=&#34;_blank&#34;&gt;Yihui Xie&amp;rsquo;s&lt;/a&gt; &lt;a href=&#34;https://bookdown.org/yihui/bookdown/web-pages-and-shiny-apps.html&#34; target=&#34;_blank&#34;&gt;bookdown&lt;/a&gt; that demonstrates how to embed Shiny Apps. His example uses &lt;a href=&#34;https://github.com/jcheng5&#34; target=&#34;_blank&#34;&gt;Joe Cheng&amp;rsquo;s&lt;/a&gt; &lt;a href=&#34;https://cran.r-project.org/web/packages/miniUI/index.html&#34; target=&#34;_blank&#34;&gt;miniUI package&lt;/a&gt;.]&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;Sitting in the library for one of the first times during business school with the intention of studying for an economics final, I instead decided that building a shiny app was a better use of a Monday night. In this post, we will walk through the steps necessarily to get a mobile-optimized Shiny app running. Time estimate is approximately an hour. This quick project is a testament to how RStudio&amp;rsquo;s tools make creating custom web apps.&lt;/p&gt;
+
+&lt;p&gt;I was working with a dataset from Buzzfeed on American&amp;rsquo;s ability to distinguish accurate and inaccurate news in the wake of the 2016 presidential election. This app was a means to show others just how difficult identifying fake news can be.&lt;/p&gt;
+
+&lt;h1 id=&#34;setup-shinyapps-io&#34;&gt;Setup Shinyapps.io&lt;/h1&gt;
+
+&lt;p&gt;Setting up shinyapps.io to host the app is the easiest part of the process.&lt;/p&gt;
+
+&lt;p&gt;(1) Setup an account on &lt;a href=&#34;shinyapps.io&#34; target=&#34;_blank&#34;&gt;shinyapps.io&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&#34;custom&#34; src=&#34;{{site.img_path}}/fake_news_app/01.png&#34; width=&#34;65%&#34;&gt;&lt;/p&gt;
+
+&lt;p&gt;(2) Setup &lt;code&gt;rconnect&lt;/code&gt; in your R environment.&lt;/p&gt;
+
+&lt;p&gt;{% highlight r %}
+install.packages(&amp;lsquo;rconnect&amp;rsquo;)
+library(&amp;lsquo;rconnect&amp;rsquo;)
+{% endhighlight %}&lt;/p&gt;
+
+&lt;p&gt;On &lt;a href=&#34;shinyapps.io&#34; target=&#34;_blank&#34;&gt;shinyapps.io&lt;/a&gt;, go to &lt;strong&gt;Account&lt;/strong&gt; → &lt;strong&gt;Tokens&lt;/strong&gt; then &lt;strong&gt;+ Add Token&lt;/strong&gt;. Then click &lt;strong&gt;Show&lt;/strong&gt; and copy this statement run in R.&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&#34;custom&#34; src=&#34;{{site.img_path}}/fake_news_app/02.png&#34; width=&#34;65%&#34;&gt;&lt;/p&gt;
+
+&lt;h1 id=&#34;mysql-db-to-store-data&#34;&gt;MySQL DB to Store Data&lt;/h1&gt;
+
+&lt;p&gt;The hardest part of this process is creating a place for persistent storage. This &lt;a href=&#34;https://shiny.rstudio.com/articles/persistent-data-storage.html&#34; target=&#34;_blank&#34;&gt;summary of options&lt;/a&gt; by Dean Attali was extremely helpful in getting me started. Unfortunately I was unable to use the new &lt;a href=&#34;https://jrfarrer.github.io/r/2016/12/29/RStudio-Lightsail.html&#34; target=&#34;_blank&#34;&gt;Amazon Lightsail&lt;/a&gt; VPS because only SSH connections are allowed, which would not be possible from the shinyapps.io server without its own key and port-forwarding.&lt;/p&gt;
+
+&lt;p&gt;(1) Spin up an EC2 instance, if you do not already have one&lt;/p&gt;
+
+&lt;p&gt;From the &lt;a href=&#34;console.aws.amazon.com/ec2&#34; target=&#34;_blank&#34;&gt;EC2 Dashboard&lt;/a&gt;, click &lt;strong&gt;Launch Instance&lt;/strong&gt;, select &lt;strong&gt;Ubuntu&lt;/strong&gt;, and use the &lt;strong&gt;t2.micro&lt;/strong&gt; which is part of the free tier.&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&#34;custom&#34; src=&#34;{{site.img_path}}/fake_news_app/03.png&#34; width=&#34;50%&#34;&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&#34;custom&#34; src=&#34;{{site.img_path}}/fake_news_app/04.png&#34; width=&#34;65%&#34;&gt;&lt;/p&gt;
+
+&lt;p&gt;On the tab &lt;strong&gt;6. Configure Security Group&lt;/strong&gt;, add a new rule for &lt;strong&gt;MYSQL/Aurora&lt;/strong&gt;, which will add port 3306. Then copy &lt;code&gt;0.0.0.0/0&lt;/code&gt; into the &lt;strong&gt;Source&lt;/strong&gt; section.&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&#34;custom&#34; src=&#34;{{site.img_path}}/fake_news_app/05.png&#34; width=&#34;60%&#34;&gt;&lt;/p&gt;
+
+&lt;p&gt;Then go to &lt;strong&gt;Review and Launch&lt;/strong&gt; to finish the process. You will need to select a new or existing SSH key pair. To learn more about SSH key pairs, see this &lt;a href=&#34;http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html&#34; target=&#34;_blank&#34;&gt;AWS article&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;(2) SSH into the EC2 instance&lt;/p&gt;
+
+&lt;p&gt;Once the instance is running with the bright green ball next to it, copy the &lt;strong&gt;Public DNS&lt;/strong&gt; and SSH into the machine.&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&#34;custom&#34; src=&#34;{{site.img_path}}/fake_news_app/06.png&#34; width=&#34;65%&#34;&gt;&lt;/p&gt;
+
+&lt;p&gt;{% highlight shell %}
+ssh -i macbookair.pem ubuntu@ec2-XXXXXXXXX.compute-1.amazonaws.com
+{% endhighlight %}&lt;/p&gt;
+
+&lt;p&gt;(3) Install MySQL Server&lt;/p&gt;
+
+&lt;p&gt;{% highlight shell %}
+sudo apt-get update
+sudo apt-get install mysql-server
+{% endhighlight %}&lt;/p&gt;
+
+&lt;p&gt;After the second command you&amp;rsquo;ll need to click &lt;strong&gt;Y&lt;/strong&gt; and type in a password for the root user of MYSQL.&lt;/p&gt;
+
+&lt;p&gt;(4) Configure the MySQL installation by running&lt;/p&gt;
+
+&lt;p&gt;{% highlight shell %}
+sudo mysql_secure_installation
+{% endhighlight %}&lt;/p&gt;
+
+&lt;p&gt;After typing the root password, say no by clicking any key and then &lt;strong&gt;Y&lt;/strong&gt; to the remaining questions.&lt;/p&gt;
+
+&lt;p&gt;(5) Test the server is running with the command&lt;/p&gt;
+
+&lt;p&gt;{% highlight shell %}
+service mysql status
+{% endhighlight %}&lt;/p&gt;
+
+&lt;p&gt;You should see something like this&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&#34;custom&#34; src=&#34;{{site.img_path}}/fake_news_app/14.png&#34; width=&#34;65%&#34;&gt;&lt;/p&gt;
+
+&lt;p&gt;(6) Access MySQL via the shell&lt;/p&gt;
+
+&lt;p&gt;Run the following command and enter the password for the root MySQL user.&lt;/p&gt;
+
+&lt;p&gt;{% highlight shell %}
+mysql -u root -p
+{% endhighlight %}&lt;/p&gt;
+
+&lt;p&gt;(7) Run &lt;code&gt;SHOW DATABASES;&lt;/code&gt; to see the default databases:&lt;/p&gt;
+
+&lt;p&gt;{% highlight sql %}
+SHOW DATABASES;
+{% endhighlight %}&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&#34;custom&#34; src=&#34;{{site.img_path}}/fake_news_app/07.png&#34; width=&#34;20%&#34;&gt;&lt;/p&gt;
+
+&lt;p&gt;(8) Create a database for our app called &lt;strong&gt;fake_news&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;{% highlight sql %}
+CREATE DATABASE fake_news;
+{% endhighlight %}&lt;/p&gt;
+
+&lt;p&gt;Once it&amp;rsquo;s created, switch to the new database with&lt;/p&gt;
+
+&lt;p&gt;{% highlight sql %}
+USE fake_news;
+{% endhighlight %}&lt;/p&gt;
+
+&lt;p&gt;(9) Create one simple table with the command:&lt;/p&gt;
+
+&lt;p&gt;{% highlight sql %}
+CREATE TABLE responses (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    email VARCHAR(254),
+    domain VARCHAR(64),
+    q_id INT,
+    response BOOLEAN
+);
+{% endhighlight %}&lt;/p&gt;
+
+&lt;p&gt;As a test, insert two records:&lt;/p&gt;
+
+&lt;p&gt;{% highlight sql %}
+INSERT INTO responses (email, domain, q_id, response)
+VALUES (&amp;ldquo;test&amp;rdquo;,&amp;ldquo;gmail.com&amp;rdquo;, 2, TRUE),
+        (&amp;ldquo;test2&amp;rdquo;,&amp;ldquo;gmail.com&amp;rdquo;, 1, FALSE);
+SELECT * FROM responses;
+{% endhighlight %}&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&#34;custom&#34; src=&#34;{{site.img_path}}/fake_news_app/08.png&#34; width=&#34;35%&#34;&gt;&lt;/p&gt;
+
+&lt;p&gt;Then delete them:&lt;/p&gt;
+
+&lt;p&gt;{% highlight sql %}
+DELETE FROM responses;
+SELECT * FROM responses;
+{% endhighlight %}&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&#34;custom&#34; src=&#34;{{site.img_path}}/fake_news_app/09.png&#34; width=&#34;35%&#34;&gt;&lt;/p&gt;
+
+&lt;p&gt;(10) Create an account Access for a user for the app&lt;/p&gt;
+
+&lt;p&gt;Here we will create a user that has &lt;em&gt;complete access&lt;/em&gt; to the database. This tutorial is an example and obviously in a production environment you would do this differently.&lt;/p&gt;
+
+&lt;p&gt;{% highlight sql %}
+CREATE USER &amp;lsquo;new_username&amp;rsquo;@&amp;lsquo;localhost&amp;rsquo; IDENTIFIED BY &amp;lsquo;new_password&amp;rsquo;;
+CREATE USER &amp;lsquo;new_username&amp;rsquo;@&amp;lsquo;%&amp;rsquo; IDENTIFIED BY &amp;lsquo;new_password&amp;rsquo;;&lt;/p&gt;
+
+&lt;p&gt;GRANT ALL ON &lt;em&gt;.&lt;/em&gt; TO &amp;lsquo;new_username&amp;rsquo;@&amp;lsquo;localhost&amp;rsquo;;
+GRANT ALL ON &lt;em&gt;.&lt;/em&gt; TO &amp;lsquo;new_username&amp;rsquo;@&amp;lsquo;%&amp;rsquo;;&lt;/p&gt;
+
+&lt;p&gt;GRANT ALL PRIVILEGES ON &lt;em&gt;.&lt;/em&gt; TO &amp;lsquo;new_username&amp;rsquo;@&amp;lsquo;%&amp;rsquo; IDENTIFIED BY &amp;lsquo;new_password&amp;rsquo; WITH GRANT OPTION;
+{% endhighlight %}&lt;/p&gt;
+
+&lt;p&gt;If you are curious about the password requirements, check your environment variables that were set during configuration:&lt;/p&gt;
+
+&lt;p&gt;{% highlight sql %}
+SHOW VARIABLES LIKE &amp;lsquo;validate_password%&amp;lsquo;;
+{% endhighlight %}&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&#34;custom&#34; src=&#34;{{site.img_path}}/fake_news_app/10.png&#34; width=&#34;40%&#34;&gt;&lt;/p&gt;
+
+&lt;p&gt;You also need to edit the &lt;code&gt;my.cnf&lt;/code&gt; file to enable remote access. First quit MySQL with the &lt;code&gt;exit&lt;/code&gt; command. Run the following command that opens &lt;code&gt;my.cnf&lt;/code&gt; in the text editor vim.&lt;/p&gt;
+
+&lt;p&gt;{% highlight shell %}
+sudo vim /etc/mysql/my.cnf
+{% endhighlight %}&lt;/p&gt;
+
+&lt;p&gt;Hit &lt;code&gt;a&lt;/code&gt; on the keyboard to enter insert mode, scroll down to right below the comment and paste the following in.&lt;/p&gt;
+
+&lt;p&gt;{% highlight vim %}
+[mysqld]
+#&lt;/p&gt;
+
+&lt;h1 id=&#34;basic-settings&#34;&gt;* Basic Settings&lt;/h1&gt;
+
+&lt;p&gt;#
+user            = mysql
+pid-file        = /var/run/mysqld/mysqld.pid
+socket          = /var/run/mysqld/mysqld.sock
+port            = 3306
+basedir         = /usr
+datadir         = /var/lib/mysql
+tmpdir          = /tmp
+lc-messages-dir = /usr/share/mysql
+skip-external-locking
+#&lt;/p&gt;
+
+&lt;h1 id=&#34;instead-of-skip-networking-the-default-is-now-to-listen-only-on&#34;&gt;Instead of skip-networking the default is now to listen only on&lt;/h1&gt;
+
+&lt;h1 id=&#34;localhost-which-is-more-compatible-and-is-not-less-secure&#34;&gt;localhost which is more compatible and is not less secure.&lt;/h1&gt;
+
+&lt;p&gt;bind-address            = 0.0.0.0
+{% endhighlight %}&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&#34;custom&#34; src=&#34;{{site.img_path}}/fake_news_app/11.png&#34; width=&#34;50%&#34;&gt;&lt;/p&gt;
+
+&lt;p&gt;Then tap &lt;code&gt;esc&lt;/code&gt; then &lt;code&gt;:&lt;/code&gt;, and type &lt;code&gt;wq!&lt;/code&gt; and hit &lt;code&gt;enter&lt;/code&gt; so save and exit. Then run the following command to restart MySQL.&lt;/p&gt;
+
+&lt;p&gt;{% highlight shell %}
+sudo /etc/init.d/mysql restart
+{% endhighlight %}&lt;/p&gt;
+
+&lt;p&gt;The hard stuff is over!&lt;/p&gt;
+
+&lt;h1 id=&#34;create-app&#34;&gt;Create App&lt;/h1&gt;
+
+&lt;p&gt;This part is relatively easy as we are making a simple Shiny app using the miniUI. In this app we have 3 tabs:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Tab 1: Users select whether they believe the news headline is Real / Fake and submit an email address&lt;/li&gt;
+&lt;li&gt;Tab 2: Users view their results and see mistakes highlighted in red and the percent of others who have gotten that headline correct&lt;/li&gt;
+&lt;li&gt;Tab 3: Users shown a &amp;ldquo;leaderboard&amp;rdquo; of correct responses based on domain. My idea was that this could be a competition among business schools.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;To get this app running for yourself, clone the repo &lt;a href=&#34;https://github.com/jrfarrer/fake_news_app&#34; target=&#34;_blank&#34;&gt;https://github.com/jrfarrer/fake_news_app&lt;/a&gt; and then modify the credentials in &lt;code&gt;credentials.R&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;{% highlight r %}
+host &amp;lt;- &amp;ldquo;ec2-XXXXXXXXXXXX.compute-1.amazonaws.com&amp;rdquo;
+user &amp;lt;- &amp;ldquo;fake_news&amp;rdquo;
+password &amp;lt;- &amp;ldquo;XXXXXXXXXXXXXXX&amp;rdquo;
+mailbox_layer &amp;lt;- &amp;ldquo;XXXXXXXXXXXXXXX&amp;rdquo;
+{% endhighlight %}&lt;/p&gt;
+
+&lt;p&gt;You&amp;rsquo;ll recognize the first 3 credentials in the image above as related to the MySQL serve we setup. The last credential relates to &lt;a href=&#34;https://mailboxlayer.com/&#34; target=&#34;_blank&#34;&gt;mailboxlayer API&lt;/a&gt;, which is an email verification service. I use this to check whether the email address is a real email address. It is easy to signup for free and get an API key that you can paste in. With each call to the mailboxlayer API, you receive a score on the likelihood the provided address is legitimate. In the &lt;code&gt;app.R&lt;/code&gt; I set a threshold of 0.65 and also use the domain returned to check that it is a &lt;code&gt;.edu&lt;/code&gt; address to better support the leaderboard objective.&lt;/p&gt;
+
+&lt;h2 id=&#34;shiny-app-explained&#34;&gt;Shiny App Explained&lt;/h2&gt;
+
+&lt;p&gt;(1) Articles&lt;/p&gt;
+
+&lt;p&gt;The news headlines come from a pipe-delimited text file that I put together from information in this &lt;a href=&#34;https://github.com/BuzzFeedNews/2016-12-fake-news-survey&#34; target=&#34;_blank&#34;&gt;Buzzfeed repo&lt;/a&gt;.&lt;/p&gt;
+
+&lt;script src=&#34;https://gist.github.com/jrfarrer/e92e700a3495506f279f3c4c7fbacbf0.js&#34;&gt;&lt;/script&gt;
+
+&lt;p&gt;(2) Bootstrap Toggles&lt;/p&gt;
+
+&lt;p&gt;One of the things shiny users might have noticed immediately is the &lt;a href=&#34;http://shiny.rstudio.com/gallery/widget-gallery.html&#34; target=&#34;_blank&#34;&gt;non-shiny widgets&lt;/a&gt;. &lt;a href=&#34;http://www.bootstraptoggle.com/&#34; target=&#34;_blank&#34;&gt;Bootstrap toogles&lt;/a&gt; seemed like the appropriate user interaction. I created these by creating checkboxes manually and then adding the stylesheet and javascript from Bootstrap.&lt;/p&gt;
+
+&lt;p&gt;{% highlight r %}
+isolate({
+  time_int &amp;lt;- round(as.numeric(Sys.time()) - as.numeric(as.POSIXct(Sys.Date())),0)
+})&lt;/p&gt;
+
+&lt;p&gt;output$toggles &amp;lt;- renderUI({&lt;/p&gt;
+
+&lt;p&gt;toggles &amp;lt;- paste0(&amp;rsquo;&lt;div class=&#34;checkbox&#34;&gt;
+                      &lt;label class=&#34;clearfix&#34;&gt;
+                        &lt;input id=&#39;, articles$id[randos[, time_int]],&#39; checked type=&#34;checkbox&#34; data-toggle=&#34;toggle&#34; data-on=&#34;Real&#34; data-off=&#34;Fake&#34; data-size=&#34;small&#34;&gt;&amp;rsquo;, articles$article[randos[, time_int]],&amp;rsquo;
+                      &lt;/label&gt;
+                  &lt;/div&gt;&amp;rsquo;)&lt;/p&gt;
+
+&lt;p&gt;HTML(paste0(&amp;rsquo;&lt;head&gt;
+              &lt;link rel=&#34;stylesheet&#34; type=&#34;text/css&#34; href=&#34;https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css&#34;&gt;
+              &lt;script type=&#34;text/javascript&#34; src=&#34;https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js&#34;&gt;&lt;/script&gt;
+          &lt;/head&gt;&amp;rsquo;, toggles))
+})
+{% endhighlight %}&lt;/p&gt;
+
+&lt;p&gt;The &lt;code&gt;randos&lt;/code&gt; objected is created by &lt;code&gt;randos &amp;lt;- replicate(3600*24, sample(1:11))&lt;/code&gt; and is a means to have the order of the articles be different for every session. I created a matrix of different orders for every second of the day (86,400) which is then indexed by &lt;code&gt;time_int&lt;/code&gt; inside the server component. The isolate ensures this order is static so that the order appears the same on both the Headline and Results tabs.&lt;/p&gt;
+
+&lt;p&gt;(3) Datatables&lt;/p&gt;
+
+&lt;p&gt;I have used the &lt;a href=&#34;https://rstudio.github.io/DT/&#34; target=&#34;_blank&#34;&gt;DT package&lt;/a&gt; on almost all my shiny projects, including the buttons extensions and the column and row selections features. This project is an example of just how easy it is to build a great looking table with the DT package.&lt;/p&gt;
+
+&lt;p&gt;{% highlight r %}
+cols &amp;lt;- ifelse(df2$&lt;code&gt;Actual&lt;/code&gt; == df2$&lt;code&gt;You Selected&lt;/code&gt;, NA,&amp;ldquo;#FCBBA1&amp;rdquo;)&lt;/p&gt;
+
+&lt;p&gt;DT::datatable(df2
+              , rownames = FALSE
+              , escape =  FALSE
+              , options = list(
+                dom = &amp;rsquo;t&amp;rsquo;
+                , pageLength = 11
+                , ordering = FALSE
+                , columnDefs = list(list(className = &amp;lsquo;dt-center&amp;rsquo;, targets = 1:3))
+              )
+) %&amp;gt;% DT::formatStyle(columns = 1:4, valueColumns = 1, backgroundColor = styleEqual(df2$Article, cols)) %&amp;gt;%
+  DT::formatPercentage(4)&lt;/p&gt;
+
+&lt;p&gt;{% endhighlight %}&lt;/p&gt;
+
+&lt;h2 id=&#34;test-the-app&#34;&gt;Test the App&lt;/h2&gt;
+
+&lt;p&gt;To test the app, change the comment of the last two lines to&lt;/p&gt;
+
+&lt;p&gt;{% highlight r %}
+#shinyApp(ui, server)
+runGadget(shinyApp(ui, server), viewer = paneViewer())
+{% endhighlight %}&lt;/p&gt;
+
+&lt;p&gt;highlight all and run (do not click &lt;code&gt;Run App&lt;/code&gt;). The app should appear in the RStudio Viewer:&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&#34;custom&#34; src=&#34;{{site.img_path}}/fake_news_app/12.png&#34; width=&#34;30%&#34;&gt;&lt;/p&gt;
+
+&lt;p&gt;If this works, you are ready to deploy (just remember to swap the line commenting above back to where it stood).&lt;/p&gt;
+
+&lt;h1 id=&#34;deploy&#34;&gt;Deploy&lt;/h1&gt;
+
+&lt;p&gt;Luckily this part is quite straightforward.&lt;/p&gt;
+
+&lt;p&gt;Run the deployApp command&lt;/p&gt;
+
+&lt;p&gt;{% highlight r %}
+rsconnect::deployApp()
+{% endhighlight %}&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&#34;custom&#34; src=&#34;{{site.img_path}}/fake_news_app/13.png&#34; width=&#34;50%&#34;&gt;&lt;/p&gt;
+
+&lt;p&gt;The first time this will take a while as all package dependencies are built. When you make a change, simply rerun the same command.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Final Project on Fake News</title>
+      <link>/project/stat701_fake_news/</link>
+      <pubDate>Fri, 23 Dec 2016 00:00:00 +0000</pubDate>
+      
+      <guid>/project/stat701_fake_news/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Homework 4</title>
+      <link>/project/stat701_hw4/</link>
+      <pubDate>Sun, 04 Dec 2016 00:00:00 +0000</pubDate>
+      
+      <guid>/project/stat701_hw4/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Mini-Project</title>
+      <link>/project/mktg776_hw1/</link>
+      <pubDate>Mon, 14 Nov 2016 00:00:00 +0000</pubDate>
+      
+      <guid>/project/mktg776_hw1/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Mini-Project</title>
+      <link>/project/stat701_miniproject/</link>
+      <pubDate>Mon, 14 Nov 2016 00:00:00 +0000</pubDate>
+      
+      <guid>/project/stat701_miniproject/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Homework 3</title>
+      <link>/project/stat701_hw3/</link>
+      <pubDate>Sun, 30 Oct 2016 00:00:00 +0000</pubDate>
+      
+      <guid>/project/stat701_hw3/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Homework 2</title>
+      <link>/project/stat701_hw2/</link>
+      <pubDate>Sun, 16 Oct 2016 00:00:00 +0000</pubDate>
+      
+      <guid>/project/stat701_hw2/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Homework 1</title>
+      <link>/project/stat701_hw1/</link>
+      <pubDate>Sun, 25 Sep 2016 00:00:00 +0000</pubDate>
+      
+      <guid>/project/stat701_hw1/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>
