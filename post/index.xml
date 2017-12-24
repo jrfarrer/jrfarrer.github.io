@@ -12,197 +12,138 @@
     
     <item>
       <title>How to Build a Mobile Shiny App in an Hour</title>
-      <link>/post/2016-12-30-news-app/</link>
+      <link>/post/how-to-build-a-mobile-shiny-app-in-an-hour/</link>
       <pubDate>Fri, 30 Dec 2016 00:00:00 +0000</pubDate>
       
-      <guid>/post/2016-12-30-news-app/</guid>
-      <description>
+      <guid>/post/how-to-build-a-mobile-shiny-app-in-an-hour/</guid>
+      <description>&lt;div id=&#34;TOC&#34;&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#tldr&#34;&gt;&lt;span class=&#34;toc-section-number&#34;&gt;1&lt;/span&gt; tl;dr&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#setup-shinyapps.io&#34;&gt;&lt;span class=&#34;toc-section-number&#34;&gt;2&lt;/span&gt; Setup Shinyapps.io&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#mysql-db-to-store-data&#34;&gt;&lt;span class=&#34;toc-section-number&#34;&gt;3&lt;/span&gt; MySQL DB to Store Data&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#create-app&#34;&gt;&lt;span class=&#34;toc-section-number&#34;&gt;4&lt;/span&gt; Create App&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#deploy&#34;&gt;&lt;span class=&#34;toc-section-number&#34;&gt;5&lt;/span&gt; Deploy&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
 
-&lt;p&gt;&lt;strong&gt;tl;dr&lt;/strong&gt;
-Spin up a mobile-friendly Shiny app that stores data in an hour.&lt;/p&gt;
-
-&lt;iframe style=&#34;border:1px solid #000000;display: block;margin-left: auto;margin-right: auto;&#34; width=&#34;450px&#34; height=&#34;630px&#34; align=&#34;center&#34; src=&#34;https://jordanfarrer.shinyapps.io/fake_news&#34; frameborder=&#34;1&#34; allowfullscreen&gt;&lt;/iframe&gt;
-
-&lt;p style=&#34;text-align:center;&#34;&gt;&lt;a href = &#34;https://jordanfarrer.shinyapps.io/fake_news&#34; target=&#34;_blank&#34;&gt;Direct Link&lt;/a&gt; || &lt;a href = &#34;https://github.com/jrfarrer/fake_news_app&#34; target=&#34;_blank&#34;&gt;Github&lt;/a&gt;&lt;/p&gt;
-    
-
-&lt;p&gt;&lt;em&gt;[This project was inspired by a section of &lt;a href=&#34;http://yihui.name/&#34; target=&#34;_blank&#34;&gt;Yihui Xie&amp;rsquo;s&lt;/a&gt; &lt;a href=&#34;https://bookdown.org/yihui/bookdown/web-pages-and-shiny-apps.html&#34; target=&#34;_blank&#34;&gt;bookdown&lt;/a&gt; that demonstrates how to embed Shiny Apps. His example uses &lt;a href=&#34;https://github.com/jcheng5&#34; target=&#34;_blank&#34;&gt;Joe Cheng&amp;rsquo;s&lt;/a&gt; &lt;a href=&#34;https://cran.r-project.org/web/packages/miniUI/index.html&#34; target=&#34;_blank&#34;&gt;miniUI package&lt;/a&gt;.]&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;Sitting in the library for one of the first times during business school with the intention of studying for an economics final, I instead decided that building a shiny app was a better use of a Monday night. In this post, we will walk through the steps necessarily to get a mobile-optimized Shiny app running. Time estimate is approximately an hour. This quick project is a testament to how RStudio&amp;rsquo;s tools make creating custom web apps.&lt;/p&gt;
-
-&lt;p&gt;I was working with a dataset from Buzzfeed on American&amp;rsquo;s ability to distinguish accurate and inaccurate news in the wake of the 2016 presidential election. This app was a means to show others just how difficult identifying fake news can be.&lt;/p&gt;
-
-&lt;h1 id=&#34;setup-shinyapps-io&#34;&gt;Setup Shinyapps.io&lt;/h1&gt;
-
+&lt;div id=&#34;tldr&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;&lt;span class=&#34;header-section-number&#34;&gt;1&lt;/span&gt; tl;dr&lt;/h1&gt;
+&lt;p&gt;Spin up a mobile-friendly Shiny app that stores data in an hour.&lt;/p&gt;
+&lt;iframe style=&#34;border:1px solid #000000;display: block;margin-left: auto;margin-right: auto;&#34; width=&#34;450px&#34; height=&#34;630px&#34; align=&#34;center&#34; src=&#34;https://jordanfarrer.shinyapps.io/fake_news&#34; frameborder=&#34;1&#34; allowfullscreen&gt;
+&lt;/iframe&gt;
+&lt;p style=&#34;text-align:center;&#34;&gt;
+&lt;a href = &#34;https://jordanfarrer.shinyapps.io/fake_news&#34; target=&#34;_blank&#34;&gt;Direct Link&lt;/a&gt; || &lt;a href = &#34;https://github.com/jrfarrer/fake_news_app&#34; target=&#34;_blank&#34;&gt;Github&lt;/a&gt;
+&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;[This project was inspired by a section of &lt;a href=&#34;http://yihui.name/&#34;&gt;Yihui Xie’s&lt;/a&gt; &lt;a href=&#34;https://bookdown.org/yihui/bookdown/web-pages-and-shiny-apps.html&#34;&gt;bookdown&lt;/a&gt; that demonstrates how to embed Shiny Apps. His example uses &lt;a href=&#34;https://github.com/jcheng5&#34;&gt;Joe Cheng’s&lt;/a&gt; &lt;a href=&#34;https://cran.r-project.org/web/packages/miniUI/index.html&#34;&gt;miniUI package&lt;/a&gt;.]&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;Sitting in the library for one of the first times during business school with the intention of studying for an economics final, I instead decided that building a shiny app was a better use of a Monday night. In this post, we will walk through the steps necessarily to get a mobile-optimized Shiny app running. Time estimate is approximately an hour. This quick project is a testament to how RStudio’s tools make creating custom web apps.&lt;/p&gt;
+&lt;p&gt;I was working with a dataset from Buzzfeed on American’s ability to distinguish accurate and inaccurate news in the wake of the 2016 presidential election. This app was a means to show others just how difficult identifying fake news can be.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;setup-shinyapps.io&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;&lt;span class=&#34;header-section-number&#34;&gt;2&lt;/span&gt; Setup Shinyapps.io&lt;/h1&gt;
 &lt;p&gt;Setting up shinyapps.io to host the app is the easiest part of the process.&lt;/p&gt;
-
-&lt;p&gt;(1) Setup an account on &lt;a href=&#34;shinyapps.io&#34; target=&#34;_blank&#34;&gt;shinyapps.io&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img class=&#34;custom&#34; src=&#34;{{site.img_path}}/fake_news_app/01.png&#34; width=&#34;65%&#34;&gt;&lt;/p&gt;
-
-&lt;p&gt;(2) Setup &lt;code&gt;rconnect&lt;/code&gt; in your R environment.&lt;/p&gt;
-
-&lt;p&gt;{% highlight r %}
-install.packages(&amp;lsquo;rconnect&amp;rsquo;)
-library(&amp;lsquo;rconnect&amp;rsquo;)
-{% endhighlight %}&lt;/p&gt;
-
-&lt;p&gt;On &lt;a href=&#34;shinyapps.io&#34; target=&#34;_blank&#34;&gt;shinyapps.io&lt;/a&gt;, go to &lt;strong&gt;Account&lt;/strong&gt; → &lt;strong&gt;Tokens&lt;/strong&gt; then &lt;strong&gt;+ Add Token&lt;/strong&gt;. Then click &lt;strong&gt;Show&lt;/strong&gt; and copy this statement run in R.&lt;/p&gt;
-
-&lt;p&gt;&lt;img class=&#34;custom&#34; src=&#34;{{site.img_path}}/fake_news_app/02.png&#34; width=&#34;65%&#34;&gt;&lt;/p&gt;
-
-&lt;h1 id=&#34;mysql-db-to-store-data&#34;&gt;MySQL DB to Store Data&lt;/h1&gt;
-
-&lt;p&gt;The hardest part of this process is creating a place for persistent storage. This &lt;a href=&#34;https://shiny.rstudio.com/articles/persistent-data-storage.html&#34; target=&#34;_blank&#34;&gt;summary of options&lt;/a&gt; by Dean Attali was extremely helpful in getting me started. Unfortunately I was unable to use the new &lt;a href=&#34;https://jrfarrer.github.io/r/2016/12/29/RStudio-Lightsail.html&#34; target=&#34;_blank&#34;&gt;Amazon Lightsail&lt;/a&gt; VPS because only SSH connections are allowed, which would not be possible from the shinyapps.io server without its own key and port-forwarding.&lt;/p&gt;
-
-&lt;p&gt;(1) Spin up an EC2 instance, if you do not already have one&lt;/p&gt;
-
-&lt;p&gt;From the &lt;a href=&#34;console.aws.amazon.com/ec2&#34; target=&#34;_blank&#34;&gt;EC2 Dashboard&lt;/a&gt;, click &lt;strong&gt;Launch Instance&lt;/strong&gt;, select &lt;strong&gt;Ubuntu&lt;/strong&gt;, and use the &lt;strong&gt;t2.micro&lt;/strong&gt; which is part of the free tier.&lt;/p&gt;
-
-&lt;p&gt;&lt;img class=&#34;custom&#34; src=&#34;{{site.img_path}}/fake_news_app/03.png&#34; width=&#34;50%&#34;&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img class=&#34;custom&#34; src=&#34;{{site.img_path}}/fake_news_app/04.png&#34; width=&#34;65%&#34;&gt;&lt;/p&gt;
-
+&lt;div id=&#34;setup-an-account-on-shinyapps.io&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;span class=&#34;header-section-number&#34;&gt;2.1&lt;/span&gt; Setup an account on &lt;a href=&#34;shinyapps.io&#34; class=&#34;uri&#34;&gt;shinyapps.io&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;&lt;img class=&#34;custom&#34; src=&#34;../img/posts/fake_news_app/01.png&#34; width=&#34;65%&#34;&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;setup-rconnect-in-your-r-environment.&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;span class=&#34;header-section-number&#34;&gt;2.2&lt;/span&gt; Setup &lt;code&gt;rconnect&lt;/code&gt; in your R environment.&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;install.packages(&amp;#39;rconnect&amp;#39;)
+library(&amp;#39;rconnect&amp;#39;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;On &lt;a href=&#34;shinyapps.io&#34; class=&#34;uri&#34;&gt;shinyapps.io&lt;/a&gt;, go to &lt;strong&gt;Account&lt;/strong&gt; → &lt;strong&gt;Tokens&lt;/strong&gt; then &lt;strong&gt;+ Add Token&lt;/strong&gt;. Then click &lt;strong&gt;Show&lt;/strong&gt; and copy this statement run in R.&lt;/p&gt;
+&lt;p&gt;&lt;img class=&#34;custom&#34; src=&#34;../img/posts/fake_news_app/02.png&#34; width=&#34;65%&#34;&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;mysql-db-to-store-data&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;&lt;span class=&#34;header-section-number&#34;&gt;3&lt;/span&gt; MySQL DB to Store Data&lt;/h1&gt;
+&lt;p&gt;The hardest part of this process is creating a place for persistent storage. This &lt;a href=&#34;https://shiny.rstudio.com/articles/persistent-data-storage.html&#34;&gt;summary of options&lt;/a&gt; by Dean Attali was extremely helpful in getting me started. Unfortunately I was unable to use the new &lt;a href=&#34;https://jrfarrer.github.io/r/2016/12/29/RStudio-Lightsail.html&#34;&gt;Amazon Lightsail&lt;/a&gt; VPS because only SSH connections are allowed, which would not be possible from the shinyapps.io server without its own key and port-forwarding.&lt;/p&gt;
+&lt;div id=&#34;spin-up-an-ec2-instance-if-you-do-not-already-have-one&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;span class=&#34;header-section-number&#34;&gt;3.1&lt;/span&gt; Spin up an EC2 instance, if you do not already have one&lt;/h2&gt;
+&lt;p&gt;From the &lt;a href=&#34;console.aws.amazon.com/ec2&#34;&gt;EC2 Dashboard&lt;/a&gt;, click &lt;strong&gt;Launch Instance&lt;/strong&gt;, select &lt;strong&gt;Ubuntu&lt;/strong&gt;, and use the &lt;strong&gt;t2.micro&lt;/strong&gt; which is part of the free tier.&lt;/p&gt;
+&lt;p&gt;&lt;img class=&#34;custom&#34; src=&#34;../img/posts/fake_news_app/03.png&#34; width=&#34;50%&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img class=&#34;custom&#34; src=&#34;../img/posts/fake_news_app/04.png&#34; width=&#34;65%&#34;&gt;&lt;/p&gt;
 &lt;p&gt;On the tab &lt;strong&gt;6. Configure Security Group&lt;/strong&gt;, add a new rule for &lt;strong&gt;MYSQL/Aurora&lt;/strong&gt;, which will add port 3306. Then copy &lt;code&gt;0.0.0.0/0&lt;/code&gt; into the &lt;strong&gt;Source&lt;/strong&gt; section.&lt;/p&gt;
-
-&lt;p&gt;&lt;img class=&#34;custom&#34; src=&#34;{{site.img_path}}/fake_news_app/05.png&#34; width=&#34;60%&#34;&gt;&lt;/p&gt;
-
-&lt;p&gt;Then go to &lt;strong&gt;Review and Launch&lt;/strong&gt; to finish the process. You will need to select a new or existing SSH key pair. To learn more about SSH key pairs, see this &lt;a href=&#34;http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html&#34; target=&#34;_blank&#34;&gt;AWS article&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;(2) SSH into the EC2 instance&lt;/p&gt;
-
+&lt;p&gt;&lt;img class=&#34;custom&#34; src=&#34;../img/posts/fake_news_app/05.png&#34; width=&#34;60%&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Then go to &lt;strong&gt;Review and Launch&lt;/strong&gt; to finish the process. You will need to select a new or existing SSH key pair. To learn more about SSH key pairs, see this &lt;a href=&#34;http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html&#34;&gt;AWS article&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;ssh-into-the-ec2-instance&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;span class=&#34;header-section-number&#34;&gt;3.2&lt;/span&gt; SSH into the EC2 instance&lt;/h2&gt;
 &lt;p&gt;Once the instance is running with the bright green ball next to it, copy the &lt;strong&gt;Public DNS&lt;/strong&gt; and SSH into the machine.&lt;/p&gt;
-
-&lt;p&gt;&lt;img class=&#34;custom&#34; src=&#34;{{site.img_path}}/fake_news_app/06.png&#34; width=&#34;65%&#34;&gt;&lt;/p&gt;
-
-&lt;p&gt;{% highlight shell %}
-ssh -i macbookair.pem ubuntu@ec2-XXXXXXXXX.compute-1.amazonaws.com
-{% endhighlight %}&lt;/p&gt;
-
-&lt;p&gt;(3) Install MySQL Server&lt;/p&gt;
-
-&lt;p&gt;{% highlight shell %}
-sudo apt-get update
-sudo apt-get install mysql-server
-{% endhighlight %}&lt;/p&gt;
-
-&lt;p&gt;After the second command you&amp;rsquo;ll need to click &lt;strong&gt;Y&lt;/strong&gt; and type in a password for the root user of MYSQL.&lt;/p&gt;
-
-&lt;p&gt;(4) Configure the MySQL installation by running&lt;/p&gt;
-
-&lt;p&gt;{% highlight shell %}
-sudo mysql_secure_installation
-{% endhighlight %}&lt;/p&gt;
-
+&lt;p&gt;&lt;img class=&#34;custom&#34; src=&#34;../img/posts/fake_news_app/06.png&#34; width=&#34;65%&#34;&gt;&lt;/p&gt;
+&lt;pre class=&#34;bash&#34;&gt;&lt;code&gt;ssh -i macbookair.pem ubuntu@ec2-XXXXXXXXX.compute-1.amazonaws.com&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;install-mysql-server&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;span class=&#34;header-section-number&#34;&gt;3.3&lt;/span&gt; Install MySQL Server&lt;/h2&gt;
+&lt;pre class=&#34;bash&#34;&gt;&lt;code&gt;sudo apt-get update
+sudo apt-get install mysql-server&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;After the second command you’ll need to click &lt;strong&gt;Y&lt;/strong&gt; and type in a password for the root user of MYSQL.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;configure-the-mysql-installation-by-running&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;span class=&#34;header-section-number&#34;&gt;3.4&lt;/span&gt; Configure the MySQL installation by running&lt;/h2&gt;
+&lt;pre class=&#34;bash&#34;&gt;&lt;code&gt;sudo mysql_secure_installation&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;After typing the root password, say no by clicking any key and then &lt;strong&gt;Y&lt;/strong&gt; to the remaining questions.&lt;/p&gt;
-
-&lt;p&gt;(5) Test the server is running with the command&lt;/p&gt;
-
-&lt;p&gt;{% highlight shell %}
-service mysql status
-{% endhighlight %}&lt;/p&gt;
-
+&lt;/div&gt;
+&lt;div id=&#34;test-the-server-is-running-with-the-command&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;span class=&#34;header-section-number&#34;&gt;3.5&lt;/span&gt; Test the server is running with the command&lt;/h2&gt;
+&lt;pre class=&#34;bash&#34;&gt;&lt;code&gt;service mysql status&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;You should see something like this&lt;/p&gt;
-
-&lt;p&gt;&lt;img class=&#34;custom&#34; src=&#34;{{site.img_path}}/fake_news_app/14.png&#34; width=&#34;65%&#34;&gt;&lt;/p&gt;
-
-&lt;p&gt;(6) Access MySQL via the shell&lt;/p&gt;
-
+&lt;p&gt;&lt;img class=&#34;custom&#34; src=&#34;../img/posts/fake_news_app/14.png&#34; width=&#34;65%&#34;&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;access-mysql-via-the-shell&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;span class=&#34;header-section-number&#34;&gt;3.6&lt;/span&gt; Access MySQL via the shell&lt;/h2&gt;
 &lt;p&gt;Run the following command and enter the password for the root MySQL user.&lt;/p&gt;
-
-&lt;p&gt;{% highlight shell %}
-mysql -u root -p
-{% endhighlight %}&lt;/p&gt;
-
-&lt;p&gt;(7) Run &lt;code&gt;SHOW DATABASES;&lt;/code&gt; to see the default databases:&lt;/p&gt;
-
-&lt;p&gt;{% highlight sql %}
-SHOW DATABASES;
-{% endhighlight %}&lt;/p&gt;
-
-&lt;p&gt;&lt;img class=&#34;custom&#34; src=&#34;{{site.img_path}}/fake_news_app/07.png&#34; width=&#34;20%&#34;&gt;&lt;/p&gt;
-
-&lt;p&gt;(8) Create a database for our app called &lt;strong&gt;fake_news&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;{% highlight sql %}
-CREATE DATABASE fake_news;
-{% endhighlight %}&lt;/p&gt;
-
-&lt;p&gt;Once it&amp;rsquo;s created, switch to the new database with&lt;/p&gt;
-
-&lt;p&gt;{% highlight sql %}
-USE fake_news;
-{% endhighlight %}&lt;/p&gt;
-
-&lt;p&gt;(9) Create one simple table with the command:&lt;/p&gt;
-
-&lt;p&gt;{% highlight sql %}
-CREATE TABLE responses (
-    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+&lt;pre class=&#34;bash&#34;&gt;&lt;code&gt;mysql -u root -p&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;run-show-databases-to-see-the-default-databases&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;span class=&#34;header-section-number&#34;&gt;3.7&lt;/span&gt; Run &lt;code&gt;SHOW DATABASES;&lt;/code&gt; to see the default databases:&lt;/h2&gt;
+&lt;pre class=&#34;sql&#34;&gt;&lt;code&gt;SHOW DATABASES;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img class=&#34;custom&#34; src=&#34;../img/posts/fake_news_app/07.png&#34; width=&#34;20%&#34;&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;create-a-database-for-our-app-called-fake_news&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;span class=&#34;header-section-number&#34;&gt;3.8&lt;/span&gt; Create a database for our app called &lt;strong&gt;fake_news&lt;/strong&gt;&lt;/h2&gt;
+&lt;pre class=&#34;sql&#34;&gt;&lt;code&gt;CREATE DATABASE fake_news;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Once it’s created, switch to the new database with&lt;/p&gt;
+&lt;pre class=&#34;sql&#34;&gt;&lt;code&gt;USE fake_news;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;create-one-simple-table-with-the-command&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;span class=&#34;header-section-number&#34;&gt;3.9&lt;/span&gt; Create one simple table with the command:&lt;/h2&gt;
+&lt;pre class=&#34;sql&#34;&gt;&lt;code&gt;CREATE TABLE responses (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, 
     email VARCHAR(254),
     domain VARCHAR(64),
-    q_id INT,
+    q_id INT, 
     response BOOLEAN
-);
-{% endhighlight %}&lt;/p&gt;
-
+);&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;As a test, insert two records:&lt;/p&gt;
-
-&lt;p&gt;{% highlight sql %}
-INSERT INTO responses (email, domain, q_id, response)
-VALUES (&amp;ldquo;test&amp;rdquo;,&amp;ldquo;gmail.com&amp;rdquo;, 2, TRUE),
-        (&amp;ldquo;test2&amp;rdquo;,&amp;ldquo;gmail.com&amp;rdquo;, 1, FALSE);
-SELECT * FROM responses;
-{% endhighlight %}&lt;/p&gt;
-
-&lt;p&gt;&lt;img class=&#34;custom&#34; src=&#34;{{site.img_path}}/fake_news_app/08.png&#34; width=&#34;35%&#34;&gt;&lt;/p&gt;
-
+&lt;pre class=&#34;sql&#34;&gt;&lt;code&gt;INSERT INTO responses (email, domain, q_id, response) 
+VALUES (&amp;quot;test&amp;quot;,&amp;quot;gmail.com&amp;quot;, 2, TRUE), 
+        (&amp;quot;test2&amp;quot;,&amp;quot;gmail.com&amp;quot;, 1, FALSE);
+SELECT * FROM responses;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img class=&#34;custom&#34; src=&#34;../img/posts/fake_news_app/08.png&#34; width=&#34;35%&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Then delete them:&lt;/p&gt;
-
-&lt;p&gt;{% highlight sql %}
-DELETE FROM responses;
-SELECT * FROM responses;
-{% endhighlight %}&lt;/p&gt;
-
-&lt;p&gt;&lt;img class=&#34;custom&#34; src=&#34;{{site.img_path}}/fake_news_app/09.png&#34; width=&#34;35%&#34;&gt;&lt;/p&gt;
-
-&lt;p&gt;(10) Create an account Access for a user for the app&lt;/p&gt;
-
+&lt;pre class=&#34;sql&#34;&gt;&lt;code&gt;DELETE FROM responses;
+SELECT * FROM responses;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img class=&#34;custom&#34; src=&#34;../img/posts/fake_news_app/09.png&#34; width=&#34;35%&#34;&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;create-an-account-access-for-a-user-for-the-app&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;span class=&#34;header-section-number&#34;&gt;3.10&lt;/span&gt; Create an account Access for a user for the app&lt;/h2&gt;
 &lt;p&gt;Here we will create a user that has &lt;em&gt;complete access&lt;/em&gt; to the database. This tutorial is an example and obviously in a production environment you would do this differently.&lt;/p&gt;
+&lt;pre class=&#34;sql&#34;&gt;&lt;code&gt;CREATE USER &amp;#39;new_username&amp;#39;@&amp;#39;localhost&amp;#39; IDENTIFIED BY &amp;#39;new_password&amp;#39;;
+CREATE USER &amp;#39;new_username&amp;#39;@&amp;#39;%&amp;#39; IDENTIFIED BY &amp;#39;new_password&amp;#39;;
 
-&lt;p&gt;{% highlight sql %}
-CREATE USER &amp;lsquo;new_username&amp;rsquo;@&amp;lsquo;localhost&amp;rsquo; IDENTIFIED BY &amp;lsquo;new_password&amp;rsquo;;
-CREATE USER &amp;lsquo;new_username&amp;rsquo;@&amp;lsquo;%&amp;rsquo; IDENTIFIED BY &amp;lsquo;new_password&amp;rsquo;;&lt;/p&gt;
+GRANT ALL ON *.* TO &amp;#39;new_username&amp;#39;@&amp;#39;localhost&amp;#39;;
+GRANT ALL ON *.* TO &amp;#39;new_username&amp;#39;@&amp;#39;%&amp;#39;;
 
-&lt;p&gt;GRANT ALL ON &lt;em&gt;.&lt;/em&gt; TO &amp;lsquo;new_username&amp;rsquo;@&amp;lsquo;localhost&amp;rsquo;;
-GRANT ALL ON &lt;em&gt;.&lt;/em&gt; TO &amp;lsquo;new_username&amp;rsquo;@&amp;lsquo;%&amp;rsquo;;&lt;/p&gt;
-
-&lt;p&gt;GRANT ALL PRIVILEGES ON &lt;em&gt;.&lt;/em&gt; TO &amp;lsquo;new_username&amp;rsquo;@&amp;lsquo;%&amp;rsquo; IDENTIFIED BY &amp;lsquo;new_password&amp;rsquo; WITH GRANT OPTION;
-{% endhighlight %}&lt;/p&gt;
-
+GRANT ALL PRIVILEGES ON *.* TO &amp;#39;new_username&amp;#39;@&amp;#39;%&amp;#39; IDENTIFIED BY &amp;#39;new_password&amp;#39; WITH GRANT OPTION;&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;If you are curious about the password requirements, check your environment variables that were set during configuration:&lt;/p&gt;
-
-&lt;p&gt;{% highlight sql %}
-SHOW VARIABLES LIKE &amp;lsquo;validate_password%&amp;lsquo;;
-{% endhighlight %}&lt;/p&gt;
-
-&lt;p&gt;&lt;img class=&#34;custom&#34; src=&#34;{{site.img_path}}/fake_news_app/10.png&#34; width=&#34;40%&#34;&gt;&lt;/p&gt;
-
+&lt;pre class=&#34;sql&#34;&gt;&lt;code&gt;SHOW VARIABLES LIKE &amp;#39;validate_password%&amp;#39;;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img class=&#34;custom&#34; src=&#34;../img/posts/fake_news_app/10.png&#34; width=&#34;40%&#34;&gt;&lt;/p&gt;
 &lt;p&gt;You also need to edit the &lt;code&gt;my.cnf&lt;/code&gt; file to enable remote access. First quit MySQL with the &lt;code&gt;exit&lt;/code&gt; command. Run the following command that opens &lt;code&gt;my.cnf&lt;/code&gt; in the text editor vim.&lt;/p&gt;
-
-&lt;p&gt;{% highlight shell %}
-sudo vim /etc/mysql/my.cnf
-{% endhighlight %}&lt;/p&gt;
-
+&lt;pre class=&#34;bash&#34;&gt;&lt;code&gt;sudo vim /etc/mysql/my.cnf&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Hit &lt;code&gt;a&lt;/code&gt; on the keyboard to enter insert mode, scroll down to right below the comment and paste the following in.&lt;/p&gt;
-
-&lt;p&gt;{% highlight vim %}
-[mysqld]
-#&lt;/p&gt;
-
-&lt;h1 id=&#34;basic-settings&#34;&gt;* Basic Settings&lt;/h1&gt;
-
-&lt;p&gt;#
+&lt;pre class=&#34;bash&#34;&gt;&lt;code&gt;[mysqld]
+#
+# * Basic Settings
+#
 user            = mysql
 pid-file        = /var/run/mysqld/mysqld.pid
 socket          = /var/run/mysqld/mysqld.sock
@@ -212,129 +153,308 @@ datadir         = /var/lib/mysql
 tmpdir          = /tmp
 lc-messages-dir = /usr/share/mysql
 skip-external-locking
-#&lt;/p&gt;
-
-&lt;h1 id=&#34;instead-of-skip-networking-the-default-is-now-to-listen-only-on&#34;&gt;Instead of skip-networking the default is now to listen only on&lt;/h1&gt;
-
-&lt;h1 id=&#34;localhost-which-is-more-compatible-and-is-not-less-secure&#34;&gt;localhost which is more compatible and is not less secure.&lt;/h1&gt;
-
-&lt;p&gt;bind-address            = 0.0.0.0
-{% endhighlight %}&lt;/p&gt;
-
-&lt;p&gt;&lt;img class=&#34;custom&#34; src=&#34;{{site.img_path}}/fake_news_app/11.png&#34; width=&#34;50%&#34;&gt;&lt;/p&gt;
-
+#
+# Instead of skip-networking the default is now to listen only on
+# localhost which is more compatible and is not less secure.
+bind-address            = 0.0.0.0&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img class=&#34;custom&#34; src=&#34;../img/posts/fake_news_app/11.png&#34; width=&#34;50%&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Then tap &lt;code&gt;esc&lt;/code&gt; then &lt;code&gt;:&lt;/code&gt;, and type &lt;code&gt;wq!&lt;/code&gt; and hit &lt;code&gt;enter&lt;/code&gt; so save and exit. Then run the following command to restart MySQL.&lt;/p&gt;
-
-&lt;p&gt;{% highlight shell %}
-sudo /etc/init.d/mysql restart
-{% endhighlight %}&lt;/p&gt;
-
+&lt;pre class=&#34;bash&#34;&gt;&lt;code&gt;sudo /etc/init.d/mysql restart&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;The hard stuff is over!&lt;/p&gt;
-
-&lt;h1 id=&#34;create-app&#34;&gt;Create App&lt;/h1&gt;
-
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;create-app&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;&lt;span class=&#34;header-section-number&#34;&gt;4&lt;/span&gt; Create App&lt;/h1&gt;
 &lt;p&gt;This part is relatively easy as we are making a simple Shiny app using the miniUI. In this app we have 3 tabs:&lt;/p&gt;
-
-&lt;ol&gt;
+&lt;ol style=&#34;list-style-type: decimal&#34;&gt;
 &lt;li&gt;Tab 1: Users select whether they believe the news headline is Real / Fake and submit an email address&lt;/li&gt;
 &lt;li&gt;Tab 2: Users view their results and see mistakes highlighted in red and the percent of others who have gotten that headline correct&lt;/li&gt;
-&lt;li&gt;Tab 3: Users shown a &amp;ldquo;leaderboard&amp;rdquo; of correct responses based on domain. My idea was that this could be a competition among business schools.&lt;/li&gt;
+&lt;li&gt;Tab 3: Users shown a “leaderboard” of correct responses based on domain. My idea was that this could be a competition among business schools.&lt;/li&gt;
 &lt;/ol&gt;
-
-&lt;p&gt;To get this app running for yourself, clone the repo &lt;a href=&#34;https://github.com/jrfarrer/fake_news_app&#34; target=&#34;_blank&#34;&gt;https://github.com/jrfarrer/fake_news_app&lt;/a&gt; and then modify the credentials in &lt;code&gt;credentials.R&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;{% highlight r %}
-host &amp;lt;- &amp;ldquo;ec2-XXXXXXXXXXXX.compute-1.amazonaws.com&amp;rdquo;
-user &amp;lt;- &amp;ldquo;fake_news&amp;rdquo;
-password &amp;lt;- &amp;ldquo;XXXXXXXXXXXXXXX&amp;rdquo;
-mailbox_layer &amp;lt;- &amp;ldquo;XXXXXXXXXXXXXXX&amp;rdquo;
-{% endhighlight %}&lt;/p&gt;
-
-&lt;p&gt;You&amp;rsquo;ll recognize the first 3 credentials in the image above as related to the MySQL serve we setup. The last credential relates to &lt;a href=&#34;https://mailboxlayer.com/&#34; target=&#34;_blank&#34;&gt;mailboxlayer API&lt;/a&gt;, which is an email verification service. I use this to check whether the email address is a real email address. It is easy to signup for free and get an API key that you can paste in. With each call to the mailboxlayer API, you receive a score on the likelihood the provided address is legitimate. In the &lt;code&gt;app.R&lt;/code&gt; I set a threshold of 0.65 and also use the domain returned to check that it is a &lt;code&gt;.edu&lt;/code&gt; address to better support the leaderboard objective.&lt;/p&gt;
-
-&lt;h2 id=&#34;shiny-app-explained&#34;&gt;Shiny App Explained&lt;/h2&gt;
-
-&lt;p&gt;(1) Articles&lt;/p&gt;
-
-&lt;p&gt;The news headlines come from a pipe-delimited text file that I put together from information in this &lt;a href=&#34;https://github.com/BuzzFeedNews/2016-12-fake-news-survey&#34; target=&#34;_blank&#34;&gt;Buzzfeed repo&lt;/a&gt;.&lt;/p&gt;
-
+&lt;p&gt;To get this app running for yourself, clone the repo &lt;a href=&#34;https://github.com/jrfarrer/fake_news_app&#34; class=&#34;uri&#34;&gt;https://github.com/jrfarrer/fake_news_app&lt;/a&gt; and then modify the credentials in &lt;code&gt;credentials.R&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;host &amp;lt;- &amp;quot;ec2-XXXXXXXXXXXX.compute-1.amazonaws.com&amp;quot;
+user &amp;lt;- &amp;quot;fake_news&amp;quot;
+password &amp;lt;- &amp;quot;XXXXXXXXXXXXXXX&amp;quot;
+mailbox_layer &amp;lt;- &amp;quot;XXXXXXXXXXXXXXX&amp;quot;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;You’ll recognize the first 3 credentials in the image above as related to the MySQL serve we setup. The last credential relates to &lt;a href=&#34;https://mailboxlayer.com/&#34;&gt;mailboxlayer API&lt;/a&gt;, which is an email verification service. I use this to check whether the email address is a real email address. It is easy to signup for free and get an API key that you can paste in. With each call to the mailboxlayer API, you receive a score on the likelihood the provided address is legitimate. In the &lt;code&gt;app.R&lt;/code&gt; I set a threshold of 0.65 and also use the domain returned to check that it is a &lt;code&gt;.edu&lt;/code&gt; address to better support the leaderboard objective.&lt;/p&gt;
+&lt;div id=&#34;shiny-app-explained&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;span class=&#34;header-section-number&#34;&gt;4.1&lt;/span&gt; Shiny App Explained&lt;/h2&gt;
+&lt;div id=&#34;articles&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;&lt;span class=&#34;header-section-number&#34;&gt;4.1.1&lt;/span&gt; Articles&lt;/h3&gt;
+&lt;p&gt;The news headlines come from a pipe-delimited text file that I put together from information in this &lt;a href=&#34;https://github.com/BuzzFeedNews/2016-12-fake-news-survey&#34;&gt;Buzzfeed repo&lt;/a&gt;.&lt;/p&gt;
 &lt;script src=&#34;https://gist.github.com/jrfarrer/e92e700a3495506f279f3c4c7fbacbf0.js&#34;&gt;&lt;/script&gt;
-
-&lt;p&gt;(2) Bootstrap Toggles&lt;/p&gt;
-
-&lt;p&gt;One of the things shiny users might have noticed immediately is the &lt;a href=&#34;http://shiny.rstudio.com/gallery/widget-gallery.html&#34; target=&#34;_blank&#34;&gt;non-shiny widgets&lt;/a&gt;. &lt;a href=&#34;http://www.bootstraptoggle.com/&#34; target=&#34;_blank&#34;&gt;Bootstrap toogles&lt;/a&gt; seemed like the appropriate user interaction. I created these by creating checkboxes manually and then adding the stylesheet and javascript from Bootstrap.&lt;/p&gt;
-
-&lt;p&gt;{% highlight r %}
-isolate({
+&lt;/div&gt;
+&lt;div id=&#34;bootstrap-toggles&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;&lt;span class=&#34;header-section-number&#34;&gt;4.1.2&lt;/span&gt; Bootstrap Toggles&lt;/h3&gt;
+&lt;p&gt;One of the things shiny users might have noticed immediately is the &lt;a href=&#34;http://shiny.rstudio.com/gallery/widget-gallery.html&#34;&gt;non-shiny widgets&lt;/a&gt;. &lt;a href=&#34;http://www.bootstraptoggle.com/&#34;&gt;Bootstrap toogles&lt;/a&gt; seemed like the appropriate user interaction. I created these by creating checkboxes manually and then adding the stylesheet and javascript from Bootstrap.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;isolate({
   time_int &amp;lt;- round(as.numeric(Sys.time()) - as.numeric(as.POSIXct(Sys.Date())),0)
-})&lt;/p&gt;
-
-&lt;p&gt;output$toggles &amp;lt;- renderUI({&lt;/p&gt;
-
-&lt;p&gt;toggles &amp;lt;- paste0(&amp;rsquo;&lt;div class=&#34;checkbox&#34;&gt;
-                      &lt;label class=&#34;clearfix&#34;&gt;
-                        &lt;input id=&#39;, articles$id[randos[, time_int]],&#39; checked type=&#34;checkbox&#34; data-toggle=&#34;toggle&#34; data-on=&#34;Real&#34; data-off=&#34;Fake&#34; data-size=&#34;small&#34;&gt;&amp;rsquo;, articles$article[randos[, time_int]],&amp;rsquo;
-                      &lt;/label&gt;
-                  &lt;/div&gt;&amp;rsquo;)&lt;/p&gt;
-
-&lt;p&gt;HTML(paste0(&amp;rsquo;&lt;head&gt;
-              &lt;link rel=&#34;stylesheet&#34; type=&#34;text/css&#34; href=&#34;https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css&#34;&gt;
-              &lt;script type=&#34;text/javascript&#34; src=&#34;https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js&#34;&gt;&lt;/script&gt;
-          &lt;/head&gt;&amp;rsquo;, toggles))
 })
-{% endhighlight %}&lt;/p&gt;
 
+output$toggles &amp;lt;- renderUI({
+  
+  toggles &amp;lt;- paste0(&amp;#39;&amp;lt;div class=&amp;quot;checkbox&amp;quot;&amp;gt;
+                      &amp;lt;label class=&amp;quot;clearfix&amp;quot;&amp;gt;
+                        &amp;lt;input id=&amp;#39;, articles$id[randos[, time_int]],&amp;#39; checked type=&amp;quot;checkbox&amp;quot; data-toggle=&amp;quot;toggle&amp;quot; data-on=&amp;quot;Real&amp;quot; data-off=&amp;quot;Fake&amp;quot; data-size=&amp;quot;small&amp;quot;&amp;gt;&amp;#39;, articles$article[randos[, time_int]],&amp;#39; 
+                      &amp;lt;/label&amp;gt;
+                  &amp;lt;/div&amp;gt;&amp;#39;)
+  
+  HTML(paste0(&amp;#39;&amp;lt;head&amp;gt;
+              &amp;lt;link rel=&amp;quot;stylesheet&amp;quot; type=&amp;quot;text/css&amp;quot; href=&amp;quot;https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css&amp;quot;&amp;gt;
+              &amp;lt;script type=&amp;quot;text/javascript&amp;quot; src=&amp;quot;https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;
+          &amp;lt;/head&amp;gt;&amp;#39;, toggles)) 
+})&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;The &lt;code&gt;randos&lt;/code&gt; objected is created by &lt;code&gt;randos &amp;lt;- replicate(3600*24, sample(1:11))&lt;/code&gt; and is a means to have the order of the articles be different for every session. I created a matrix of different orders for every second of the day (86,400) which is then indexed by &lt;code&gt;time_int&lt;/code&gt; inside the server component. The isolate ensures this order is static so that the order appears the same on both the Headline and Results tabs.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;datatables&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;&lt;span class=&#34;header-section-number&#34;&gt;4.1.3&lt;/span&gt; Datatables&lt;/h3&gt;
+&lt;p&gt;I have used the &lt;a href=&#34;https://rstudio.github.io/DT/&#34;&gt;DT package&lt;/a&gt; on almost all my shiny projects, including the buttons extensions and the column and row selections features. This project is an example of just how easy it is to build a great looking table with the DT package.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cols &amp;lt;- ifelse(df2$`Actual` == df2$`You Selected`, NA,&amp;quot;#FCBBA1&amp;quot;)
 
-&lt;p&gt;(3) Datatables&lt;/p&gt;
-
-&lt;p&gt;I have used the &lt;a href=&#34;https://rstudio.github.io/DT/&#34; target=&#34;_blank&#34;&gt;DT package&lt;/a&gt; on almost all my shiny projects, including the buttons extensions and the column and row selections features. This project is an example of just how easy it is to build a great looking table with the DT package.&lt;/p&gt;
-
-&lt;p&gt;{% highlight r %}
-cols &amp;lt;- ifelse(df2$&lt;code&gt;Actual&lt;/code&gt; == df2$&lt;code&gt;You Selected&lt;/code&gt;, NA,&amp;ldquo;#FCBBA1&amp;rdquo;)&lt;/p&gt;
-
-&lt;p&gt;DT::datatable(df2
+DT::datatable(df2
               , rownames = FALSE
               , escape =  FALSE
               , options = list(
-                dom = &amp;rsquo;t&amp;rsquo;
+                dom = &amp;#39;t&amp;#39;
                 , pageLength = 11
                 , ordering = FALSE
-                , columnDefs = list(list(className = &amp;lsquo;dt-center&amp;rsquo;, targets = 1:3))
+                , columnDefs = list(list(className = &amp;#39;dt-center&amp;#39;, targets = 1:3))
               )
 ) %&amp;gt;% DT::formatStyle(columns = 1:4, valueColumns = 1, backgroundColor = styleEqual(df2$Article, cols)) %&amp;gt;%
-  DT::formatPercentage(4)&lt;/p&gt;
-
-&lt;p&gt;{% endhighlight %}&lt;/p&gt;
-
-&lt;h2 id=&#34;test-the-app&#34;&gt;Test the App&lt;/h2&gt;
-
+  DT::formatPercentage(4)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;test-the-app&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;span class=&#34;header-section-number&#34;&gt;4.2&lt;/span&gt; Test the App&lt;/h2&gt;
 &lt;p&gt;To test the app, change the comment of the last two lines to&lt;/p&gt;
-
-&lt;p&gt;{% highlight r %}
-#shinyApp(ui, server)
-runGadget(shinyApp(ui, server), viewer = paneViewer())
-{% endhighlight %}&lt;/p&gt;
-
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#shinyApp(ui, server)
+runGadget(shinyApp(ui, server), viewer = paneViewer())&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;highlight all and run (do not click &lt;code&gt;Run App&lt;/code&gt;). The app should appear in the RStudio Viewer:&lt;/p&gt;
-
-&lt;p&gt;&lt;img class=&#34;custom&#34; src=&#34;{{site.img_path}}/fake_news_app/12.png&#34; width=&#34;30%&#34;&gt;&lt;/p&gt;
-
+&lt;p&gt;&lt;img class=&#34;custom&#34; src=&#34;../img/posts/fake_news_app/12.png&#34; width=&#34;30%&#34;&gt;&lt;/p&gt;
 &lt;p&gt;If this works, you are ready to deploy (just remember to swap the line commenting above back to where it stood).&lt;/p&gt;
-
-&lt;h1 id=&#34;deploy&#34;&gt;Deploy&lt;/h1&gt;
-
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;deploy&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;&lt;span class=&#34;header-section-number&#34;&gt;5&lt;/span&gt; Deploy&lt;/h1&gt;
 &lt;p&gt;Luckily this part is quite straightforward.&lt;/p&gt;
-
 &lt;p&gt;Run the deployApp command&lt;/p&gt;
-
-&lt;p&gt;{% highlight r %}
-rsconnect::deployApp()
-{% endhighlight %}&lt;/p&gt;
-
-&lt;p&gt;&lt;img class=&#34;custom&#34; src=&#34;{{site.img_path}}/fake_news_app/13.png&#34; width=&#34;50%&#34;&gt;&lt;/p&gt;
-
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;rsconnect::deployApp()&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img class=&#34;custom&#34; src=&#34;../img/posts/fake_news_app/13.png&#34; width=&#34;50%&#34;&gt;&lt;/p&gt;
 &lt;p&gt;The first time this will take a while as all package dependencies are built. When you make a change, simply rerun the same command.&lt;/p&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>How to Setup RStudio on Amazon Lightsail</title>
+      <link>/post/how-to-setup-rstudio-on-amazon-lightsail/</link>
+      <pubDate>Thu, 29 Dec 2016 00:00:00 +0000</pubDate>
+      
+      <guid>/post/how-to-setup-rstudio-on-amazon-lightsail/</guid>
+      <description>&lt;div id=&#34;TOC&#34;&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#tldr&#34;&gt;&lt;span class=&#34;toc-section-number&#34;&gt;1&lt;/span&gt; tl;dr&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#setup-lightsail-instance&#34;&gt;&lt;span class=&#34;toc-section-number&#34;&gt;2&lt;/span&gt; Setup Lightsail Instance&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#swap-space&#34;&gt;&lt;span class=&#34;toc-section-number&#34;&gt;3&lt;/span&gt; Swap Space&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#rocker&#34;&gt;&lt;span class=&#34;toc-section-number&#34;&gt;4&lt;/span&gt; Rocker&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#rocker-usage&#34;&gt;&lt;span class=&#34;toc-section-number&#34;&gt;5&lt;/span&gt; Rocker Usage&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#headless-dropbox&#34;&gt;&lt;span class=&#34;toc-section-number&#34;&gt;6&lt;/span&gt; Headless Dropbox&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+
+&lt;div id=&#34;tldr&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;&lt;span class=&#34;header-section-number&#34;&gt;1&lt;/span&gt; tl;dr&lt;/h1&gt;
+&lt;p&gt;Guide to perform analyses in the cloud with RStudio on Amazon Lightsail&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;[This post is inspired by and extends upon a guide from &lt;a href=&#34;http://sas-and-r.blogspot.com/2016/12/rstudio-in-cloud-with-amazon-lightsail.html&#34;&gt;SAS and R&lt;/a&gt;]&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;In this post we will use the new &lt;a href=&#34;https://lightsail.aws.amazon.com/&#34;&gt;Amazon Lightsail&lt;/a&gt; to create an always-on RStudio enviornment in the cloud. With an older Macbook Air, the migration from local to cloud data processing and analysis has allowed me to forget about resource constraints.&lt;/p&gt;
+&lt;p&gt;&lt;img class = &#34;custom&#34; src=&#34;../img/posts/lightsail/lightsail_0.gif&#34; width=&#34;60%&#34;&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;setup-lightsail-instance&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;&lt;span class=&#34;header-section-number&#34;&gt;2&lt;/span&gt; Setup Lightsail Instance&lt;/h1&gt;
+&lt;p&gt;Lightsail is Amazon’s virtual private server (VPS) offering that makes spinning up a workspace in the cloud a breeze. In contrast to EC2, there is little provisioning involved and the pricing model is “no-nonsense” (i.e. transparent). You will notice that the interface is much more user-friendly than the EC2 Dashboard.&lt;/p&gt;
+&lt;ol style=&#34;list-style-type: decimal&#34;&gt;
+&lt;li&gt;Login into &lt;a href=&#34;https://lightsail.aws.amazon.com/&#34;&gt;Amazon Lightsail&lt;/a&gt; and create a new instance.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img class = &#34;custom&#34; src=&#34;../img/posts/lightsail/lightsail_1.png&#34; width=&#34;80%&#34;&gt;&lt;/p&gt;
+&lt;ol start=&#34;2&#34; style=&#34;list-style-type: decimal&#34;&gt;
+&lt;li&gt;Select &lt;strong&gt;Base OS&lt;/strong&gt; and &lt;strong&gt;Ubuntu&lt;/strong&gt;.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img class = &#34;custom&#34; src=&#34;../img/posts/lightsail/lightsail_2.png&#34; width=&#34;40%&#34;&gt;&lt;/p&gt;
+&lt;ol start=&#34;3&#34; style=&#34;list-style-type: decimal&#34;&gt;
+&lt;li&gt;I encourage you to use your own public key rather than a key from Amazon for ease of SSH’ing to your VPS. If you’re on OSX, your public key is likely in the following location:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre class=&#34;bash&#34;&gt;&lt;code&gt;~/.ssh/id_rsa.pub&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;If you haven’t setup a SSH key yet, the &lt;a href=&#34;https://help.github.com/articles/generating-an-ssh-key/&#34;&gt;Github guide&lt;/a&gt; is a good place to go.&lt;/p&gt;
+&lt;p&gt;For some reason, Amazon makes this difficult by using a regular file browser. You need to make hidden files viewable in Finder by running the two commands:&lt;/p&gt;
+&lt;pre class=&#34;bash&#34;&gt;&lt;code&gt;defaults write com.apple.finder AppleShowAllFiles YES
+killall Finder&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Finder will automatically relaunch. Navigate to &lt;code&gt;~/.ssh&lt;/code&gt; and drag that folder into the &lt;strong&gt;Upload a key pair&lt;/strong&gt; file dialog.&lt;/p&gt;
+&lt;p&gt;&lt;img class = &#34;custom&#34; src=&#34;../img/posts/lightsail/lightsail_3.gif&#34; width=&#34;60%&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Once the key pair is uploaded, run the following commands to hide hidden files again in Finder.&lt;/p&gt;
+&lt;pre class=&#34;bash&#34;&gt;&lt;code&gt;defaults write com.apple.finder AppleShowAllFiles N
+killall Finder&lt;/code&gt;&lt;/pre&gt;
+&lt;ol start=&#34;4&#34; style=&#34;list-style-type: decimal&#34;&gt;
+&lt;li&gt;Select the $5/month plan (that comes with a month free), name your instance anything (I chose &lt;em&gt;RStudio&lt;/em&gt;), and click &lt;strong&gt;Create&lt;/strong&gt;.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img class = &#34;custom&#34; src=&#34;../img/posts/lightsail/lightsail_4.png&#34; width=&#34;50%&#34;&gt;&lt;/p&gt;
+&lt;ol start=&#34;5&#34; style=&#34;list-style-type: decimal&#34;&gt;
+&lt;li&gt;While you are waiting for the server to spin up, click the three dots in the upper-right corner of the server and select &lt;strong&gt;Manage&lt;/strong&gt;. On the &lt;strong&gt;Networking&lt;/strong&gt; tab, under the &lt;strong&gt;Firewall&lt;/strong&gt; table, click &lt;strong&gt;+ Add Another&lt;/strong&gt;. Leave &lt;em&gt;Custom&lt;/em&gt; and &lt;em&gt;TCP&lt;/em&gt;, but change the range to just &lt;strong&gt;8787&lt;/strong&gt;. This will be the port we connect to the RStudio UI.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img class = &#34;custom&#34; src=&#34;../img/posts/lightsail/lightsail_5.png&#34; width=&#34;50%&#34;&gt;&lt;/p&gt;
+&lt;ol start=&#34;6&#34; style=&#34;list-style-type: decimal&#34;&gt;
+&lt;li&gt;After the instance is &lt;strong&gt;Running&lt;/strong&gt;, SSH into the server using the public IP address in the corner (do not worry, the one below has been deleted).&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img class = &#34;custom&#34; src=&#34;../img/posts/lightsail/lightsail_6.png&#34; width=&#34;50%&#34;&gt;&lt;/p&gt;
+&lt;pre class=&#34;bash&#34;&gt;&lt;code&gt;ssh ubuntu@54.209.145.59&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Say &lt;code&gt;yes&lt;/code&gt; to the recognition of your SSH key. You are now connected!&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;swap-space&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;&lt;span class=&#34;header-section-number&#34;&gt;3&lt;/span&gt; Swap Space&lt;/h1&gt;
+&lt;p&gt;The installation of some R packages can be very memory intensive (e.g. &lt;a href=&#34;https://cran.r-project.org/web/packages/tidytext/index.html&#34;&gt;tidytext&lt;/a&gt;) and the Lightsail VPS has only 512MB of memory. In order to make such installations possible, we need to use swap space. Swap space is a portion of virtual memory that is on the hard disk, used when RAM is full. Luckily the base tier has a 20GB SSD. These steps comes from a great tutorial by &lt;a href=&#34;https://www.digitalocean.com/community/tutorials/how-to-configure-virtual-memory-swap-file-on-a-vps&#34;&gt;DigitialOcean&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;On the VPS, run the &lt;code&gt;free&lt;/code&gt; command to see that currently there is no swap memory.&lt;/p&gt;
+&lt;pre class=&#34;bash&#34;&gt;&lt;code&gt;free -h&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img class = &#34;custom&#34; src=&#34;../img/posts/lightsail/lightsail_7.png&#34; width=&#34;45%&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Run the following commands to create a swap file called &lt;strong&gt;swap.img&lt;/strong&gt;, size it to be 2GB (2048k) and turn it on.&lt;/p&gt;
+&lt;pre class=&#34;bash&#34;&gt;&lt;code&gt;cd /var
+sudo touch swap.img
+sudo chmod 600 swap.img
+sudo dd if=/dev/zero of=/var/swap.img bs=2048k count=1000
+sudo mkswap /var/swap.img
+sudo swapon /var/swap.img&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now run &lt;code&gt;free&lt;/code&gt; again to see the 2GB is now swap space.&lt;/p&gt;
+&lt;pre class=&#34;bash&#34;&gt;&lt;code&gt;free -h&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img class = &#34;custom&#34; src=&#34;../img/posts/lightsail/lightsail_8.png&#34; width=&#34;45%&#34;&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;rocker&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;&lt;span class=&#34;header-section-number&#34;&gt;4&lt;/span&gt; Rocker&lt;/h1&gt;
+&lt;ol style=&#34;list-style-type: decimal&#34;&gt;
+&lt;li&gt;Download &lt;a href=&#34;https://www.docker.com/&#34;&gt;Docker&lt;/a&gt; by running and clicking &lt;strong&gt;Y&lt;/strong&gt; to install.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre class=&#34;bash&#34;&gt;&lt;code&gt;sudo apt-get install docker.io&lt;/code&gt;&lt;/pre&gt;
+&lt;ol start=&#34;2&#34; style=&#34;list-style-type: decimal&#34;&gt;
+&lt;li&gt;Start the Docker service by running&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre class=&#34;bash&#34;&gt;&lt;code&gt;sudo service docker start&lt;/code&gt;&lt;/pre&gt;
+&lt;ol start=&#34;3&#34; style=&#34;list-style-type: decimal&#34;&gt;
+&lt;li&gt;Run the following command to start the &lt;a href=&#34;https://hub.docker.com/u/rocker/&#34;&gt;Rocker&lt;/a&gt; file&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre class=&#34;bash&#34;&gt;&lt;code&gt;sudo docker run -d -p 8787:8787 -e ROOT=TRUE rocker/hadleyverse&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The first time, this will require a download and extraction of the file:&lt;/p&gt;
+&lt;p&gt;In the run command above,&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;-d indicates the container starts in detached mode&lt;/li&gt;
+&lt;li&gt;-p publishes a container᾿s port to a port on the host (allowing us to use 8787 to access RStudio in the browser)&lt;/li&gt;
+&lt;li&gt;-e sets an environment variable, in our case enabling root access&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start=&#34;4&#34; style=&#34;list-style-type: decimal&#34;&gt;
+&lt;li&gt;In the browser, navigate to &lt;code&gt;&amp;lt;VPS IP address&amp;gt;:8787&lt;/code&gt;. Username = &lt;code&gt;rstudio&lt;/code&gt; and password = &lt;code&gt;rstudio&lt;/code&gt;.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img class = &#34;custom&#34; src=&#34;../img/posts/lightsail/lightsail_9.png&#34; width=&#34;40%&#34;&gt;&lt;/p&gt;
+&lt;ol start=&#34;5&#34; style=&#34;list-style-type: decimal&#34;&gt;
+&lt;li&gt;You’re using RStudio in the cloud!&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img class = &#34;custom&#34; src=&#34;../img/posts/lightsail/lightsail_10.png&#34; width=&#34;60%&#34;&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;rocker-usage&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;&lt;span class=&#34;header-section-number&#34;&gt;5&lt;/span&gt; Rocker Usage&lt;/h1&gt;
+&lt;div id=&#34;installing-packages&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;span class=&#34;header-section-number&#34;&gt;5.1&lt;/span&gt; Installing Packages&lt;/h2&gt;
+&lt;p&gt;You are going to want to customize your docker container for future R-ing. Let’s bookmark the webpage and get started. Install your favorite packages (some that use g++ will take a bit longer but will finish thanks to the swap memory). Change RStudio settings, such as font size and syntax highlighting.&lt;/p&gt;
+&lt;p&gt;If there are external dependencies (i.e. for &lt;a href=&#34;https://cran.r-project.org/web/packages/rattle/index.html&#34;&gt;Rattle&lt;/a&gt;) you need to install them in the docker container. Let’s do this for Rattle:&lt;/p&gt;
+&lt;ol style=&#34;list-style-type: decimal&#34;&gt;
+&lt;li&gt;To view active containers, run&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre class=&#34;bash&#34;&gt;&lt;code&gt;sudo docker ps&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img class = &#34;custom&#34; src=&#34;../img/posts/lightsail/lightsail_11.png&#34; width=&#34;45%&#34;&gt;&lt;/p&gt;
+&lt;ol start=&#34;2&#34; style=&#34;list-style-type: decimal&#34;&gt;
+&lt;li&gt;To start bash shell for the container, run the following command replacing the &lt;code&gt;&amp;lt;container-id&amp;gt;&lt;/code&gt; with the string found above.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre class=&#34;bash&#34;&gt;&lt;code&gt;sudo docker exec -it &amp;lt;container-id&amp;gt; bash&lt;/code&gt;&lt;/pre&gt;
+&lt;ol start=&#34;3&#34; style=&#34;list-style-type: decimal&#34;&gt;
+&lt;li&gt;Install libgtk2.0-dev, by running typing &lt;strong&gt;Y&lt;/strong&gt; after the second command:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre class=&#34;bash&#34;&gt;&lt;code&gt;sudo apt-get update
+sudo apt-get install wajig 
+sudo wajig install libgtk2.0-dev&lt;/code&gt;&lt;/pre&gt;
+&lt;ol start=&#34;4&#34; style=&#34;list-style-type: decimal&#34;&gt;
+&lt;li&gt;You are now set to install &lt;strong&gt;rattle&lt;/strong&gt; in R in RStudio&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;install.packages(&amp;#39;rattle&amp;#39;)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;saving-a-container&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;span class=&#34;header-section-number&#34;&gt;5.2&lt;/span&gt; Saving a Container&lt;/h2&gt;
+&lt;p&gt;You do not need to close the Docker container, but it’s a good idea to save the container once you have it in a condition you like it.&lt;/p&gt;
+&lt;p&gt;To the save your current container, find the container id and run the commit command:&lt;/p&gt;
+&lt;pre class=&#34;bash&#34;&gt;&lt;code&gt;sudo docker ps
+sudo docker commit -m &amp;quot;tidyverse + my packages&amp;quot; &amp;lt;container id&amp;gt;  rstudio2&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;To see all images&lt;/p&gt;
+&lt;pre class=&#34;bash&#34;&gt;&lt;code&gt;sudo docker images&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img class = &#34;custom&#34; src=&#34;../img/posts/lightsail/lightsail_12.png&#34; width=&#34;45%&#34;&gt;&lt;/p&gt;
+&lt;p&gt;You should see &lt;strong&gt;rocker/hadleyverse&lt;/strong&gt; and your new container. Now, kill your original container and start the new one. The command below actually kills all open containers.&lt;/p&gt;
+&lt;pre class=&#34;bash&#34;&gt;&lt;code&gt;sudo docker stop $(sudo docker ps -a -q)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Then start your newly saved container:&lt;/p&gt;
+&lt;pre class=&#34;bash&#34;&gt;&lt;code&gt;sudo docker run -d -p 8787:8787 -e ROOT=TRUE rstudio2&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;headless-dropbox&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;&lt;span class=&#34;header-section-number&#34;&gt;6&lt;/span&gt; Headless Dropbox&lt;/h1&gt;
+&lt;p&gt;I found that this setup was not too useful unless I had data transferring to the Docker container running RStudio. A good solution here is Dropbox. All my work is stored in Dropbox and I have a Dropbox account that runs on an EC2 instance and automatically downloads university course files from &lt;a href=&#34;https://www.canvaslms.com/&#34;&gt;Canvas&lt;/a&gt;, the learning management system at my university. So, if my professor adds a new .R file or dataset, I immediately have access in RStudio on Lightsail.&lt;/p&gt;
+&lt;div id=&#34;install-python2.7&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;span class=&#34;header-section-number&#34;&gt;6.1&lt;/span&gt; Install Python2.7&lt;/h2&gt;
+&lt;p&gt;We need to install python2.7 because the &lt;a href=&#34;http://www.dropboxwiki.com/tips-and-tricks/using-the-official-dropbox-command-line-interface-cli&#34;&gt;python script&lt;/a&gt; that Dropbox created is for python2.7.&lt;/p&gt;
+&lt;ol style=&#34;list-style-type: decimal&#34;&gt;
+&lt;li&gt;Install a bunch of dependencies:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre class=&#34;bash&#34;&gt;&lt;code&gt;sudo apt-get update
+sudo apt-get install build-essential checkinstall
+sudo apt-get install libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev&lt;/code&gt;&lt;/pre&gt;
+&lt;ol start=&#34;2&#34; style=&#34;list-style-type: decimal&#34;&gt;
+&lt;li&gt;Download and extract python2.7&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre class=&#34;bash&#34;&gt;&lt;code&gt;wget https://www.python.org/ftp/python/2.7.12/Python-2.7.12.tgz
+tar -xvf Python-2.7.12.tgz
+cd Python-2.7.12&lt;/code&gt;&lt;/pre&gt;
+&lt;ol start=&#34;3&#34; style=&#34;list-style-type: decimal&#34;&gt;
+&lt;li&gt;Perform the installation. For the last line &lt;code&gt;checkinstall&lt;/code&gt;, you’ll need to respond to a lot of questions and it will take a bit.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre class=&#34;bash&#34;&gt;&lt;code&gt;./configure
+make
+sudo checkinstall&lt;/code&gt;&lt;/pre&gt;
+&lt;ol start=&#34;4&#34; style=&#34;list-style-type: decimal&#34;&gt;
+&lt;li&gt;Check that the default python version is now 2.7&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre class=&#34;bash&#34;&gt;&lt;code&gt;python -V&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img class = &#34;custom&#34; src=&#34;../img/posts/lightsail/lightsail_13.png&#34; width=&#34;20%&#34;&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;install-dropbox&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;span class=&#34;header-section-number&#34;&gt;6.2&lt;/span&gt; Install Dropbox&lt;/h2&gt;
+&lt;ol style=&#34;list-style-type: decimal&#34;&gt;
+&lt;li&gt;Download and start the daemon&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre class=&#34;bash&#34;&gt;&lt;code&gt;cd ~ &amp;amp;&amp;amp; wget -O - &amp;quot;https://www.dropbox.com/download?plat=lnx.x86_64&amp;quot; | tar xzf -
+~/.dropbox-dist/dropboxd&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;After the last command you’ll see&lt;/p&gt;
+&lt;p&gt;&lt;img class = &#34;custom&#34; src=&#34;../img/posts/lightsail/lightsail_14.png&#34; width=&#34;40%&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Take the URL and paste it into the browser to connect to your Dropbox account.&lt;/p&gt;
+&lt;p&gt;&lt;img class = &#34;custom&#34; src=&#34;../img/posts/lightsail/lightsail_15.png&#34; width=&#34;50%&#34;&gt;&lt;/p&gt;
+&lt;ol start=&#34;2&#34; style=&#34;list-style-type: decimal&#34;&gt;
+&lt;li&gt;Download Dropbox’s python script to control Dropbox:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre class=&#34;bash&#34;&gt;&lt;code&gt;mkdir -p ~/bin
+wget -O ~/bin/dropbox.py &amp;quot;https://www.dropbox.com/download?dl=packages/dropbox.py&amp;quot;
+chmod +x ~/bin/dropbox.py
+python2.7 ~/bin/dropbox.py start
+python2.7 ~/bin/dropbox.py autostart y&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;You’ll now see the Dropbox folder in your &lt;strong&gt;ubuntu&lt;/strong&gt; directory.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;run-docker-container-with-dropbox&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;span class=&#34;header-section-number&#34;&gt;6.3&lt;/span&gt; Run Docker Container with Dropbox&lt;/h2&gt;
+&lt;p&gt;Now with Dropbox set up, you can use the -v switch to attach the Dropbox folder (i.e. volume) to your Docker container.&lt;/p&gt;
+&lt;pre class=&#34;bash&#34;&gt;&lt;code&gt;sudo docker run -d -e ROOT=TRUE -v /home/ubuntu/Dropbox:/home/rstudio/Dropbox -p 8787:8787 rstudio2&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now, you can see the Dropbox folder in the &lt;strong&gt;Files&lt;/strong&gt; pane.&lt;/p&gt;
+&lt;p&gt;&lt;img class = &#34;custom&#34; src=&#34;../img/posts/lightsail/lightsail_16.png&#34; width=&#34;60%&#34;&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
 </description>
     </item>
     

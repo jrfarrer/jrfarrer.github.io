@@ -239,8 +239,17 @@
     
     <url>
     
-      <loc>/post/2016-12-30-news-app/</loc>
+      <loc>/post/how-to-build-a-mobile-shiny-app-in-an-hour/</loc>
       <lastmod>2016-12-30T00:00:00+00:00</lastmod>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>/post/how-to-setup-rstudio-on-amazon-lightsail/</loc>
+      <lastmod>2016-12-29T00:00:00+00:00</lastmod>
     </url>
     
   
@@ -369,6 +378,16 @@
     
     <url>
     
+      <loc>/tags/lightsail/</loc>
+      <lastmod>2016-12-29T00:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    
+    <url>
+    
       <loc>/tags/mktg776/</loc>
       <lastmod>2017-04-05T00:00:00+00:00</lastmod>
       <priority>0</priority>
@@ -438,6 +457,16 @@
     
     <url>
     
+      <loc>/tags/rstudio/</loc>
+      <lastmod>2016-12-29T00:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    
+    <url>
+    
       <loc>/tags/shiny/</loc>
       <lastmod>2016-12-30T00:00:00+00:00</lastmod>
       <priority>0</priority>
@@ -470,6 +499,16 @@
     
       <loc>/tags/</loc>
       <lastmod>2017-01-01T00:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>/tags/vps/</loc>
+      <lastmod>2016-12-29T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     

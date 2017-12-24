@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="theme" content="hugo-academic">
+  <meta name="generator" content="Hugo 0.31.1" />
+  <meta name="author" content="Jordan Farrer">
+  <meta name="description" content="MBA Student">
+
+  
+  <link rel="alternate" hreflang="en-us" href="../../post/how-to-setup-rstudio-on-amazon-lightsail/">
+
+  
+  
+
+
+  
+
+  
+  
+  
+  
+    
+  
+  
+    
+    
+      
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+      
+    
+  
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha512-6MXa8B6uaO18Hid6blRMetEIoPqHf7Ux1tnyIQdpt9qI5OACx7C+O3IVTr98vwGnlcg0LOLa02i9Y1HpVhlfiw==" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.1/css/academicons.min.css" integrity="sha512-NThgw3XKQ1absAahW6to7Ey42uycrVvfNfyjqcFNgCmOCQ5AR4AO0SiXrN+8ZtYeappp56lk1WtvjVmEa+VR6A==" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha512-SfTiTlX6kk+qitfevl/7LibUOeJWlt9rbyDn92a1DqWOw9vWG2MFoays0sgObmWazO5BQPiFucnnEAjpAB+/Sw==" crossorigin="anonymous">
+  
+  
+  
+  
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Montserrat:400,700%7cRoboto:400,400italic,700%7cRoboto&#43;Mono">
+  
+  <link rel="stylesheet" href="../../styles.css">
+  
+
+  
+    <script>
+      window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+      ga('create', 'UA-89515063-1', 'auto');
+      ga('require', 'eventTracker');
+      ga('require', 'outboundLinkTracker');
+      ga('require', 'urlChangeTracker');
+      ga('send', 'pageview');
+    </script>
+    <script async src="//www.google-analytics.com/analytics.js"></script>
+    
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/autotrack/2.4.1/autotrack.js" integrity="sha512-HUmooslVKj4m6OBu0OgzjXXr+QuFYy/k7eLI5jdeEy/F4RSgMn6XRWRGkFi5IFaFgy7uFTkegp3Z0XnJf3Jq+g==" crossorigin="anonymous"></script>
+    
+  
+
+  
+  <link rel="alternate" href="../../index.xml" type="application/rss+xml" title="Jordan Farrer">
+  <link rel="feed" href="../../index.xml" type="application/rss+xml" title="Jordan Farrer">
+  
+
+  <link rel="manifest" href="../../site.webmanifest">
+  <link rel="icon" type="image/png" href="../../img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="../../img/icon-192.png">
+
+  <link rel="canonical" href="../../post/how-to-setup-rstudio-on-amazon-lightsail/">
+
+  <meta property="twitter:card" content="summary_large_image">
+  
+  <meta property="og:site_name" content="Jordan Farrer">
+  <meta property="og:url" content="/post/how-to-setup-rstudio-on-amazon-lightsail/">
+  <meta property="og:title" content="How to Setup RStudio on Amazon Lightsail | Jordan Farrer">
+  <meta property="og:description" content="">
+  <meta property="og:locale" content="en-us">
+  
+  <meta property="article:published_time" content="2016-12-29T00:00:00&#43;00:00">
+  
+  <meta property="article:modified_time" content="2016-12-29T00:00:00&#43;00:00">
+  
+
+  
+
+  <title>How to Setup RStudio on Amazon Lightsail | Jordan Farrer</title>
+
+</head>
+<body id="top" data-spy="scroll" data-target="#toc" data-offset="71" >
+
+<nav class="navbar navbar-default navbar-fixed-top" id="navbar-main">
+  <div class="container">
+
+    
+    <div class="navbar-header">
+      
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+              data-target=".navbar-collapse" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      
+      <a class="navbar-brand" href="../../">Jordan Farrer</a>
+    </div>
+
+    
+    <div class="collapse navbar-collapse">
+
+      
+      
+      <ul class="nav navbar-nav navbar-right">
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="../../#about">
+            
+            <span>Home</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="../../#projects">
+            
+            <span>Projects</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="../../#posts">
+            
+            <span>Posts</span>
+            
+          </a>
+        </li>
+
+        
+        
+      
+
+      
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+<article class="article" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+  <div class="article-container">
+    <div class="article-inner">
+      <h1 itemprop="name">How to Setup RStudio on Amazon Lightsail</h1>
+
+      
+
+<div class="article-metadata">
+
+  <span class="article-date">
+    
+    <time datetime="2016-12-29 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+      Dec 29, 2016
+    </time>
+  </span>
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    6 min read
+  </span>
+  
+
+  
+  
+
+  
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fa fa-folder"></i>
+    
+    <a href="../../categories/r">R</a
+    >
+    
+  </span>
+  
+  
+
+  
+  
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    <li>
+      <a class="twitter"
+         href="https://twitter.com/intent/tweet?text=How%20to%20Setup%20RStudio%20on%20Amazon%20Lightsail&amp;url=%2fpost%2fhow-to-setup-rstudio-on-amazon-lightsail%2f"
+         target="_blank" rel="noopener">
+        <i class="fa fa-twitter"></i>
+      </a>
+    </li>
+    <li>
+      <a class="facebook"
+         href="https://www.facebook.com/sharer.php?u=%2fpost%2fhow-to-setup-rstudio-on-amazon-lightsail%2f"
+         target="_blank" rel="noopener">
+        <i class="fa fa-facebook"></i>
+      </a>
+    </li>
+    <li>
+      <a class="linkedin"
+         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=%2fpost%2fhow-to-setup-rstudio-on-amazon-lightsail%2f&amp;title=How%20to%20Setup%20RStudio%20on%20Amazon%20Lightsail"
+         target="_blank" rel="noopener">
+        <i class="fa fa-linkedin"></i>
+      </a>
+    </li>
+    <li>
+      <a class="email"
+         href="mailto:?subject=How%20to%20Setup%20RStudio%20on%20Amazon%20Lightsail&amp;body=%2fpost%2fhow-to-setup-rstudio-on-amazon-lightsail%2f">
+        <i class="fa fa-envelope"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+  
+
+</div>
+
+
+      <div class="article-style" itemprop="articleBody">
+        <div id="TOC">
+<ul>
+<li><a href="#tldr"><span class="toc-section-number">1</span> tl;dr</a></li>
+<li><a href="#setup-lightsail-instance"><span class="toc-section-number">2</span> Setup Lightsail Instance</a></li>
+<li><a href="#swap-space"><span class="toc-section-number">3</span> Swap Space</a></li>
+<li><a href="#rocker"><span class="toc-section-number">4</span> Rocker</a></li>
+<li><a href="#rocker-usage"><span class="toc-section-number">5</span> Rocker Usage</a></li>
+<li><a href="#headless-dropbox"><span class="toc-section-number">6</span> Headless Dropbox</a></li>
+</ul>
+</div>
+
+<div id="tldr" class="section level1">
+<h1><span class="header-section-number">1</span> tl;dr</h1>
+<p>Guide to perform analyses in the cloud with RStudio on Amazon Lightsail</p>
+<p><em>[This post is inspired by and extends upon a guide from <a href="http://sas-and-r.blogspot.com/2016/12/rstudio-in-cloud-with-amazon-lightsail.html">SAS and R</a>]</em></p>
+<p>In this post we will use the new <a href="https://lightsail.aws.amazon.com/">Amazon Lightsail</a> to create an always-on RStudio enviornment in the cloud. With an older Macbook Air, the migration from local to cloud data processing and analysis has allowed me to forget about resource constraints.</p>
+<p><img class = "custom" src="../../img/posts/lightsail/lightsail_0.gif" width="60%"></p>
+</div>
+<div id="setup-lightsail-instance" class="section level1">
+<h1><span class="header-section-number">2</span> Setup Lightsail Instance</h1>
+<p>Lightsail is Amazon’s virtual private server (VPS) offering that makes spinning up a workspace in the cloud a breeze. In contrast to EC2, there is little provisioning involved and the pricing model is “no-nonsense” (i.e. transparent). You will notice that the interface is much more user-friendly than the EC2 Dashboard.</p>
+<ol style="list-style-type: decimal">
+<li>Login into <a href="https://lightsail.aws.amazon.com/">Amazon Lightsail</a> and create a new instance.</li>
+</ol>
+<p><img class = "custom" src="../../img/posts/lightsail/lightsail_1.png" width="80%"></p>
+<ol start="2" style="list-style-type: decimal">
+<li>Select <strong>Base OS</strong> and <strong>Ubuntu</strong>.</li>
+</ol>
+<p><img class = "custom" src="../../img/posts/lightsail/lightsail_2.png" width="40%"></p>
+<ol start="3" style="list-style-type: decimal">
+<li>I encourage you to use your own public key rather than a key from Amazon for ease of SSH’ing to your VPS. If you’re on OSX, your public key is likely in the following location:</li>
+</ol>
+<pre class="bash"><code>~/.ssh/id_rsa.pub</code></pre>
+<p>If you haven’t setup a SSH key yet, the <a href="https://help.github.com/articles/generating-an-ssh-key/">Github guide</a> is a good place to go.</p>
+<p>For some reason, Amazon makes this difficult by using a regular file browser. You need to make hidden files viewable in Finder by running the two commands:</p>
+<pre class="bash"><code>defaults write com.apple.finder AppleShowAllFiles YES
+killall Finder</code></pre>
+<p>Finder will automatically relaunch. Navigate to <code>~/.ssh</code> and drag that folder into the <strong>Upload a key pair</strong> file dialog.</p>
+<p><img class = "custom" src="../../img/posts/lightsail/lightsail_3.gif" width="60%"></p>
+<p>Once the key pair is uploaded, run the following commands to hide hidden files again in Finder.</p>
+<pre class="bash"><code>defaults write com.apple.finder AppleShowAllFiles N
+killall Finder</code></pre>
+<ol start="4" style="list-style-type: decimal">
+<li>Select the $5/month plan (that comes with a month free), name your instance anything (I chose <em>RStudio</em>), and click <strong>Create</strong>.</li>
+</ol>
+<p><img class = "custom" src="../../img/posts/lightsail/lightsail_4.png" width="50%"></p>
+<ol start="5" style="list-style-type: decimal">
+<li>While you are waiting for the server to spin up, click the three dots in the upper-right corner of the server and select <strong>Manage</strong>. On the <strong>Networking</strong> tab, under the <strong>Firewall</strong> table, click <strong>+ Add Another</strong>. Leave <em>Custom</em> and <em>TCP</em>, but change the range to just <strong>8787</strong>. This will be the port we connect to the RStudio UI.</li>
+</ol>
+<p><img class = "custom" src="../../img/posts/lightsail/lightsail_5.png" width="50%"></p>
+<ol start="6" style="list-style-type: decimal">
+<li>After the instance is <strong>Running</strong>, SSH into the server using the public IP address in the corner (do not worry, the one below has been deleted).</li>
+</ol>
+<p><img class = "custom" src="../../img/posts/lightsail/lightsail_6.png" width="50%"></p>
+<pre class="bash"><code>ssh ubuntu@54.209.145.59</code></pre>
+<p>Say <code>yes</code> to the recognition of your SSH key. You are now connected!</p>
+</div>
+<div id="swap-space" class="section level1">
+<h1><span class="header-section-number">3</span> Swap Space</h1>
+<p>The installation of some R packages can be very memory intensive (e.g. <a href="https://cran.r-project.org/web/packages/tidytext/index.html">tidytext</a>) and the Lightsail VPS has only 512MB of memory. In order to make such installations possible, we need to use swap space. Swap space is a portion of virtual memory that is on the hard disk, used when RAM is full. Luckily the base tier has a 20GB SSD. These steps comes from a great tutorial by <a href="https://www.digitalocean.com/community/tutorials/how-to-configure-virtual-memory-swap-file-on-a-vps">DigitialOcean</a>.</p>
+<p>On the VPS, run the <code>free</code> command to see that currently there is no swap memory.</p>
+<pre class="bash"><code>free -h</code></pre>
+<p><img class = "custom" src="../../img/posts/lightsail/lightsail_7.png" width="45%"></p>
+<p>Run the following commands to create a swap file called <strong>swap.img</strong>, size it to be 2GB (2048k) and turn it on.</p>
+<pre class="bash"><code>cd /var
+sudo touch swap.img
+sudo chmod 600 swap.img
+sudo dd if=/dev/zero of=/var/swap.img bs=2048k count=1000
+sudo mkswap /var/swap.img
+sudo swapon /var/swap.img</code></pre>
+<p>Now run <code>free</code> again to see the 2GB is now swap space.</p>
+<pre class="bash"><code>free -h</code></pre>
+<p><img class = "custom" src="../../img/posts/lightsail/lightsail_8.png" width="45%"></p>
+</div>
+<div id="rocker" class="section level1">
+<h1><span class="header-section-number">4</span> Rocker</h1>
+<ol style="list-style-type: decimal">
+<li>Download <a href="https://www.docker.com/">Docker</a> by running and clicking <strong>Y</strong> to install.</li>
+</ol>
+<pre class="bash"><code>sudo apt-get install docker.io</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>Start the Docker service by running</li>
+</ol>
+<pre class="bash"><code>sudo service docker start</code></pre>
+<ol start="3" style="list-style-type: decimal">
+<li>Run the following command to start the <a href="https://hub.docker.com/u/rocker/">Rocker</a> file</li>
+</ol>
+<pre class="bash"><code>sudo docker run -d -p 8787:8787 -e ROOT=TRUE rocker/hadleyverse</code></pre>
+<p>The first time, this will require a download and extraction of the file:</p>
+<p>In the run command above,</p>
+<ul>
+<li>-d indicates the container starts in detached mode</li>
+<li>-p publishes a container᾿s port to a port on the host (allowing us to use 8787 to access RStudio in the browser)</li>
+<li>-e sets an environment variable, in our case enabling root access</li>
+</ul>
+<ol start="4" style="list-style-type: decimal">
+<li>In the browser, navigate to <code>&lt;VPS IP address&gt;:8787</code>. Username = <code>rstudio</code> and password = <code>rstudio</code>.</li>
+</ol>
+<p><img class = "custom" src="../../img/posts/lightsail/lightsail_9.png" width="40%"></p>
+<ol start="5" style="list-style-type: decimal">
+<li>You’re using RStudio in the cloud!</li>
+</ol>
+<p><img class = "custom" src="../../img/posts/lightsail/lightsail_10.png" width="60%"></p>
+</div>
+<div id="rocker-usage" class="section level1">
+<h1><span class="header-section-number">5</span> Rocker Usage</h1>
+<div id="installing-packages" class="section level2">
+<h2><span class="header-section-number">5.1</span> Installing Packages</h2>
+<p>You are going to want to customize your docker container for future R-ing. Let’s bookmark the webpage and get started. Install your favorite packages (some that use g++ will take a bit longer but will finish thanks to the swap memory). Change RStudio settings, such as font size and syntax highlighting.</p>
+<p>If there are external dependencies (i.e. for <a href="https://cran.r-project.org/web/packages/rattle/index.html">Rattle</a>) you need to install them in the docker container. Let’s do this for Rattle:</p>
+<ol style="list-style-type: decimal">
+<li>To view active containers, run</li>
+</ol>
+<pre class="bash"><code>sudo docker ps</code></pre>
+<p><img class = "custom" src="../../img/posts/lightsail/lightsail_11.png" width="45%"></p>
+<ol start="2" style="list-style-type: decimal">
+<li>To start bash shell for the container, run the following command replacing the <code>&lt;container-id&gt;</code> with the string found above.</li>
+</ol>
+<pre class="bash"><code>sudo docker exec -it &lt;container-id&gt; bash</code></pre>
+<ol start="3" style="list-style-type: decimal">
+<li>Install libgtk2.0-dev, by running typing <strong>Y</strong> after the second command:</li>
+</ol>
+<pre class="bash"><code>sudo apt-get update
+sudo apt-get install wajig 
+sudo wajig install libgtk2.0-dev</code></pre>
+<ol start="4" style="list-style-type: decimal">
+<li>You are now set to install <strong>rattle</strong> in R in RStudio</li>
+</ol>
+<pre class="r"><code>install.packages(&#39;rattle&#39;)</code></pre>
+</div>
+<div id="saving-a-container" class="section level2">
+<h2><span class="header-section-number">5.2</span> Saving a Container</h2>
+<p>You do not need to close the Docker container, but it’s a good idea to save the container once you have it in a condition you like it.</p>
+<p>To the save your current container, find the container id and run the commit command:</p>
+<pre class="bash"><code>sudo docker ps
+sudo docker commit -m &quot;tidyverse + my packages&quot; &lt;container id&gt;  rstudio2</code></pre>
+<p>To see all images</p>
+<pre class="bash"><code>sudo docker images</code></pre>
+<p><img class = "custom" src="../../img/posts/lightsail/lightsail_12.png" width="45%"></p>
+<p>You should see <strong>rocker/hadleyverse</strong> and your new container. Now, kill your original container and start the new one. The command below actually kills all open containers.</p>
+<pre class="bash"><code>sudo docker stop $(sudo docker ps -a -q)</code></pre>
+<p>Then start your newly saved container:</p>
+<pre class="bash"><code>sudo docker run -d -p 8787:8787 -e ROOT=TRUE rstudio2</code></pre>
+</div>
+</div>
+<div id="headless-dropbox" class="section level1">
+<h1><span class="header-section-number">6</span> Headless Dropbox</h1>
+<p>I found that this setup was not too useful unless I had data transferring to the Docker container running RStudio. A good solution here is Dropbox. All my work is stored in Dropbox and I have a Dropbox account that runs on an EC2 instance and automatically downloads university course files from <a href="https://www.canvaslms.com/">Canvas</a>, the learning management system at my university. So, if my professor adds a new .R file or dataset, I immediately have access in RStudio on Lightsail.</p>
+<div id="install-python2.7" class="section level2">
+<h2><span class="header-section-number">6.1</span> Install Python2.7</h2>
+<p>We need to install python2.7 because the <a href="http://www.dropboxwiki.com/tips-and-tricks/using-the-official-dropbox-command-line-interface-cli">python script</a> that Dropbox created is for python2.7.</p>
+<ol style="list-style-type: decimal">
+<li>Install a bunch of dependencies:</li>
+</ol>
+<pre class="bash"><code>sudo apt-get update
+sudo apt-get install build-essential checkinstall
+sudo apt-get install libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>Download and extract python2.7</li>
+</ol>
+<pre class="bash"><code>wget https://www.python.org/ftp/python/2.7.12/Python-2.7.12.tgz
+tar -xvf Python-2.7.12.tgz
+cd Python-2.7.12</code></pre>
+<ol start="3" style="list-style-type: decimal">
+<li>Perform the installation. For the last line <code>checkinstall</code>, you’ll need to respond to a lot of questions and it will take a bit.</li>
+</ol>
+<pre class="bash"><code>./configure
+make
+sudo checkinstall</code></pre>
+<ol start="4" style="list-style-type: decimal">
+<li>Check that the default python version is now 2.7</li>
+</ol>
+<pre class="bash"><code>python -V</code></pre>
+<p><img class = "custom" src="../../img/posts/lightsail/lightsail_13.png" width="20%"></p>
+</div>
+<div id="install-dropbox" class="section level2">
+<h2><span class="header-section-number">6.2</span> Install Dropbox</h2>
+<ol style="list-style-type: decimal">
+<li>Download and start the daemon</li>
+</ol>
+<pre class="bash"><code>cd ~ &amp;&amp; wget -O - &quot;https://www.dropbox.com/download?plat=lnx.x86_64&quot; | tar xzf -
+~/.dropbox-dist/dropboxd</code></pre>
+<p>After the last command you’ll see</p>
+<p><img class = "custom" src="../../img/posts/lightsail/lightsail_14.png" width="40%"></p>
+<p>Take the URL and paste it into the browser to connect to your Dropbox account.</p>
+<p><img class = "custom" src="../../img/posts/lightsail/lightsail_15.png" width="50%"></p>
+<ol start="2" style="list-style-type: decimal">
+<li>Download Dropbox’s python script to control Dropbox:</li>
+</ol>
+<pre class="bash"><code>mkdir -p ~/bin
+wget -O ~/bin/dropbox.py &quot;https://www.dropbox.com/download?dl=packages/dropbox.py&quot;
+chmod +x ~/bin/dropbox.py
+python2.7 ~/bin/dropbox.py start
+python2.7 ~/bin/dropbox.py autostart y</code></pre>
+<p>You’ll now see the Dropbox folder in your <strong>ubuntu</strong> directory.</p>
+</div>
+<div id="run-docker-container-with-dropbox" class="section level2">
+<h2><span class="header-section-number">6.3</span> Run Docker Container with Dropbox</h2>
+<p>Now with Dropbox set up, you can use the -v switch to attach the Dropbox folder (i.e. volume) to your Docker container.</p>
+<pre class="bash"><code>sudo docker run -d -e ROOT=TRUE -v /home/ubuntu/Dropbox:/home/rstudio/Dropbox -p 8787:8787 rstudio2</code></pre>
+<p>Now, you can see the Dropbox folder in the <strong>Files</strong> pane.</p>
+<p><img class = "custom" src="../../img/posts/lightsail/lightsail_16.png" width="60%"></p>
+</div>
+</div>
+
+      </div>
+
+      
+
+
+<div class="article-tags">
+  
+  <a class="btn btn-primary btn-outline" href="../../tags/r">R</a>
+  
+  <a class="btn btn-primary btn-outline" href="../../tags/lightsail">Lightsail</a>
+  
+  <a class="btn btn-primary btn-outline" href="../../tags/vps">VPS</a>
+  
+  <a class="btn btn-primary btn-outline" href="../../tags/rstudio">rstudio</a>
+  
+</div>
+
+
+
+    </div>
+  </div>
+
+</article>
+
+
+
+
+
+
+<div class="article-container">
+  
+
+</div>
+
+<footer class="site-footer">
+  <div class="container">
+    <p class="powered-by">
+
+      &copy; 2017 Jordan Farrer &middot; 
+      
+      Built with
+      <a href="https://bookdown.org/yihui/blogdown/" target="_blank" rel="noopener">blogdown</a>
+
+      <span class="pull-right" aria-hidden="true">
+        <a href="#" id="back_to_top">
+          <span class="button_icon">
+            <i class="fa fa-chevron-up fa-2x"></i>
+          </span>
+        </a>
+      </span>
+
+    </p>
+  </div>
+</footer>
+
+
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close btn-large" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Cite</h4>
+      </div>
+      <div>
+        <pre><code class="modal-body tex"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-primary btn-outline js-copy-cite" href="#" target="_blank">
+          <i class="fa fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-primary btn-outline js-download-cite" href="#" target="_blank">
+          <i class="fa fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+    
+
+    
+
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" integrity="sha512-3P8rXCuGJdNZOnUx/03c1jOTnMn3rP63nBip5gOP2qmUh5YAdVAvFZ1E+QLZZbC1rtMrQb+mah3AfYW11RUrWA==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.3/imagesloaded.pkgd.min.js" integrity="sha512-umsR78NN0D23AzgoZ11K7raBD+R6hqKojyBZs1w8WvYlsI+QuKRGBx3LFCwhatzBunCjDuJpDHwxD13sLMbpRA==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha512-iztkobsvnjKfAtTNdHkGVjAYTrrtlC7mGp/54c40wowO7LhURYl3gVzzcEqGl/qKXQltJ2HwMrdLcNUdo+N/RQ==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.4/isotope.pkgd.min.js" integrity="sha512-VDBOIlDbuC4VWxGJNmuFRQ0Li0SKkDpmGyuhAG5LTDLd/dJ/S0WMVxriR2Y+CyPL5gzjpN4f/6iqWVBJlht0tQ==" crossorigin="anonymous"></script>
+    
+    
+    <script src="../../js/hugo-academic.js"></script>
+    
+
+    
+    
+      
+      
+      <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+      
+
+      
+
+      
+
+      <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+    </script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML" integrity="sha512-tOav5w1OjvsSJzePRtt2uQPFwBoHt1VZcUq8l8nm5284LEKE9FSJBQryzMBzHxY5P0zRdNqEcpLIRVYFNgu1jw==" crossorigin="anonymous"></script>
+    
+    
+
+  </body>
+</html>
+
