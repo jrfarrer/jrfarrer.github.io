@@ -272,6 +272,7 @@
 
       $container.imagesLoaded(function() {
         // Initialize Isotope after all images have loaded.
+        $('.js-project-description').text($('.default-project-description').text());
         $container.isotope({
           itemSelector: '.isotope-item',
           layoutMode: layout,
@@ -282,6 +283,7 @@
           let selector = $(this).attr('data-filter');
           $container.isotope({filter: selector});
           $(this).removeClass('active').addClass('active').siblings().removeClass('active all');
+          $('.js-project-description').text($(this).attr('data-description'));
           return false;
         });
       });
