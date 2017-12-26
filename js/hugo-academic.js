@@ -270,7 +270,7 @@
         layout = 'fitRows';
       }
 
-      $container.imagesLoaded(function() {
+        $container.imagesLoaded(function() {
         // Initialize Isotope after all images have loaded.
         $('.js-project-description').text($('.default-project-description').text());
         $container.isotope({
