@@ -11,6 +11,133 @@
     <atom:link href="/post/" rel="self" type="application/rss+xml" />
     
     <item>
+      <title>Sync Canvas Files</title>
+      <link>/post/sync-canvas-files/</link>
+      <pubDate>Fri, 19 Jan 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/sync-canvas-files/</guid>
+      <description>&lt;div id=&#34;TOC&#34;&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#tldr&#34;&gt;&lt;span class=&#34;toc-section-number&#34;&gt;1&lt;/span&gt; tl;dr&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#background&#34;&gt;&lt;span class=&#34;toc-section-number&#34;&gt;2&lt;/span&gt; Background&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#guide&#34;&gt;&lt;span class=&#34;toc-section-number&#34;&gt;3&lt;/span&gt; Guide&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+
+&lt;style&gt;
+  img { 
+     border:1px solid #021a40;
+  }
+&lt;/style&gt;
+&lt;div id=&#34;tldr&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;&lt;span class=&#34;header-section-number&#34;&gt;1&lt;/span&gt; tl;dr&lt;/h1&gt;
+&lt;ol style=&#34;list-style-type: decimal&#34;&gt;
+&lt;li&gt;Frustrating to regularly download files from Canvas (learning management system used at Wharton) each time a professor adds/modifies a file&lt;/li&gt;
+&lt;li&gt;This guide outlines a quick solution for syncing Canvas files for a set of classes using only R&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;div id=&#34;background&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;&lt;span class=&#34;header-section-number&#34;&gt;2&lt;/span&gt; Background&lt;/h1&gt;
+&lt;p&gt;When I first started at Wharton, I modified this &lt;a href=&#34;https://github.com/dharadesair/CanvasSync/blob/master/CanvasSync.py&#34;&gt;python script&lt;/a&gt; and set it up to download Canvas files every 30 minutes on an EC2 instance. I then used &lt;a href=&#34;https://www.dropbox.com/help/desktop-web/linux-commands&#34;&gt;headless Dropbox&lt;/a&gt; to sync to my local machine. It was quite a nice solution because it did not depend on my location machine and I would get a desktop notification from Dropbox every time a new file was added to Canvas.&lt;/p&gt;
+&lt;p&gt;However, the structure of this script was for all files for all classes. I do not need all the files from previous classes and would prefer selective syncing. I started to modify the python script and then just decided to see if I could rewrite this in R. In addition to selective syncing, I added a check to see if the file size had changed. If so, the script re-downloads the file. This occurs when a professor updates a syllabus or homework assignment without changing the filename. A limitation of this script is that it does not delete files that the professor has removed from Canvas. I’m not too concerned with this limitation - this script was something I built in a morning before class and it was not meant to me a perfect product.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;guide&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;&lt;span class=&#34;header-section-number&#34;&gt;3&lt;/span&gt; Guide&lt;/h1&gt;
+&lt;div id=&#34;download-files&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;span class=&#34;header-section-number&#34;&gt;3.1&lt;/span&gt; Download Files&lt;/h2&gt;
+&lt;p&gt;First you need to download the files from &lt;a href=&#34;https://github.com/jrfarrer/sync_canvas&#34;&gt;github&lt;/a&gt;. You can download the github repo either by cloning it&lt;/p&gt;
+&lt;pre class=&#34;bash&#34;&gt;&lt;code&gt;git clone https://github.com/jrfarrer/sync_canvas.git&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;or by downloading the zip file from the repo.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;../img/posts/sync_canvas/github.png&#34; width=&#34;100%&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Once you have downloaded this folder either by cloning the repo or downloading the zip, open &lt;code&gt;sync_canvas.Rproj&lt;/code&gt; to open the RStudio project.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;../img/posts/sync_canvas/rproj.png&#34; width=&#34;100%&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;canvas-access-token&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;span class=&#34;header-section-number&#34;&gt;3.2&lt;/span&gt; Canvas Access Token&lt;/h2&gt;
+&lt;p&gt;We need to create an API key (or access token) so that we can access Canvas outside of the browser. We will be using the Files API (&lt;a href=&#34;https://canvas.instructure.com/doc/api/files&#34;&gt;full documentation&lt;/a&gt;).&lt;/p&gt;
+&lt;div id=&#34;creating-the-token-on-canvas&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;&lt;span class=&#34;header-section-number&#34;&gt;3.2.1&lt;/span&gt; Creating the token on Canvas&lt;/h3&gt;
+&lt;p&gt;On &lt;a href=&#34;https://canvas.upenn.edu/&#34;&gt;Canvas&lt;/a&gt;, click &lt;strong&gt;Account&lt;/strong&gt; on the left-panel and then &lt;strong&gt;Setting&lt;/strong&gt;. Scroll down and under Approved Integrations, click &lt;strong&gt;+ New Access Token&lt;/strong&gt;. In the dialog, give a purpose such as “sync_canvas” and leave the date empty. Then click &lt;strong&gt;Generate Token&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;../img/posts/sync_canvas/new_access_token.png&#34; width=&#34;50%&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;The token is the long string of characters. &lt;strong&gt;DO NOT SHARE&lt;/strong&gt; this token as it provides access to your Canvas account. Copy it to the clipboard.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;../img/posts/sync_canvas/access_token_details.png&#34; width=&#34;50%&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;adding-token-to-.renviron-file&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;&lt;span class=&#34;header-section-number&#34;&gt;3.2.2&lt;/span&gt; Adding Token to .Renviron file&lt;/h3&gt;
+&lt;p&gt;Following good practice of securely storing API keys, we will put it in a &lt;code&gt;.Renviron&lt;/code&gt; file that is loaded whenever the R sessions starts. To create the file and open it, run the following code&lt;a href=&#34;#fn1&#34; class=&#34;footnoteRef&#34; id=&#34;fnref1&#34;&gt;&lt;sup&gt;1&lt;/sup&gt;&lt;/a&gt; in the R console.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;user_renviron = path.expand(file.path(&amp;quot;~&amp;quot;, &amp;quot;.Renviron&amp;quot;))
+if(!file.exists(user_renviron)) # check to see if the file already exists
+  file.create(user_renviron)
+file.edit(user_renviron)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;It will open &lt;code&gt;.Renviron&lt;/code&gt; in RStudio. Add the following line and save.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;CANVAS_TOKEN = &amp;quot;YOUR API KEY&amp;quot;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;../img/posts/sync_canvas/renviron.png&#34; width=&#34;75%&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;To test whether this worked, restart R by going to &lt;strong&gt;Session&lt;/strong&gt; &amp;gt; &lt;strong&gt;Restart R&lt;/strong&gt; in the RStudio menu. Then run the following in the R console.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;Sys.getenv(&amp;quot;CANVAS_TOKEN&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;It should return your API key - it is now an environmental variable.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;modify-course-list&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;span class=&#34;header-section-number&#34;&gt;3.3&lt;/span&gt; Modify Course List&lt;/h2&gt;
+&lt;p&gt;The R script only syncs data for courses listed in the file &lt;code&gt;course_list.csv&lt;/code&gt;. It should already be open when you opened &lt;code&gt;sync_canvas.Rproj&lt;/code&gt;. My spring 2018 schedule is listed, you need to change this for your schedule.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;../img/posts/sync_canvas/course_list.png&#34; width=&#34;50%&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;The first column of the csv will become the name of the course directory. The second column is ID of the class. To find the class ID, in Canvas go to the course page and the end of the URL will have a 7-digit ID. Just copy each one into this csv.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;../img/posts/sync_canvas/course_id.png&#34; width=&#34;50%&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;set-local-directory&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;span class=&#34;header-section-number&#34;&gt;3.4&lt;/span&gt; Set Local Directory&lt;/h2&gt;
+&lt;p&gt;At the top of the &lt;code&gt;sync_canvas.R&lt;/code&gt; file there are two directories that you need to change. To find a folder easily in Finder, &lt;strong&gt;right-click&lt;/strong&gt; on the folder and press &lt;strong&gt;Option&lt;/strong&gt; on the keyboard. This copies the entire path to the clipboard.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;../img/posts/sync_canvas/pathname.gif&#34; width=&#34;50%&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;The two paths are:&lt;/p&gt;
+&lt;ol style=&#34;list-style-type: decimal&#34;&gt;
+&lt;li&gt;&lt;strong&gt;sync_canvas_dir&lt;/strong&gt;: Location of the sync_canvas folder you downloaded. This is the location on your computer where the sync_canvas.R is located.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;file_dir&lt;/strong&gt;: Location where you want to have the Canvas course files saved. For me, this is a folder in my Dropbox directory.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img src=&#34;../img/posts/sync_canvas/two_pathes.png&#34; width=&#34;50%&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;initial-file-download&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;span class=&#34;header-section-number&#34;&gt;3.5&lt;/span&gt; Initial file download&lt;/h2&gt;
+&lt;p&gt;We are all set to do an initial download. This will take a while, depending on how many classes you listed in the csv and the quantity/size of files uploaded by instructors. With &lt;code&gt;sync_canvas.R&lt;/code&gt; open, click &lt;strong&gt;Source&lt;/strong&gt;. It will take a while to run. You should be able to see the files populating in &lt;code&gt;file_dir&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;../img/posts/sync_canvas/initial_run.png&#34; width=&#34;50%&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;automate-syncing&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;span class=&#34;header-section-number&#34;&gt;3.6&lt;/span&gt; Automate Syncing&lt;/h2&gt;
+&lt;p&gt;There are many better ways to setup automation of the file downloading process (e.g. &lt;a href=&#34;http://www.launchd.info/&#34;&gt;launchd&lt;/a&gt; or &lt;a href=&#34;nerds.airbnb.com/airflow/&#34;&gt;airflow&lt;/a&gt;), but I wanted it to be quick and easy to setup. Cron is an older job scheduling utility that I’m very familiar with and is simple to setup and test. For this guide, we are using the R package &lt;code&gt;cronR&lt;/code&gt; so that we do not leave RStudio, but all the package does is set up a cron job.&lt;/p&gt;
+&lt;div id=&#34;install-cronr&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;&lt;span class=&#34;header-section-number&#34;&gt;3.6.1&lt;/span&gt; Install cronR&lt;/h3&gt;
+&lt;p&gt;We first need to install &lt;a href=&#34;https://cran.r-project.org/web/packages/cronR/index.html&#34;&gt;cronR&lt;/a&gt;.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;install.packages(&amp;#39;cronR&amp;#39;)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;create-cron-job&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;&lt;span class=&#34;header-section-number&#34;&gt;3.6.2&lt;/span&gt; Create cron job&lt;/h3&gt;
+&lt;p&gt;Create the &lt;code&gt;sync_canvas_file&lt;/code&gt; character variable to be &lt;code&gt;sync_canvas_dir&lt;/code&gt; + &lt;code&gt;sync_canvas.R&lt;/code&gt;. The path for me is below. Modify and run this in the R console.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Modify directory below - should be sync_canvas_dir + sync_canvas.R&amp;quot;
+sync_canvas_file &amp;lt;- &amp;quot;/Users/jordanfarrer/Dropbox/Projects/sync_canvas/sync_canvas.R&amp;quot;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Then, run the following code chunk.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(cronR)
+cmd &amp;lt;- paste(file.path(Sys.getenv(&amp;quot;R_HOME&amp;quot;), &amp;quot;bin&amp;quot;, &amp;quot;Rscript&amp;quot;), sync_canvas_file)
+cron_add(cmd, frequency = &amp;#39;hourly&amp;#39;, id = &amp;#39;sync_canvas&amp;#39;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;../img/posts/sync_canvas/cron.png&#34; width=&#34;75%&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;You now have the syncing process scheduled to run every hour on the hour (that your computer is turned on).&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;logging&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;&lt;span class=&#34;header-section-number&#34;&gt;3.6.3&lt;/span&gt; Logging&lt;/h3&gt;
+&lt;p&gt;While cron can help with logging, I wanted a bit more control and handled logging within &lt;code&gt;canvas_sync.R&lt;/code&gt;. After each run (on the hour), a log &lt;code&gt;sync_canvas_log.csv&lt;/code&gt; will be updated in the &lt;code&gt;sync_canvas_dir&lt;/code&gt; folder. The most recent files will appear at the top. Even if no files were downloaded, a row will be added indicating the process ran. I find it easy to use &lt;a href=&#34;https://support.apple.com/kb/PH25575&#34;&gt;Quick Look&lt;/a&gt; (in Finder select &lt;code&gt;sync_canvas_log.csv&lt;/code&gt; and hit the spacebar) to easily check on the process and what files have been added and I will never actually open the file. The run times are in UTC.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;../img/posts/sync_canvas/logging.png&#34; width=&#34;100%&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;You are now all setup - close RStudio and stop downloading files from Canvas! I have Canvas email notifications setup when a professor uploads a file. Now I do not need to go and download it!&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;footnotes&#34;&gt;
+&lt;hr /&gt;
+&lt;ol&gt;
+&lt;li id=&#34;fn1&#34;&gt;&lt;p&gt;Source: &lt;a href=&#34;https://csgillespie.github.io/efficientR/r-startup.html#the-location-of-startup-files&#34;&gt;Efficient R programming&lt;/a&gt;&lt;a href=&#34;#fnref1&#34;&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
       <title>How to Build a Mobile Shiny App in an Hour</title>
       <link>/post/how-to-build-a-mobile-shiny-app-in-an-hour/</link>
       <pubDate>Fri, 30 Dec 2016 00:00:00 +0000</pubDate>
