@@ -97,6 +97,8 @@ file.edit(user_renviron)&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;div id=&#34;initial-file-download&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;&lt;span class=&#34;header-section-number&#34;&gt;3.5&lt;/span&gt; Initial file download&lt;/h2&gt;
+&lt;p&gt;You need to ensure you have the tidyverse and jsonlite packages installed. You can run this code check to ensure they are up-to-date.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;install.packages(c(&amp;#39;tidyverse&amp;#39;, &amp;#39;jsonlite&amp;#39;))&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;We are all set to do an initial download. This will take a while, depending on how many classes you listed in the csv and the quantity/size of files uploaded by instructors. With &lt;code&gt;sync_canvas.R&lt;/code&gt; open, click &lt;strong&gt;Source&lt;/strong&gt;. It will take a while to run. You should be able to see the files populating in &lt;code&gt;file_dir&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;./img/posts/sync_canvas/initial_run.png&#34; width=&#34;50%&#34; /&gt;&lt;/p&gt;
 &lt;/div&gt;
