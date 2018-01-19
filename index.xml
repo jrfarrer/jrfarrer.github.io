@@ -86,19 +86,15 @@ file.edit(user_renviron)&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;div id=&#34;set-local-directory&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;&lt;span class=&#34;header-section-number&#34;&gt;3.4&lt;/span&gt; Set Local Directory&lt;/h2&gt;
-&lt;p&gt;At the top of the &lt;code&gt;sync_canvas.R&lt;/code&gt; file there are two directories that you need to change. To find a folder easily in Finder, &lt;strong&gt;right-click&lt;/strong&gt; on the folder and press &lt;strong&gt;Option&lt;/strong&gt; on the keyboard. This copies the entire path to the clipboard.&lt;/p&gt;
+&lt;p&gt;At the top of the &lt;code&gt;sync_canvas.R&lt;/code&gt; file there is one directory that you need to change. To find a folder easily in Finder, &lt;strong&gt;right-click&lt;/strong&gt; on the folder and press &lt;strong&gt;Option&lt;/strong&gt; on the keyboard. This copies the entire path to the clipboard.&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;./img/posts/sync_canvas/pathname.gif&#34; width=&#34;50%&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;The two paths are:&lt;/p&gt;
-&lt;ol style=&#34;list-style-type: decimal&#34;&gt;
-&lt;li&gt;&lt;strong&gt;sync_canvas_dir&lt;/strong&gt;: Location of the sync_canvas folder you downloaded. This is the location on your computer where the sync_canvas.R is located.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;file_dir&lt;/strong&gt;: Location where you want to have the Canvas course files saved. For me, this is a folder in my Dropbox directory.&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;&lt;img src=&#34;./img/posts/sync_canvas/two_pathes.png&#34; width=&#34;50%&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;The one path is &lt;strong&gt;file_dir&lt;/strong&gt; - location where you want to have the Canvas course files saved. For me, this is a folder in my Dropbox directory.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;./img/posts/sync_canvas/one_path.png&#34; width=&#34;50%&#34; /&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;initial-file-download&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;&lt;span class=&#34;header-section-number&#34;&gt;3.5&lt;/span&gt; Initial file download&lt;/h2&gt;
-&lt;p&gt;You need to ensure you have the tidyverse and jsonlite packages installed. You can run this code check to ensure they are up-to-date.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;install.packages(c(&amp;#39;tidyverse&amp;#39;, &amp;#39;jsonlite&amp;#39;))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;You need to ensure you have the tidyverse, jsonlite, and here packages installed. You should run this code in the R console check to ensure they are up-to-date.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;install.packages(c(&amp;#39;tidyverse&amp;#39;, &amp;#39;jsonlite&amp;#39;, &amp;#39;here&amp;#39;))&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;We are all set to do an initial download. This will take a while, depending on how many classes you listed in the csv and the quantity/size of files uploaded by instructors. With &lt;code&gt;sync_canvas.R&lt;/code&gt; open, click &lt;strong&gt;Source&lt;/strong&gt;. It will take a while to run. You should be able to see the files populating in &lt;code&gt;file_dir&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;./img/posts/sync_canvas/initial_run.png&#34; width=&#34;50%&#34; /&gt;&lt;/p&gt;
 &lt;/div&gt;
@@ -112,11 +108,9 @@ file.edit(user_renviron)&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;div id=&#34;create-cron-job&#34; class=&#34;section level3&#34;&gt;
 &lt;h3&gt;&lt;span class=&#34;header-section-number&#34;&gt;3.6.2&lt;/span&gt; Create cron job&lt;/h3&gt;
-&lt;p&gt;Create the &lt;code&gt;sync_canvas_file&lt;/code&gt; character variable to be &lt;code&gt;sync_canvas_dir&lt;/code&gt; + &lt;code&gt;sync_canvas.R&lt;/code&gt;. The path for me is below. Modify and run this in the R console.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Modify directory below - should be sync_canvas_dir + sync_canvas.R&amp;quot;
-sync_canvas_file &amp;lt;- &amp;quot;/Users/jordanfarrer/Dropbox/Projects/sync_canvas/sync_canvas.R&amp;quot;&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Then, run the following code chunk.&lt;/p&gt;
+&lt;p&gt;Run the following code chunk in the R console.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(cronR)
+sync_canvas_file &amp;lt;- file.path(here::here(), &amp;quot;sync_canvas.R&amp;quot;)
 cmd &amp;lt;- paste(file.path(Sys.getenv(&amp;quot;R_HOME&amp;quot;), &amp;quot;bin&amp;quot;, &amp;quot;Rscript&amp;quot;), sync_canvas_file)
 cron_add(cmd, frequency = &amp;#39;hourly&amp;#39;, id = &amp;#39;sync_canvas&amp;#39;)&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;img src=&#34;./img/posts/sync_canvas/cron.png&#34; width=&#34;75%&#34; /&gt;&lt;/p&gt;
@@ -124,7 +118,7 @@ cron_add(cmd, frequency = &amp;#39;hourly&amp;#39;, id = &amp;#39;sync_canvas&am
 &lt;/div&gt;
 &lt;div id=&#34;logging&#34; class=&#34;section level3&#34;&gt;
 &lt;h3&gt;&lt;span class=&#34;header-section-number&#34;&gt;3.6.3&lt;/span&gt; Logging&lt;/h3&gt;
-&lt;p&gt;While cron can help with logging, I wanted a bit more control and handled logging within &lt;code&gt;canvas_sync.R&lt;/code&gt;. After each run (on the hour), a log &lt;code&gt;sync_canvas_log.csv&lt;/code&gt; will be updated in the &lt;code&gt;sync_canvas_dir&lt;/code&gt; folder. The most recent files will appear at the top. Even if no files were downloaded, a row will be added indicating the process ran. I find it easy to use &lt;a href=&#34;https://support.apple.com/kb/PH25575&#34;&gt;Quick Look&lt;/a&gt; (in Finder select &lt;code&gt;sync_canvas_log.csv&lt;/code&gt; and hit the spacebar) to easily check on the process and what files have been added and I will never actually open the file. The run times are in UTC.&lt;/p&gt;
+&lt;p&gt;While cron can help with logging, I wanted a bit more control and handled logging within &lt;code&gt;canvas_sync.R&lt;/code&gt;. After each run (on the hour), a log &lt;code&gt;sync_canvas_log.csv&lt;/code&gt; will be updated in the project folder. The most recent files will appear at the top. Even if no files were downloaded, a row will be added indicating the process ran. I find it easy to use &lt;a href=&#34;https://support.apple.com/kb/PH25575&#34;&gt;Quick Look&lt;/a&gt; (in Finder select &lt;code&gt;sync_canvas_log.csv&lt;/code&gt; and hit the spacebar) to easily check on the process and what files have been added and I will never actually open the file. The run times are in UTC.&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;./img/posts/sync_canvas/logging.png&#34; width=&#34;100%&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;You are now all setup - close RStudio and stop downloading files from Canvas! I have Canvas email notifications setup when a professor uploads a file. Now I do not need to go and download it!&lt;/p&gt;
 &lt;/div&gt;
