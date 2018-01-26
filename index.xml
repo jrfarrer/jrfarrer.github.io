@@ -633,7 +633,7 @@ Figure 4.1: GroupMe database ERD (Entity Relationship Diagram)
         )&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Then we create two functions:&lt;/p&gt;
 &lt;ol style=&#34;list-style-type: decimal&#34;&gt;
-&lt;li&gt;&lt;code&gt;redshift_datatypes&lt;/code&gt; - returns the character of the Redshift column type for a given data.frame column&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;redshift_datatypes&lt;/code&gt; - returns a character string of the Redshift column type for a given data.frame column&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;upload_to_redshift&lt;/code&gt; - loads a tibble into Redshift&lt;/li&gt;
 &lt;/ol&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;redshift_datatypes &amp;lt;- function(column) {
@@ -706,168 +706,6 @@ ORDER BY  created_at&lt;/code&gt;&lt;/pre&gt;
 &lt;/table&gt;
 &lt;/div&gt;
 &lt;/div&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Table Captions</title>
-      <link>/post/table-captions/</link>
-      <pubDate>Tue, 23 Jan 2018 00:00:00 +0000</pubDate>
-      
-      <guid>/post/table-captions/</guid>
-      <description>&lt;pre class=&#34;sql&#34;&gt;&lt;code&gt;WITH twoCol( a, b ) AS ( SELECT 1, 2 UNION SELECT 2, 4) SELECT a, b FROM twoCol;&lt;/code&gt;&lt;/pre&gt;
-&lt;div class=&#34;knitsql-table&#34;&gt;
-&lt;table&gt;
-&lt;caption&gt;&lt;span id=&#34;tab:unnamed-chunk-1&#34;&gt;Table 1: &lt;/span&gt;My Caption&lt;/caption&gt;
-&lt;thead&gt;
-&lt;tr class=&#34;header&#34;&gt;
-&lt;th align=&#34;left&#34;&gt;a&lt;/th&gt;
-&lt;th align=&#34;right&#34;&gt;b&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr class=&#34;odd&#34;&gt;
-&lt;td align=&#34;left&#34;&gt;1&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;2&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr class=&#34;even&#34;&gt;
-&lt;td align=&#34;left&#34;&gt;2&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;4&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;/div&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;datasets::mtcars %&amp;gt;%
-  head(2)&lt;/code&gt;&lt;/pre&gt;
-&lt;div class=&#34;kable-table&#34;&gt;
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr class=&#34;header&#34;&gt;
-&lt;th&gt;&lt;/th&gt;
-&lt;th align=&#34;right&#34;&gt;mpg&lt;/th&gt;
-&lt;th align=&#34;right&#34;&gt;cyl&lt;/th&gt;
-&lt;th align=&#34;right&#34;&gt;disp&lt;/th&gt;
-&lt;th align=&#34;right&#34;&gt;hp&lt;/th&gt;
-&lt;th align=&#34;right&#34;&gt;drat&lt;/th&gt;
-&lt;th align=&#34;right&#34;&gt;wt&lt;/th&gt;
-&lt;th align=&#34;right&#34;&gt;qsec&lt;/th&gt;
-&lt;th align=&#34;right&#34;&gt;vs&lt;/th&gt;
-&lt;th align=&#34;right&#34;&gt;am&lt;/th&gt;
-&lt;th align=&#34;right&#34;&gt;gear&lt;/th&gt;
-&lt;th align=&#34;right&#34;&gt;carb&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr class=&#34;odd&#34;&gt;
-&lt;td&gt;Mazda RX4&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;21&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;6&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;160&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;110&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;3.9&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;2.620&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;16.46&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;4&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;4&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr class=&#34;even&#34;&gt;
-&lt;td&gt;Mazda RX4 Wag&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;21&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;6&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;160&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;110&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;3.9&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;2.875&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;17.02&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;4&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;4&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;/div&gt;
-&lt;table&gt;
-&lt;caption&gt;
-Sample of the users table
-&lt;/caption&gt;
-&lt;colgroup&gt;
-&lt;col width=&#34;100&#34;&gt;
-&lt;/col&gt;
-&lt;/colgroup&gt;
-&lt;thead&gt;
-&lt;tr class=&#34;header&#34;&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;datasets::mtcars %&amp;gt;%
-  head(2) %&amp;gt;%
-  knitr::kable(caption = &amp;quot;My caption&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
-&lt;table&gt;
-&lt;caption&gt;&lt;span id=&#34;tab:unnamed-chunk-2&#34;&gt;Table 2: &lt;/span&gt;My caption&lt;/caption&gt;
-&lt;thead&gt;
-&lt;tr class=&#34;header&#34;&gt;
-&lt;th&gt;&lt;/th&gt;
-&lt;th align=&#34;right&#34;&gt;mpg&lt;/th&gt;
-&lt;th align=&#34;right&#34;&gt;cyl&lt;/th&gt;
-&lt;th align=&#34;right&#34;&gt;disp&lt;/th&gt;
-&lt;th align=&#34;right&#34;&gt;hp&lt;/th&gt;
-&lt;th align=&#34;right&#34;&gt;drat&lt;/th&gt;
-&lt;th align=&#34;right&#34;&gt;wt&lt;/th&gt;
-&lt;th align=&#34;right&#34;&gt;qsec&lt;/th&gt;
-&lt;th align=&#34;right&#34;&gt;vs&lt;/th&gt;
-&lt;th align=&#34;right&#34;&gt;am&lt;/th&gt;
-&lt;th align=&#34;right&#34;&gt;gear&lt;/th&gt;
-&lt;th align=&#34;right&#34;&gt;carb&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr class=&#34;odd&#34;&gt;
-&lt;td&gt;Mazda RX4&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;21&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;6&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;160&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;110&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;3.9&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;2.620&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;16.46&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;4&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;4&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr class=&#34;even&#34;&gt;
-&lt;td&gt;Mazda RX4 Wag&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;21&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;6&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;160&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;110&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;3.9&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;2.875&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;17.02&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;4&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;4&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;style&gt;
-  img { 
-     border:1px solid #021a40;
-  }
-  .pagedtable-info {
-    font-size: 75% !important;
-  }
-  table {
-    font-size: 75% !important;
-  }
-&lt;/style&gt;
 </description>
     </item>
     
@@ -1099,6 +937,15 @@ cron_add(cmd, frequency = &amp;#39;hourly&amp;#39;, id = &amp;#39;sync_canvas&am
       <pubDate>Fri, 24 Feb 2017 00:00:00 +0000</pubDate>
       
       <guid>/project/mktg776_hw5/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Project 1</title>
+      <link>/project/mktg776_p1/</link>
+      <pubDate>Wed, 22 Feb 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/project/mktg776_p1/</guid>
       <description></description>
     </item>
     

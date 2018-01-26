@@ -879,7 +879,7 @@ Figure 4.1: GroupMe database ERD (Entity Relationship Diagram)
         )</code></pre>
 <p>Then we create two functions:</p>
 <ol style="list-style-type: decimal">
-<li><code>redshift_datatypes</code> - returns the character of the Redshift column type for a given data.frame column</li>
+<li><code>redshift_datatypes</code> - returns a character string of the Redshift column type for a given data.frame column</li>
 <li><code>upload_to_redshift</code> - loads a tibble into Redshift</li>
 </ol>
 <pre class="r"><code>redshift_datatypes &lt;- function(column) {
