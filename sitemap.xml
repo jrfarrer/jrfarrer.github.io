@@ -5,8 +5,26 @@
     
     <url>
     
+      <loc>/post/groupme-data-etl/</loc>
+      <lastmod>2018-01-26T00:00:00+00:00</lastmod>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>/post/table-captions/</loc>
+      <lastmod>2018-01-23T00:00:00+00:00</lastmod>
+    </url>
+    
+  
+    
+    
+    <url>
+    
       <loc>/post/sync-canvas-files/</loc>
-      <lastmod>2018-01-19T00:00:00+00:00</lastmod>
+      <lastmod>2018-01-16T00:00:00+00:00</lastmod>
     </url>
     
   
@@ -329,6 +347,22 @@
     
     <url>
     
+      <loc>/post/widget_unnamed-chunk-7/</loc>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>/post/widgets/widget_unnamed-chunk-7/</loc>
+    </url>
+    
+  
+    
+    
+    <url>
+    
       <loc>/tags/aws/</loc>
       <lastmod>2016-12-30T00:00:00+00:00</lastmod>
       <priority>0</priority>
@@ -340,7 +374,7 @@
     <url>
     
       <loc>/tags/canvas/</loc>
-      <lastmod>2018-01-19T00:00:00+00:00</lastmod>
+      <lastmod>2018-01-16T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -380,6 +414,16 @@
     
       <loc>/tags/fnce611/</loc>
       <lastmod>2017-03-24T00:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>/tags/groupme/</loc>
+      <lastmod>2018-01-26T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -457,8 +501,8 @@
     
     <url>
     
-      <loc>/tags/r/</loc>
-      <lastmod>2018-01-19T00:00:00+00:00</lastmod>
+      <loc>/categories/r/</loc>
+      <lastmod>2018-01-26T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -467,8 +511,8 @@
     
     <url>
     
-      <loc>/categories/r/</loc>
-      <lastmod>2018-01-19T00:00:00+00:00</lastmod>
+      <loc>/tags/r/</loc>
+      <lastmod>2018-01-26T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -479,6 +523,16 @@
     
       <loc>/tags/rstudio/</loc>
       <lastmod>2016-12-29T00:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>/tags/sql/</loc>
+      <lastmod>2018-01-26T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     

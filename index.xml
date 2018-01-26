@@ -11,9 +11,870 @@
     <atom:link href="/" rel="self" type="application/rss+xml" />
     
     <item>
+      <title>GroupMe Data ETL</title>
+      <link>/post/groupme-data-etl/</link>
+      <pubDate>Fri, 26 Jan 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/groupme-data-etl/</guid>
+      <description>&lt;div id=&#34;TOC&#34;&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#tldr&#34;&gt;&lt;span class=&#34;toc-section-number&#34;&gt;1&lt;/span&gt; tl;dr&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#data-extraction&#34;&gt;&lt;span class=&#34;toc-section-number&#34;&gt;2&lt;/span&gt; Data Extraction&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#data-transforming&#34;&gt;&lt;span class=&#34;toc-section-number&#34;&gt;3&lt;/span&gt; Data Transforming&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#loading-into-aws-redshift&#34;&gt;&lt;span class=&#34;toc-section-number&#34;&gt;4&lt;/span&gt; Loading into AWS Redshift&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+
+&lt;style&gt;
+  .article-style img {
+    box-shadow: none !important;
+  }
+   img { 
+      border:0px;
+      
+   }
+  .pagedtable-info {
+    font-size: 75% !important;
+  }
+  table {
+    font-size: 75% !important;
+  }
+&lt;/style&gt;
+&lt;div id=&#34;tldr&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;&lt;span class=&#34;header-section-number&#34;&gt;1&lt;/span&gt; tl;dr&lt;/h1&gt;
+&lt;ol style=&#34;list-style-type: decimal&#34;&gt;
+&lt;li&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/Extract,_transform,_load&#34;&gt;ETL&lt;/a&gt; (extract, transform, load) process for the Wharton 2018/2019 GroupMe class threads from the GroupMe API to Amazon Redshift&lt;/li&gt;
+&lt;li&gt;I used this dataset for a &lt;a href=&#34;https://jrfarrer.github.io/mktg776_p1/&#34;&gt;project&lt;/a&gt; in Peter Fader’s course and to teach SQL to MBAs (session &lt;a href=&#34;http://bit.ly/sqlatlunch_week1&#34;&gt;1&lt;/a&gt;, &lt;a href=&#34;http://bit.ly/sqlatlunch_week2&#34;&gt;2&lt;/a&gt;, and &lt;a href=&#34;http://bit.ly/sqlatlunch_week3&#34;&gt;3&lt;/a&gt;)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;div id=&#34;data-extraction&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;&lt;span class=&#34;header-section-number&#34;&gt;2&lt;/span&gt; Data Extraction&lt;/h1&gt;
+&lt;p&gt;&lt;a href=&#34;https://groupme.com&#34;&gt;GroupMe&lt;/a&gt; has a &lt;a href=&#34;https://dev.groupme.com/docs/v3&#34;&gt;REST API&lt;/a&gt; and after logging in you can create your own &lt;a href=&#34;https://dev.groupme.com/session/new&#34;&gt;API key&lt;/a&gt;. We have two separate keys for the 2018 and 2019 class threads that are stored in &lt;code&gt;.Renviron&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;base_url &amp;lt;- &amp;quot;https://api.groupme.com/v3/&amp;quot;
+tokens &amp;lt;- paste0(&amp;quot;?token=&amp;quot;, Sys.getenv(c(&amp;quot;GROUPME_2018&amp;quot;, &amp;quot;GROUPME_2019&amp;quot;)))&lt;/code&gt;&lt;/pre&gt;
+&lt;div id=&#34;groups&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;span class=&#34;header-section-number&#34;&gt;2.1&lt;/span&gt; Groups&lt;/h2&gt;
+&lt;p&gt;In order to use the messages API, we need to know the &lt;code&gt;group_id&lt;/code&gt;. We create a function that for an API token returns all the groups the users belong to. The GroupMe API only allows returning 10 results per request so we loop until there are no more groups to return.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;fn_dl_groups &amp;lt;- function(token) {
+  
+  i &amp;lt;- 1; more_response &amp;lt;- TRUE; tmp_list &amp;lt;- list();
+  while (more_response) {
+      url &amp;lt;- paste0(base_url, &amp;quot;groups&amp;quot;, token, &amp;quot;&amp;amp;per_page=10&amp;amp;page=&amp;quot;, i)
+      tmp_group &amp;lt;- fromJSON(url, flatten = TRUE)$response
+      if (length(tmp_group) == 0) {
+        more_response &amp;lt;- FALSE
+      } else {
+        tmp_list[[i]] &amp;lt;- tmp_group 
+        i &amp;lt;- i + 1
+      }
+  }
+  tmp_list %&amp;gt;% 
+    rbind_pages() %&amp;gt;% 
+    as_tibble()
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;We apply this function using a &lt;code&gt;purrr&lt;/code&gt; function.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;all_groups &amp;lt;-
+  map_dfr(tokens, fn_dl_groups)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Each record of the data frame is a group (with a &lt;code&gt;group_id&lt;/code&gt; and &lt;code&gt;name&lt;/code&gt;).&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;all_groups %&amp;gt;% glimpse()&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Observations: 178
+## Variables: 28
+## $ id                                          &amp;lt;chr&amp;gt; &amp;quot;25466934&amp;quot;, &amp;quot;19105...
+## $ group_id                                    &amp;lt;chr&amp;gt; &amp;quot;25466934&amp;quot;, &amp;quot;19105...
+## $ name                                        &amp;lt;chr&amp;gt; &amp;quot;Wharton Ski Trip ...
+## $ phone_number                                &amp;lt;chr&amp;gt; &amp;quot;+1 6177016748&amp;quot;, &amp;quot;...
+## $ type                                        &amp;lt;chr&amp;gt; &amp;quot;private&amp;quot;, &amp;quot;privat...
+## $ description                                 &amp;lt;chr&amp;gt; &amp;quot;&amp;quot;, &amp;quot;&amp;quot;, &amp;quot;Breck FAQ...
+## $ image_url                                   &amp;lt;chr&amp;gt; &amp;quot;https://i.groupme...
+## $ creator_user_id                             &amp;lt;chr&amp;gt; &amp;quot;34509622&amp;quot;, &amp;quot;34473...
+## $ created_at                                  &amp;lt;int&amp;gt; 1475104416, 145321...
+## $ updated_at                                  &amp;lt;int&amp;gt; 1516944776, 151693...
+## $ office_mode                                 &amp;lt;lgl&amp;gt; FALSE, FALSE, FALS...
+## $ share_url                                   &amp;lt;chr&amp;gt; &amp;quot;https://groupme.c...
+## $ share_qr_code_url                           &amp;lt;chr&amp;gt; &amp;quot;https://image.gro...
+## $ members                                     &amp;lt;list&amp;gt; [&amp;lt;c(&amp;quot;34509622&amp;quot;, &amp;quot;...
+## $ max_members                                 &amp;lt;int&amp;gt; 1400, 1000, 2000, ...
+## $ messages.count                              &amp;lt;int&amp;gt; 1351, 13191, 701, ...
+## $ messages.last_message_id                    &amp;lt;chr&amp;gt; &amp;quot;15169447768279128...
+## $ messages.last_message_created_at            &amp;lt;int&amp;gt; 1516944776, 151693...
+## $ messages.preview.nickname                   &amp;lt;chr&amp;gt; &amp;quot;Tala Al Jabri&amp;quot;, &amp;quot;...
+## $ messages.preview.text                       &amp;lt;chr&amp;gt; &amp;quot;Is there a Wharto...
+## $ messages.preview.image_url                  &amp;lt;chr&amp;gt; &amp;quot;https://i.groupme...
+## $ messages.preview.attachments                &amp;lt;list&amp;gt; [&amp;lt;&amp;gt;, &amp;lt;&amp;gt;, &amp;lt;&amp;gt;, &amp;lt;&amp;gt;, ...
+## $ messages.preview.event.type                 &amp;lt;chr&amp;gt; NA, NA, NA, NA, NA...
+## $ messages.preview.event.data.conversation.id &amp;lt;chr&amp;gt; NA, NA, NA, NA, NA...
+## $ messages.preview.event.data.poll.id         &amp;lt;chr&amp;gt; NA, NA, NA, NA, NA...
+## $ messages.preview.event.data.poll.subject    &amp;lt;chr&amp;gt; NA, NA, NA, NA, NA...
+## $ messages.preview.event.data.user.id         &amp;lt;chr&amp;gt; NA, NA, NA, NA, NA...
+## $ messages.preview.event.data.user.nickname   &amp;lt;chr&amp;gt; NA, NA, NA, NA, NA...&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;messages&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;span class=&#34;header-section-number&#34;&gt;2.2&lt;/span&gt; Messages&lt;/h2&gt;
+&lt;p&gt;Now we create a function to download the message for any given &lt;code&gt;group_id&lt;/code&gt;. Again, this involves a loop as there is a limit of 100 messages per request.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;fn_dl_messages &amp;lt;- function(group_id, token) {
+  
+  i &amp;lt;- 1; more_response &amp;lt;- TRUE; tmp_list &amp;lt;- list();last_id &amp;lt;- &amp;quot;&amp;quot;;
+  while(more_response) {
+    before_id_param &amp;lt;- ifelse(last_id == &amp;quot;&amp;quot;, &amp;quot;&amp;quot;, paste0(&amp;quot;&amp;amp;before_id=&amp;quot;, last_id))
+    url &amp;lt;- paste0(base_url, &amp;quot;groups/&amp;quot;, group_id, 
+                  &amp;quot;/messages&amp;quot;, token, &amp;quot;&amp;amp;limit=100&amp;quot;, before_id_param)  
+    tmp_msg &amp;lt;- try(
+      fromJSON(url, flatten = TRUE)$response$messages
+      , silent = TRUE
+    )
+    if (&amp;quot;try-error&amp;quot; %in% class(tmp_msg)) {
+      more_response &amp;lt;- FALSE
+    } else {
+      tmp_list[[i]] &amp;lt;- tmp_msg 
+      last_id &amp;lt;- tail(tmp_msg, 1)$id  
+      i &amp;lt;- i + 1
+    }
+  }
+  tmp_list %&amp;gt;% 
+    rbind_pages() %&amp;gt;% 
+    as_tibble()
+}  &lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;We apply this function to only the two class threads named &lt;strong&gt;Wharton - 2018&lt;/strong&gt; and &lt;strong&gt;Wharton MBA Class of 2019&lt;/strong&gt;.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;all_messages &amp;lt;-
+  all_groups %&amp;gt;%
+  filter(name %in% c(&amp;quot;Wharton - 2018&amp;quot;, &amp;quot;Wharton MBA Class of 2019&amp;quot;)) %&amp;gt;% 
+  pull(group_id) %&amp;gt;%
+  map2_dfr(tokens, fn_dl_messages) %&amp;gt;%
+  mutate(thread = 
+           case_when(
+              group_id == &amp;quot;19105351&amp;quot; ~ &amp;quot;2018&amp;quot;
+            , group_id == &amp;quot;27514952&amp;quot; ~ &amp;quot;2019&amp;quot;
+          )
+        )&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The &lt;code&gt;all_messages&lt;/code&gt; data frame contains columns with nested data frames and vectors.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;all_messages %&amp;gt;% glimpse()&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Observations: 22,897
+## Variables: 37
+## $ attachments                      &amp;lt;list&amp;gt; [&amp;lt;&amp;gt;, &amp;lt;&amp;gt;, &amp;lt;12, 19, 31, 6, 11,...
+## $ avatar_url                       &amp;lt;chr&amp;gt; &amp;quot;https://i.groupme.com/740x75...
+## $ created_at                       &amp;lt;int&amp;gt; 1516937026, 1516936990, 15169...
+## $ favorited_by                     &amp;lt;list&amp;gt; [&amp;quot;32530123&amp;quot;, &amp;lt;&amp;gt;, &amp;lt;&amp;quot;22614230&amp;quot;...
+## $ group_id                         &amp;lt;chr&amp;gt; &amp;quot;19105351&amp;quot;, &amp;quot;19105351&amp;quot;, &amp;quot;1910...
+## $ id                               &amp;lt;chr&amp;gt; &amp;quot;151693702666740099&amp;quot;, &amp;quot;151693...
+## $ name                             &amp;lt;chr&amp;gt; &amp;quot;Pablo Staubli&amp;quot;, &amp;quot;Jennifer Ma...
+## $ sender_id                        &amp;lt;chr&amp;gt; &amp;quot;40483399&amp;quot;, &amp;quot;32530123&amp;quot;, &amp;quot;6127...
+## $ sender_type                      &amp;lt;chr&amp;gt; &amp;quot;user&amp;quot;, &amp;quot;user&amp;quot;, &amp;quot;user&amp;quot;, &amp;quot;user...
+## $ source_guid                      &amp;lt;chr&amp;gt; &amp;quot;9199ABBB-485B-44BE-B7D5-54AC...
+## $ system                           &amp;lt;lgl&amp;gt; FALSE, FALSE, FALSE, FALSE, F...
+## $ text                             &amp;lt;chr&amp;gt; &amp;quot;☝🏼&amp;quot;, &amp;quot;Hi all - Is anyone goi...
+## $ user_id                          &amp;lt;chr&amp;gt; &amp;quot;40483399&amp;quot;, &amp;quot;32530123&amp;quot;, &amp;quot;6127...
+## $ event.type                       &amp;lt;chr&amp;gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ event.data.user.id               &amp;lt;chr&amp;gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ event.data.user.nickname         &amp;lt;chr&amp;gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ event.data.added_users           &amp;lt;list&amp;gt; [NULL, NULL, NULL, NULL, NUL...
+## $ event.data.options               &amp;lt;list&amp;gt; [NULL, NULL, NULL, NULL, NUL...
+## $ event.data.adder_user.id         &amp;lt;int&amp;gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ event.data.adder_user.nickname   &amp;lt;chr&amp;gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ event.data.remover_user.id       &amp;lt;int&amp;gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ event.data.remover_user.nickname &amp;lt;chr&amp;gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ event.data.removed_user.id       &amp;lt;int&amp;gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ event.data.removed_user.nickname &amp;lt;chr&amp;gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ event.data.conversation.id       &amp;lt;chr&amp;gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ event.data.poll.id               &amp;lt;chr&amp;gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ event.data.poll.subject          &amp;lt;chr&amp;gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ event.data.poll.expiration       &amp;lt;int&amp;gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ event.data.url                   &amp;lt;chr&amp;gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ event.data.event.id              &amp;lt;chr&amp;gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ event.data.event.name            &amp;lt;chr&amp;gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ event.data.event_name            &amp;lt;chr&amp;gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ event.data.minutes               &amp;lt;chr&amp;gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ event.data.updated_fields        &amp;lt;list&amp;gt; [NULL, NULL, NULL, NULL, NUL...
+## $ event.data.name                  &amp;lt;chr&amp;gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ event.data.topic                 &amp;lt;chr&amp;gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ thread                           &amp;lt;chr&amp;gt; &amp;quot;2018&amp;quot;, &amp;quot;2018&amp;quot;, &amp;quot;2018&amp;quot;, &amp;quot;2018...&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;data-transforming&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;&lt;span class=&#34;header-section-number&#34;&gt;3&lt;/span&gt; Data Transforming&lt;/h1&gt;
+&lt;p&gt;We will convert each of the nested lists (that came from the jsons returned by the API calls) into relational tables that hold the following information:&lt;/p&gt;
+&lt;ol style=&#34;list-style-type: decimal&#34;&gt;
+&lt;li&gt;Users&lt;/li&gt;
+&lt;li&gt;Messages&lt;/li&gt;
+&lt;li&gt;Likes&lt;/li&gt;
+&lt;li&gt;Media (pics, videos, gifs)&lt;/li&gt;
+&lt;li&gt;Mentions&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div id=&#34;users&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;span class=&#34;header-section-number&#34;&gt;3.1&lt;/span&gt; Users&lt;/h2&gt;
+&lt;p&gt;One the questions my MKTG776 Project 1 sought to answer was &lt;a href=&#34;https://jrfarrer.github.io/mktg776_p1/#43_gender_differences&#34;&gt;do men and women use GroupMe differently&lt;/a&gt;? Using the NBD model discussed in the course, I showed that in terms of messaging, mentions, and likes the answer was &lt;strong&gt;no&lt;/strong&gt;. So, for Wharton 2018, we use the &lt;code&gt;googlesheets&lt;/code&gt; package to pull external data from a Google Sheet.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;gs_auth(token = &amp;quot;/home/rstudio/googlesheets_token.rds&amp;quot;, verbose = FALSE)
+
+users_gender &amp;lt;- gs_title(&amp;quot;groupme_users&amp;quot;) %&amp;gt;%  gs_read(ws = &amp;quot;users&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Each line of the &lt;code&gt;all_groups&lt;/code&gt; data frame contains a nested data frame with members of each group. We unnest this user table and join it with the gender information from the Google spreadsheet.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;users &amp;lt;- 
+  all_groups %&amp;gt;% 
+  filter(name %in% c(&amp;quot;Wharton - 2018&amp;quot;, &amp;quot;Wharton MBA Class of 2019&amp;quot;)) %&amp;gt;%
+  select(group_id, members) %&amp;gt;% 
+  mutate(thread = 
+         case_when(
+            group_id == &amp;quot;19105351&amp;quot; ~ &amp;quot;2018&amp;quot;
+          , group_id == &amp;quot;27514952&amp;quot; ~ &amp;quot;2019&amp;quot;
+        )
+      ) %&amp;gt;%
+  unnest() %&amp;gt;%
+  left_join(
+    users_gender %&amp;gt;%
+      select(user_id, gender) %&amp;gt;%
+      mutate(
+        user_id = as.character(user_id)
+        , gender = factor(gender, levels = c(&amp;quot;Female&amp;quot;,&amp;quot;Male&amp;quot;))
+      )
+    , by = &amp;#39;user_id&amp;#39;
+  ) %&amp;gt;%
+  select(thread, user_id, nickname, image_url, id, muted, gender) %&amp;gt;%
+  arrange(user_id)
+
+users %&amp;gt;% glimpse()&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Observations: 1,815
+## Variables: 7
+## $ thread    &amp;lt;chr&amp;gt; &amp;quot;2018&amp;quot;, &amp;quot;2019&amp;quot;, &amp;quot;2018&amp;quot;, &amp;quot;2019&amp;quot;, &amp;quot;2018&amp;quot;, &amp;quot;2019&amp;quot;, &amp;quot;201...
+## $ user_id   &amp;lt;chr&amp;gt; &amp;quot;10006049&amp;quot;, &amp;quot;10035936&amp;quot;, &amp;quot;100773&amp;quot;, &amp;quot;10140688&amp;quot;, &amp;quot;10161...
+## $ nickname  &amp;lt;chr&amp;gt; &amp;quot;Jared Horvitz&amp;quot;, &amp;quot;Carl Chan&amp;quot;, &amp;quot;Alula Selassie&amp;quot;, &amp;quot;Pat...
+## $ image_url &amp;lt;chr&amp;gt; &amp;quot;https://i.groupme.com/748x748.jpeg.c88a057e4b5b4c94...
+## $ id        &amp;lt;chr&amp;gt; &amp;quot;146603512&amp;quot;, &amp;quot;207892698&amp;quot;, &amp;quot;172611969&amp;quot;, &amp;quot;238457662&amp;quot;, ...
+## $ muted     &amp;lt;lgl&amp;gt; FALSE, FALSE, FALSE, FALSE, TRUE, TRUE, TRUE, FALSE,...
+## $ gender    &amp;lt;fctr&amp;gt; Male, NA, Male, NA, Male, NA, Female, NA, NA, Male,...&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;We have created a users table with 7 columns. Below is a preview of 10 rows and 3 columns.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;users %&amp;gt;%
+  select(thread, user_id, nickname, muted) %&amp;gt;%
+  head(10)&lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;caption&gt;&lt;span id=&#34;tab:print-users-table-table&#34;&gt;Table 3.1: &lt;/span&gt;Sample rows from the user table&lt;/caption&gt;
+&lt;thead&gt;
+&lt;tr class=&#34;header&#34;&gt;
+&lt;th align=&#34;left&#34;&gt;thread&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;user_id&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;nickname&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;muted&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;2018&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;10006049&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;Jared Horvitz&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;FALSE&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;2019&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;10035936&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;Carl Chan&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;FALSE&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;2018&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;100773&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;Alula Selassie&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;FALSE&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;2019&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;10140688&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;Patricio Brito&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;FALSE&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;2018&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;10161622&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;Anderson 辛安&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;TRUE&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;2019&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;10203143&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;Shruti Shah&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;TRUE&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;2018&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;10217059&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;Kirtika Challa&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;TRUE&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;2019&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;10269672&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;Nikhil Raghuveera&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;FALSE&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;2019&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;10297047&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;Alex Daniels&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;FALSE&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;2018&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;10467730&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;RJ Martin&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;FALSE&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div id=&#34;messages-1&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;span class=&#34;header-section-number&#34;&gt;3.2&lt;/span&gt; Messages&lt;/h2&gt;
+&lt;p&gt;GroupMe records each event (e.g. message post, a user entering the group, creating an event, changing nickname within the group), so we isolate only the messages sent my users and create a &lt;a href=&#34;https://en.wikipedia.org/wiki/Fact_table&#34;&gt;fact table&lt;/a&gt; which is keyed on &lt;code&gt;msg_id&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;msgs_cleaned &amp;lt;-
+  all_messages %&amp;gt;%
+  filter(system == FALSE &amp;amp; is.na(event.type)) %&amp;gt;%
+  select(thread, id, created_at, user_id, name, text) %&amp;gt;%
+  rename(msg_id = id) %&amp;gt;%
+  mutate(created_at = lubridate::as_datetime(created_at, tz = &amp;quot;America/New_York&amp;quot;)) %&amp;gt;%
+  select(thread, msg_id, created_at, user_id, name, text)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;We will add some more derived columns to the messages table in a moment.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;likes&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;span class=&#34;header-section-number&#34;&gt;3.3&lt;/span&gt; Likes&lt;/h2&gt;
+&lt;p&gt;Each message can have many likes so it’s best to store this information as a separate table. In likes table, each row represents a person and &lt;code&gt;liked_by&lt;/code&gt; is a &lt;code&gt;user_id&lt;/code&gt; - person who liked that &lt;code&gt;msg_id&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;msg_likes &amp;lt;-
+  all_messages %&amp;gt;% 
+  filter(system == FALSE &amp;amp; is.na(event.type)) %&amp;gt;%
+  rowwise() %&amp;gt;%
+  filter(class(favorited_by) != &amp;quot;list&amp;quot;) %&amp;gt;%
+  ungroup() %&amp;gt;%
+  select(thread, id, favorited_by) %&amp;gt;% 
+  unnest() %&amp;gt;%
+  rename(
+      msg_id = id
+    , liked_by = favorited_by
+  )&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;msg_likes %&amp;gt;%
+  head(10)&lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;caption&gt;&lt;span id=&#34;tab:print-likes-table-table&#34;&gt;Table 3.2: &lt;/span&gt;Sample rows from the message likes table&lt;/caption&gt;
+&lt;thead&gt;
+&lt;tr class=&#34;header&#34;&gt;
+&lt;th align=&#34;left&#34;&gt;thread&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;msg_id&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;liked_by&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;2018&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;151693702666740099&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;32530123&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;2018&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;151693691456624897&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;22614230&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;2018&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;151693691456624897&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;25728066&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;2018&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;151693691456624897&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;40286396&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;2018&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;151693691456624897&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;5264490&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;2018&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;151693691456624897&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;5339851&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;2018&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;151693688143682856&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;22614230&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;2018&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;151693688143682856&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;3756827&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;2018&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;151693688143682856&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;40286396&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;2018&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;151693407843354645&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;19796318&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div id=&#34;media-pics-videos-gifs&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;span class=&#34;header-section-number&#34;&gt;3.4&lt;/span&gt; Media (pics, videos, gifs)&lt;/h2&gt;
+&lt;p&gt;The media (images, videos, and gifs) sent in a message is buried in another part of the json file. We unnest the the media and store individual links in a separate table. Surprisingly, all of these links are public (not behind a password).&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;msg_media &amp;lt;-
+  all_messages %&amp;gt;%
+  filter(system == FALSE &amp;amp; is.na(event.type)) %&amp;gt;%
+  rowwise() %&amp;gt;%
+  filter(class(attachments) != &amp;quot;list&amp;quot;) %&amp;gt;%
+  ungroup() %&amp;gt;%
+  select(thread, id, attachments) %&amp;gt;%
+  unnest() %&amp;gt;%
+  filter(type %in% c(&amp;quot;linked_image&amp;quot;, &amp;quot;image&amp;quot;,&amp;quot;video&amp;quot;)) %&amp;gt;%
+  select(thread, msg_id = id, type, url) %&amp;gt;%
+  mutate(type = ifelse(type == &amp;quot;linked_image&amp;quot;, &amp;quot;gif&amp;quot;, type)) &lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;msg_media %&amp;gt;%
+  head(10)&lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;caption&gt;&lt;span id=&#34;tab:print-msg-media-table&#34;&gt;Table 3.3: &lt;/span&gt;Sample rows from the message media table which contains links to images, videos, and gifs&lt;/caption&gt;
+&lt;thead&gt;
+&lt;tr class=&#34;header&#34;&gt;
+&lt;th align=&#34;left&#34;&gt;thread&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;msg_id&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;type&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;url&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;2018&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;151690057742991174&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;image&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;a href=&#34;https://i.groupme.com/1334x1000.jpeg.15939bc2e6e049d18ff36e963930277a&#34; class=&#34;uri&#34;&gt;https://i.groupme.com/1334x1000.jpeg.15939bc2e6e049d18ff36e963930277a&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;2018&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;151676379943246890&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;image&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;a href=&#34;https://i.groupme.com/1125x1500.jpeg.411991ef873f4124b53a39e4e641f00b&#34; class=&#34;uri&#34;&gt;https://i.groupme.com/1125x1500.jpeg.411991ef873f4124b53a39e4e641f00b&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;2018&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;151676379574536890&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;image&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;a href=&#34;https://i.groupme.com/1125x1500.jpeg.755e1499b23e45ccbde3e25bf36bdc4c&#34; class=&#34;uri&#34;&gt;https://i.groupme.com/1125x1500.jpeg.755e1499b23e45ccbde3e25bf36bdc4c&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;2018&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;151675731689691903&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;image&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;a href=&#34;https://i.groupme.com/759x1012.png.6fa08f0f26404b118d9a566ecdb45f92&#34; class=&#34;uri&#34;&gt;https://i.groupme.com/759x1012.png.6fa08f0f26404b118d9a566ecdb45f92&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;2018&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;151668678578436773&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;image&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;a href=&#34;https://i.groupme.com/1103x1500.jpeg.77a1c39df8ad433485ee3770e85ab12d&#34; class=&#34;uri&#34;&gt;https://i.groupme.com/1103x1500.jpeg.77a1c39df8ad433485ee3770e85ab12d&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;2018&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;151668592092540099&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;image&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;a href=&#34;https://i.groupme.com/893x1454.jpeg.b6e2182d1a9a4694b4ac044ce39607cf&#34; class=&#34;uri&#34;&gt;https://i.groupme.com/893x1454.jpeg.b6e2182d1a9a4694b4ac044ce39607cf&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;2018&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;151668573130740629&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;image&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;a href=&#34;https://i.groupme.com/1053x1500.jpeg.666f79152491490d8530ceb2b77d135a&#34; class=&#34;uri&#34;&gt;https://i.groupme.com/1053x1500.jpeg.666f79152491490d8530ceb2b77d135a&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;2018&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;151659192262290622&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;image&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;a href=&#34;https://i.groupme.com/1125x1500.jpeg.dd015489bb1d47c6810ef9bf7b939a2b&#34; class=&#34;uri&#34;&gt;https://i.groupme.com/1125x1500.jpeg.dd015489bb1d47c6810ef9bf7b939a2b&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;2018&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;151659158488915002&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;image&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;a href=&#34;https://i.groupme.com/670x594.jpeg.f583aee372f24d14aa9e56622ac8e3a8&#34; class=&#34;uri&#34;&gt;https://i.groupme.com/670x594.jpeg.f583aee372f24d14aa9e56622ac8e3a8&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;2018&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;151649038251759445&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;image&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;a href=&#34;https://i.groupme.com/1688x2250.jpeg.bd11ad29ddb847599a5ff5197068355c&#34; class=&#34;uri&#34;&gt;https://i.groupme.com/1688x2250.jpeg.bd11ad29ddb847599a5ff5197068355c&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div id=&#34;message-mentions&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;span class=&#34;header-section-number&#34;&gt;3.5&lt;/span&gt; Message Mentions&lt;/h2&gt;
+&lt;p&gt;Within each mesage, a user can mention someone else (@’ing another user, which sends them an alert) so we separate this into another table. Each record represents a message and the user mentioned. So, there will be multiple &lt;code&gt;message_id&lt;/code&gt;s with different &lt;code&gt;user_id&lt;/code&gt;s mentioned.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;msg_mentions &amp;lt;-
+  all_messages %&amp;gt;%
+  filter(system == FALSE &amp;amp; is.na(event.type)) %&amp;gt;%
+  rowwise() %&amp;gt;%
+  filter(class(attachments) != &amp;quot;list&amp;quot;) %&amp;gt;%
+  ungroup() %&amp;gt;%
+  select(thread, id, attachments) %&amp;gt;%
+  unnest() %&amp;gt;%
+  filter(type %in% c(&amp;quot;mentions&amp;quot;)) %&amp;gt;%
+  select(thread, msg_id = id, user_id = user_ids) %&amp;gt;% 
+  unnest()&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;msg_mentions %&amp;gt;%
+  head(10)&lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;caption&gt;&lt;span id=&#34;tab:print-msg-mentions-table&#34;&gt;Table 3.4: &lt;/span&gt;Sample rows from the message media table contains links to images, videos, and gifs&lt;/caption&gt;
+&lt;thead&gt;
+&lt;tr class=&#34;header&#34;&gt;
+&lt;th align=&#34;left&#34;&gt;thread&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;msg_id&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;user_id&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;2018&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;151693691456624897&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;5264490&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;2018&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;151693691456624897&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;40277126&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;2018&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;151693691456624897&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;24072692&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;2018&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;151693403929874645&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;4930762&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;2018&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;151693403929874645&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;6127309&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;2018&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;151693403929874645&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;24072692&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;2018&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;151693403929874645&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;4814978&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;2018&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;151690674207602856&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;4135589&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;2018&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;151690674207602856&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;19643548&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;2018&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;151676455001749334&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;20712535&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div id=&#34;messages-with-meta-info&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;span class=&#34;header-section-number&#34;&gt;3.6&lt;/span&gt; Messages with Meta-Info&lt;/h2&gt;
+&lt;p&gt;Finally, we will add a few derived columns to the cleaned messages data.frame such as&lt;/p&gt;
+&lt;ol style=&#34;list-style-type: decimal&#34;&gt;
+&lt;li&gt;&lt;code&gt;likes&lt;/code&gt; - count of likes received for a message&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;contains_media&lt;/code&gt; - boolean of whether message contained an image, video, or gif&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;num_mentions&lt;/code&gt; - count of the users mentioned in post (0, 1, 2, …)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;msgs &amp;lt;- 
+  msgs_cleaned %&amp;gt;%
+  left_join(
+    msg_likes %&amp;gt;%
+      count(msg_id) %&amp;gt;%
+      rename(likes = n)
+    , by = &amp;#39;msg_id&amp;#39;
+  ) %&amp;gt;%
+  left_join(
+    msg_media %&amp;gt;%
+      select(msg_id) %&amp;gt;%
+      mutate(contains_media = TRUE)
+    , by = &amp;#39;msg_id&amp;#39;
+  ) %&amp;gt;%
+  left_join(
+    msg_mentions %&amp;gt;%
+      count(msg_id) %&amp;gt;%
+      rename(num_mentions = n)
+    , by = &amp;#39;msg_id&amp;#39;
+  ) %&amp;gt;%
+  replace_na(list(likes = 0, contains_media = FALSE, num_mentions = 0)) %&amp;gt;%
+  select(thread, msg_id, created_at, user_id, username = name, likes, 
+         contains_media, num_mentions, msg_text = text) %&amp;gt;%
+  sample_frac() # randomizes rows&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;loading-into-aws-redshift&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;&lt;span class=&#34;header-section-number&#34;&gt;4&lt;/span&gt; Loading into AWS Redshift&lt;/h1&gt;
+&lt;p&gt;With a set of cleaned data.frames, we will load them into an AWS Redshift database as tables. Our final database structure looks like:&lt;/p&gt;
+&lt;div class=&#34;figure&#34; style=&#34;text-align: center&#34;&gt;&lt;span id=&#34;fig:img-erd&#34;&gt;&lt;/span&gt;
+&lt;img src=&#34;./img/posts/groupme_data_etl/groupme_erd.png&#34; alt=&#34;GroupMe database ERD (Entity Relationship Diagram)&#34; width=&#34;75%&#34; /&gt;
+&lt;p class=&#34;caption&#34;&gt;
+Figure 4.1: GroupMe database ERD (Entity Relationship Diagram)
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;p&gt;First, we create a connection to the Redshift cluster I set up. The database name, user, and password are all securely saved as enviornment variables.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;con &amp;lt;- DBI::dbConnect(
+            drv = RPostgreSQL::PostgreSQL()
+          , dbname = Sys.getenv(&amp;quot;redshift_db_name&amp;quot;)
+          , host = paste0(&amp;quot;groupme-stats.&amp;quot;, Sys.getenv(&amp;quot;redshift_host&amp;quot;), 
+                          &amp;quot;.us-east-1.redshift.amazonaws.com&amp;quot;)
+          , user = Sys.getenv(&amp;quot;redshift_user&amp;quot;)
+          , password = Sys.getenv(&amp;quot;redshift_pwd&amp;quot;)
+          , port = &amp;quot;5439&amp;quot;
+        )&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Then we create two functions:&lt;/p&gt;
+&lt;ol style=&#34;list-style-type: decimal&#34;&gt;
+&lt;li&gt;&lt;code&gt;redshift_datatypes&lt;/code&gt; - returns the character of the Redshift column type for a given data.frame column&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;upload_to_redshift&lt;/code&gt; - loads a tibble into Redshift&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;redshift_datatypes &amp;lt;- function(column) {
+  class &amp;lt;- class(column)[1]
+  case_when(
+      class == &amp;#39;factor&amp;#39; ~ &amp;#39;VARCHAR(256)&amp;#39;
+    , class == &amp;#39;character&amp;#39; &amp;amp;&amp;amp; max(nchar(column), na.rm = TRUE) &amp;lt;= 256  ~ &amp;#39;VARCHAR(256)&amp;#39;
+    , class == &amp;#39;character&amp;#39; ~ &amp;#39;VARCHAR(65535)&amp;#39;
+    , class == &amp;#39;logical&amp;#39; ~ &amp;#39;boolean&amp;#39;
+    , class == &amp;#39;numeric&amp;#39; ~ &amp;#39;float&amp;#39;
+    , class == &amp;#39;integer&amp;#39; ~ &amp;#39;int&amp;#39;
+    , TRUE ~ &amp;#39;timestamp&amp;#39;
+  )
+}
+
+upload_to_redshift &amp;lt;- function(con, df, tbl_name) {
+ 
+  dplyr::copy_to(con
+               , df = df
+               , name = tbl_name 
+               , overwrite = TRUE
+               , temporary = FALSE
+               , types = map_chr(df, redshift_datatypes)
+               ) 
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;We create a list of the R data.frames to move and then apply the functions above to perform the transfer.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;groupme_tbls &amp;lt;- 
+  list(users = users
+     , msgs = msgs
+     , msg_likes = msg_likes %&amp;gt;% mutate(like_id = row_number())
+     , msg_media = msg_media %&amp;gt;% mutate(media_id = row_number())
+     , msg_mentions = msg_mentions %&amp;gt;% mutate(mention_id = row_number())
+  ) 
+
+walk2(groupme_tbls, names(groupme_tbls), upload_to_redshift, con = con)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;We use the same connection to query the Redshift database. The query below returns all my messages to the Wharton 2018 GroupMe thread.&lt;/p&gt;
+&lt;pre class=&#34;sql&#34;&gt;&lt;code&gt;SELECT      CONVERT_TIMEZONE(&amp;#39;America/New_York&amp;#39;, created_at) AS created_at
+          , contains_media
+          , msg_text
+FROM      public.msgs 
+WHERE     username = &amp;#39;Jordan Farrer&amp;#39;
+ORDER BY  created_at&lt;/code&gt;&lt;/pre&gt;
+&lt;div class=&#34;knitsql-table&#34;&gt;
+&lt;table&gt;
+&lt;caption&gt;&lt;span id=&#34;tab:unnamed-chunk-3&#34;&gt;Table 4.1: &lt;/span&gt;3 records&lt;/caption&gt;
+&lt;thead&gt;
+&lt;tr class=&#34;header&#34;&gt;
+&lt;th align=&#34;left&#34;&gt;created_at&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;contains_media&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;msg_text&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;2017-06-14 00:50:53&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;FALSE&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;Assumed there’d be a filter &lt;span class=&#34;citation&#34;&gt;@Shilpa&lt;/span&gt; Kumar&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;2017-11-02 23:16:32&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;FALSE&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;Not the arbiter &lt;span class=&#34;citation&#34;&gt;@Shu&lt;/span&gt; Haur&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;2017-11-02 23:58:25&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;TRUE&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;NA&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Table Captions</title>
+      <link>/post/table-captions/</link>
+      <pubDate>Tue, 23 Jan 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/table-captions/</guid>
+      <description>&lt;pre class=&#34;sql&#34;&gt;&lt;code&gt;WITH twoCol( a, b ) AS ( SELECT 1, 2 UNION SELECT 2, 4) SELECT a, b FROM twoCol;&lt;/code&gt;&lt;/pre&gt;
+&lt;div class=&#34;knitsql-table&#34;&gt;
+&lt;table&gt;
+&lt;caption&gt;&lt;span id=&#34;tab:unnamed-chunk-1&#34;&gt;Table 1: &lt;/span&gt;My Caption&lt;/caption&gt;
+&lt;thead&gt;
+&lt;tr class=&#34;header&#34;&gt;
+&lt;th align=&#34;left&#34;&gt;a&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;b&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;1&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;2&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;2&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;4&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;datasets::mtcars %&amp;gt;%
+  head(2)&lt;/code&gt;&lt;/pre&gt;
+&lt;div class=&#34;kable-table&#34;&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr class=&#34;header&#34;&gt;
+&lt;th&gt;&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;mpg&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;cyl&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;disp&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;hp&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;drat&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;wt&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;qsec&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;vs&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;am&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;gear&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;carb&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td&gt;Mazda RX4&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;21&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;6&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;160&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;110&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;3.9&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;2.620&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;16.46&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;4&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;4&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td&gt;Mazda RX4 Wag&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;21&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;6&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;160&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;110&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;3.9&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;2.875&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;17.02&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;4&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;4&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;table&gt;
+&lt;caption&gt;
+Sample of the users table
+&lt;/caption&gt;
+&lt;colgroup&gt;
+&lt;col width=&#34;100&#34;&gt;
+&lt;/col&gt;
+&lt;/colgroup&gt;
+&lt;thead&gt;
+&lt;tr class=&#34;header&#34;&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;datasets::mtcars %&amp;gt;%
+  head(2) %&amp;gt;%
+  knitr::kable(caption = &amp;quot;My caption&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;caption&gt;&lt;span id=&#34;tab:unnamed-chunk-2&#34;&gt;Table 2: &lt;/span&gt;My caption&lt;/caption&gt;
+&lt;thead&gt;
+&lt;tr class=&#34;header&#34;&gt;
+&lt;th&gt;&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;mpg&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;cyl&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;disp&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;hp&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;drat&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;wt&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;qsec&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;vs&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;am&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;gear&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;carb&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td&gt;Mazda RX4&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;21&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;6&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;160&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;110&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;3.9&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;2.620&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;16.46&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;4&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;4&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td&gt;Mazda RX4 Wag&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;21&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;6&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;160&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;110&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;3.9&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;2.875&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;17.02&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;4&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;4&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;style&gt;
+  img { 
+     border:1px solid #021a40;
+  }
+  .pagedtable-info {
+    font-size: 75% !important;
+  }
+  table {
+    font-size: 75% !important;
+  }
+&lt;/style&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Sync Canvas Files</title>
       <link>/post/sync-canvas-files/</link>
-      <pubDate>Fri, 19 Jan 2018 00:00:00 +0000</pubDate>
+      <pubDate>Tue, 16 Jan 2018 00:00:00 +0000</pubDate>
       
       <guid>/post/sync-canvas-files/</guid>
       <description>&lt;div id=&#34;TOC&#34;&gt;
@@ -238,24 +1099,6 @@ cron_add(cmd, frequency = &amp;#39;hourly&amp;#39;, id = &amp;#39;sync_canvas&am
       <pubDate>Fri, 24 Feb 2017 00:00:00 +0000</pubDate>
       
       <guid>/project/mktg776_hw5/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Project 1</title>
-      <link>/project/mktg776_p1/</link>
-      <pubDate>Wed, 22 Feb 2017 00:00:00 +0000</pubDate>
-      
-      <guid>/project/mktg776_p1/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>OIDD898 Homework 2</title>
-      <link>/project/oidd898_hw2/</link>
-      <pubDate>Thu, 16 Feb 2017 00:00:00 +0000</pubDate>
-      
-      <guid>/project/oidd898_hw2/</guid>
       <description></description>
     </item>
     

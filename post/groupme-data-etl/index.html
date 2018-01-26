@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="theme" content="hugo-academic">
+  <meta name="generator" content="Hugo 0.31.1" />
+  <meta name="author" content="Jordan Farrer">
+  <meta name="description" content="MBA Student">
+
+  
+  <link rel="alternate" hreflang="en-us" href="../../post/groupme-data-etl/">
+
+  
+  
+
+
+  
+
+  
+  
+  
+  
+    
+  
+  
+    
+    
+      
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+      
+    
+  
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha512-6MXa8B6uaO18Hid6blRMetEIoPqHf7Ux1tnyIQdpt9qI5OACx7C+O3IVTr98vwGnlcg0LOLa02i9Y1HpVhlfiw==" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.1/css/academicons.min.css" integrity="sha512-NThgw3XKQ1absAahW6to7Ey42uycrVvfNfyjqcFNgCmOCQ5AR4AO0SiXrN+8ZtYeappp56lk1WtvjVmEa+VR6A==" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha512-SfTiTlX6kk+qitfevl/7LibUOeJWlt9rbyDn92a1DqWOw9vWG2MFoays0sgObmWazO5BQPiFucnnEAjpAB+/Sw==" crossorigin="anonymous">
+  
+  
+  
+  
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Montserrat:400,700%7cRoboto:400,400italic,700%7cRoboto&#43;Mono">
+  
+  <link rel="stylesheet" href="../../styles.css">
+  
+
+  
+    <script>
+      window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+      ga('create', 'UA-89515063-1', 'auto');
+      ga('require', 'eventTracker');
+      ga('require', 'outboundLinkTracker');
+      ga('require', 'urlChangeTracker');
+      ga('send', 'pageview');
+    </script>
+    <script async src="//www.google-analytics.com/analytics.js"></script>
+    
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/autotrack/2.4.1/autotrack.js" integrity="sha512-HUmooslVKj4m6OBu0OgzjXXr+QuFYy/k7eLI5jdeEy/F4RSgMn6XRWRGkFi5IFaFgy7uFTkegp3Z0XnJf3Jq+g==" crossorigin="anonymous"></script>
+    
+  
+
+  
+  <link rel="alternate" href="../../index.xml" type="application/rss+xml" title="Jordan Farrer">
+  <link rel="feed" href="../../index.xml" type="application/rss+xml" title="Jordan Farrer">
+  
+
+  <link rel="manifest" href="../../site.webmanifest">
+  <link rel="icon" type="image/png" href="../../img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="../../img/icon-192.png">
+
+  <link rel="canonical" href="../../post/groupme-data-etl/">
+
+  <meta property="twitter:card" content="summary_large_image">
+  
+  <meta property="og:site_name" content="Jordan Farrer">
+  <meta property="og:url" content="/post/groupme-data-etl/">
+  <meta property="og:title" content="GroupMe Data ETL | Jordan Farrer">
+  <meta property="og:description" content="">
+  <meta property="og:locale" content="en-us">
+  
+  <meta property="article:published_time" content="2018-01-26T00:00:00&#43;00:00">
+  
+  <meta property="article:modified_time" content="2018-01-26T00:00:00&#43;00:00">
+  
+
+  
+
+  <title>GroupMe Data ETL | Jordan Farrer</title>
+
+</head>
+<body id="top" data-spy="scroll" data-target="#toc" data-offset="71" >
+
+<nav class="navbar navbar-default navbar-fixed-top" id="navbar-main">
+  <div class="container">
+
+    
+    <div class="navbar-header">
+      
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+              data-target=".navbar-collapse" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      
+      <a class="navbar-brand" href="../../">Jordan Farrer</a>
+    </div>
+
+    
+    <div class="collapse navbar-collapse">
+
+      
+      
+      <ul class="nav navbar-nav navbar-right">
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="../../#about">
+            
+            <span>Home</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="../../#projects">
+            
+            <span>Projects</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="../../#posts">
+            
+            <span>Posts</span>
+            
+          </a>
+        </li>
+
+        
+        
+      
+
+      
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+<article class="article" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+  <div class="article-container">
+    <div class="article-inner">
+      <h1 itemprop="name">GroupMe Data ETL</h1>
+
+      
+
+<div class="article-metadata">
+
+  <span class="article-date">
+    
+    <time datetime="2018-01-26 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+      Jan 26, 2018
+    </time>
+  </span>
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    12 min read
+  </span>
+  
+
+  
+  
+
+  
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fa fa-folder"></i>
+    
+    <a href="../../categories/r">R</a
+    >
+    
+  </span>
+  
+  
+
+  
+  
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    <li>
+      <a class="twitter"
+         href="https://twitter.com/intent/tweet?text=GroupMe%20Data%20ETL&amp;url=%2fpost%2fgroupme-data-etl%2f"
+         target="_blank" rel="noopener">
+        <i class="fa fa-twitter"></i>
+      </a>
+    </li>
+    <li>
+      <a class="facebook"
+         href="https://www.facebook.com/sharer.php?u=%2fpost%2fgroupme-data-etl%2f"
+         target="_blank" rel="noopener">
+        <i class="fa fa-facebook"></i>
+      </a>
+    </li>
+    <li>
+      <a class="linkedin"
+         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=%2fpost%2fgroupme-data-etl%2f&amp;title=GroupMe%20Data%20ETL"
+         target="_blank" rel="noopener">
+        <i class="fa fa-linkedin"></i>
+      </a>
+    </li>
+    <li>
+      <a class="email"
+         href="mailto:?subject=GroupMe%20Data%20ETL&amp;body=%2fpost%2fgroupme-data-etl%2f">
+        <i class="fa fa-envelope"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+  
+
+</div>
+
+
+      <div class="article-style" itemprop="articleBody">
+        <div id="TOC">
+<ul>
+<li><a href="#tldr"><span class="toc-section-number">1</span> tl;dr</a></li>
+<li><a href="#data-extraction"><span class="toc-section-number">2</span> Data Extraction</a></li>
+<li><a href="#data-transforming"><span class="toc-section-number">3</span> Data Transforming</a></li>
+<li><a href="#loading-into-aws-redshift"><span class="toc-section-number">4</span> Loading into AWS Redshift</a></li>
+</ul>
+</div>
+
+<style>
+  .article-style img {
+    box-shadow: none !important;
+  }
+   img { 
+      border:0px;
+      
+   }
+  .pagedtable-info {
+    font-size: 75% !important;
+  }
+  table {
+    font-size: 75% !important;
+  }
+</style>
+<div id="tldr" class="section level1">
+<h1><span class="header-section-number">1</span> tl;dr</h1>
+<ol style="list-style-type: decimal">
+<li><a href="https://en.wikipedia.org/wiki/Extract,_transform,_load">ETL</a> (extract, transform, load) process for the Wharton 2018/2019 GroupMe class threads from the GroupMe API to Amazon Redshift</li>
+<li>I used this dataset for a <a href="https://jrfarrer.github.io/mktg776_p1/">project</a> in Peter Fader’s course and to teach SQL to MBAs (session <a href="http://bit.ly/sqlatlunch_week1">1</a>, <a href="http://bit.ly/sqlatlunch_week2">2</a>, and <a href="http://bit.ly/sqlatlunch_week3">3</a>)</li>
+</ol>
+</div>
+<div id="data-extraction" class="section level1">
+<h1><span class="header-section-number">2</span> Data Extraction</h1>
+<p><a href="https://groupme.com">GroupMe</a> has a <a href="https://dev.groupme.com/docs/v3">REST API</a> and after logging in you can create your own <a href="https://dev.groupme.com/session/new">API key</a>. We have two separate keys for the 2018 and 2019 class threads that are stored in <code>.Renviron</code>.</p>
+<pre class="r"><code>base_url &lt;- &quot;https://api.groupme.com/v3/&quot;
+tokens &lt;- paste0(&quot;?token=&quot;, Sys.getenv(c(&quot;GROUPME_2018&quot;, &quot;GROUPME_2019&quot;)))</code></pre>
+<div id="groups" class="section level2">
+<h2><span class="header-section-number">2.1</span> Groups</h2>
+<p>In order to use the messages API, we need to know the <code>group_id</code>. We create a function that for an API token returns all the groups the users belong to. The GroupMe API only allows returning 10 results per request so we loop until there are no more groups to return.</p>
+<pre class="r"><code>fn_dl_groups &lt;- function(token) {
+  
+  i &lt;- 1; more_response &lt;- TRUE; tmp_list &lt;- list();
+  while (more_response) {
+      url &lt;- paste0(base_url, &quot;groups&quot;, token, &quot;&amp;per_page=10&amp;page=&quot;, i)
+      tmp_group &lt;- fromJSON(url, flatten = TRUE)$response
+      if (length(tmp_group) == 0) {
+        more_response &lt;- FALSE
+      } else {
+        tmp_list[[i]] &lt;- tmp_group 
+        i &lt;- i + 1
+      }
+  }
+  tmp_list %&gt;% 
+    rbind_pages() %&gt;% 
+    as_tibble()
+}</code></pre>
+<p>We apply this function using a <code>purrr</code> function.</p>
+<pre class="r"><code>all_groups &lt;-
+  map_dfr(tokens, fn_dl_groups)</code></pre>
+<p>Each record of the data frame is a group (with a <code>group_id</code> and <code>name</code>).</p>
+<pre class="r"><code>all_groups %&gt;% glimpse()</code></pre>
+<pre><code>## Observations: 178
+## Variables: 28
+## $ id                                          &lt;chr&gt; &quot;25466934&quot;, &quot;19105...
+## $ group_id                                    &lt;chr&gt; &quot;25466934&quot;, &quot;19105...
+## $ name                                        &lt;chr&gt; &quot;Wharton Ski Trip ...
+## $ phone_number                                &lt;chr&gt; &quot;+1 6177016748&quot;, &quot;...
+## $ type                                        &lt;chr&gt; &quot;private&quot;, &quot;privat...
+## $ description                                 &lt;chr&gt; &quot;&quot;, &quot;&quot;, &quot;Breck FAQ...
+## $ image_url                                   &lt;chr&gt; &quot;https://i.groupme...
+## $ creator_user_id                             &lt;chr&gt; &quot;34509622&quot;, &quot;34473...
+## $ created_at                                  &lt;int&gt; 1475104416, 145321...
+## $ updated_at                                  &lt;int&gt; 1516944776, 151693...
+## $ office_mode                                 &lt;lgl&gt; FALSE, FALSE, FALS...
+## $ share_url                                   &lt;chr&gt; &quot;https://groupme.c...
+## $ share_qr_code_url                           &lt;chr&gt; &quot;https://image.gro...
+## $ members                                     &lt;list&gt; [&lt;c(&quot;34509622&quot;, &quot;...
+## $ max_members                                 &lt;int&gt; 1400, 1000, 2000, ...
+## $ messages.count                              &lt;int&gt; 1351, 13191, 701, ...
+## $ messages.last_message_id                    &lt;chr&gt; &quot;15169447768279128...
+## $ messages.last_message_created_at            &lt;int&gt; 1516944776, 151693...
+## $ messages.preview.nickname                   &lt;chr&gt; &quot;Tala Al Jabri&quot;, &quot;...
+## $ messages.preview.text                       &lt;chr&gt; &quot;Is there a Wharto...
+## $ messages.preview.image_url                  &lt;chr&gt; &quot;https://i.groupme...
+## $ messages.preview.attachments                &lt;list&gt; [&lt;&gt;, &lt;&gt;, &lt;&gt;, &lt;&gt;, ...
+## $ messages.preview.event.type                 &lt;chr&gt; NA, NA, NA, NA, NA...
+## $ messages.preview.event.data.conversation.id &lt;chr&gt; NA, NA, NA, NA, NA...
+## $ messages.preview.event.data.poll.id         &lt;chr&gt; NA, NA, NA, NA, NA...
+## $ messages.preview.event.data.poll.subject    &lt;chr&gt; NA, NA, NA, NA, NA...
+## $ messages.preview.event.data.user.id         &lt;chr&gt; NA, NA, NA, NA, NA...
+## $ messages.preview.event.data.user.nickname   &lt;chr&gt; NA, NA, NA, NA, NA...</code></pre>
+</div>
+<div id="messages" class="section level2">
+<h2><span class="header-section-number">2.2</span> Messages</h2>
+<p>Now we create a function to download the message for any given <code>group_id</code>. Again, this involves a loop as there is a limit of 100 messages per request.</p>
+<pre class="r"><code>fn_dl_messages &lt;- function(group_id, token) {
+  
+  i &lt;- 1; more_response &lt;- TRUE; tmp_list &lt;- list();last_id &lt;- &quot;&quot;;
+  while(more_response) {
+    before_id_param &lt;- ifelse(last_id == &quot;&quot;, &quot;&quot;, paste0(&quot;&amp;before_id=&quot;, last_id))
+    url &lt;- paste0(base_url, &quot;groups/&quot;, group_id, 
+                  &quot;/messages&quot;, token, &quot;&amp;limit=100&quot;, before_id_param)  
+    tmp_msg &lt;- try(
+      fromJSON(url, flatten = TRUE)$response$messages
+      , silent = TRUE
+    )
+    if (&quot;try-error&quot; %in% class(tmp_msg)) {
+      more_response &lt;- FALSE
+    } else {
+      tmp_list[[i]] &lt;- tmp_msg 
+      last_id &lt;- tail(tmp_msg, 1)$id  
+      i &lt;- i + 1
+    }
+  }
+  tmp_list %&gt;% 
+    rbind_pages() %&gt;% 
+    as_tibble()
+}  </code></pre>
+<p>We apply this function to only the two class threads named <strong>Wharton - 2018</strong> and <strong>Wharton MBA Class of 2019</strong>.</p>
+<pre class="r"><code>all_messages &lt;-
+  all_groups %&gt;%
+  filter(name %in% c(&quot;Wharton - 2018&quot;, &quot;Wharton MBA Class of 2019&quot;)) %&gt;% 
+  pull(group_id) %&gt;%
+  map2_dfr(tokens, fn_dl_messages) %&gt;%
+  mutate(thread = 
+           case_when(
+              group_id == &quot;19105351&quot; ~ &quot;2018&quot;
+            , group_id == &quot;27514952&quot; ~ &quot;2019&quot;
+          )
+        )</code></pre>
+<p>The <code>all_messages</code> data frame contains columns with nested data frames and vectors.</p>
+<pre class="r"><code>all_messages %&gt;% glimpse()</code></pre>
+<pre><code>## Observations: 22,897
+## Variables: 37
+## $ attachments                      &lt;list&gt; [&lt;&gt;, &lt;&gt;, &lt;12, 19, 31, 6, 11,...
+## $ avatar_url                       &lt;chr&gt; &quot;https://i.groupme.com/740x75...
+## $ created_at                       &lt;int&gt; 1516937026, 1516936990, 15169...
+## $ favorited_by                     &lt;list&gt; [&quot;32530123&quot;, &lt;&gt;, &lt;&quot;22614230&quot;...
+## $ group_id                         &lt;chr&gt; &quot;19105351&quot;, &quot;19105351&quot;, &quot;1910...
+## $ id                               &lt;chr&gt; &quot;151693702666740099&quot;, &quot;151693...
+## $ name                             &lt;chr&gt; &quot;Pablo Staubli&quot;, &quot;Jennifer Ma...
+## $ sender_id                        &lt;chr&gt; &quot;40483399&quot;, &quot;32530123&quot;, &quot;6127...
+## $ sender_type                      &lt;chr&gt; &quot;user&quot;, &quot;user&quot;, &quot;user&quot;, &quot;user...
+## $ source_guid                      &lt;chr&gt; &quot;9199ABBB-485B-44BE-B7D5-54AC...
+## $ system                           &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, F...
+## $ text                             &lt;chr&gt; &quot;☝🏼&quot;, &quot;Hi all - Is anyone goi...
+## $ user_id                          &lt;chr&gt; &quot;40483399&quot;, &quot;32530123&quot;, &quot;6127...
+## $ event.type                       &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ event.data.user.id               &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ event.data.user.nickname         &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ event.data.added_users           &lt;list&gt; [NULL, NULL, NULL, NULL, NUL...
+## $ event.data.options               &lt;list&gt; [NULL, NULL, NULL, NULL, NUL...
+## $ event.data.adder_user.id         &lt;int&gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ event.data.adder_user.nickname   &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ event.data.remover_user.id       &lt;int&gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ event.data.remover_user.nickname &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ event.data.removed_user.id       &lt;int&gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ event.data.removed_user.nickname &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ event.data.conversation.id       &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ event.data.poll.id               &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ event.data.poll.subject          &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ event.data.poll.expiration       &lt;int&gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ event.data.url                   &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ event.data.event.id              &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ event.data.event.name            &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ event.data.event_name            &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ event.data.minutes               &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ event.data.updated_fields        &lt;list&gt; [NULL, NULL, NULL, NULL, NUL...
+## $ event.data.name                  &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ event.data.topic                 &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, N...
+## $ thread                           &lt;chr&gt; &quot;2018&quot;, &quot;2018&quot;, &quot;2018&quot;, &quot;2018...</code></pre>
+</div>
+</div>
+<div id="data-transforming" class="section level1">
+<h1><span class="header-section-number">3</span> Data Transforming</h1>
+<p>We will convert each of the nested lists (that came from the jsons returned by the API calls) into relational tables that hold the following information:</p>
+<ol style="list-style-type: decimal">
+<li>Users</li>
+<li>Messages</li>
+<li>Likes</li>
+<li>Media (pics, videos, gifs)</li>
+<li>Mentions</li>
+</ol>
+<div id="users" class="section level2">
+<h2><span class="header-section-number">3.1</span> Users</h2>
+<p>One the questions my MKTG776 Project 1 sought to answer was <a href="https://jrfarrer.github.io/mktg776_p1/#43_gender_differences">do men and women use GroupMe differently</a>? Using the NBD model discussed in the course, I showed that in terms of messaging, mentions, and likes the answer was <strong>no</strong>. So, for Wharton 2018, we use the <code>googlesheets</code> package to pull external data from a Google Sheet.</p>
+<pre class="r"><code>gs_auth(token = &quot;/home/rstudio/googlesheets_token.rds&quot;, verbose = FALSE)
+
+users_gender &lt;- gs_title(&quot;groupme_users&quot;) %&gt;%  gs_read(ws = &quot;users&quot;)</code></pre>
+<p>Each line of the <code>all_groups</code> data frame contains a nested data frame with members of each group. We unnest this user table and join it with the gender information from the Google spreadsheet.</p>
+<pre class="r"><code>users &lt;- 
+  all_groups %&gt;% 
+  filter(name %in% c(&quot;Wharton - 2018&quot;, &quot;Wharton MBA Class of 2019&quot;)) %&gt;%
+  select(group_id, members) %&gt;% 
+  mutate(thread = 
+         case_when(
+            group_id == &quot;19105351&quot; ~ &quot;2018&quot;
+          , group_id == &quot;27514952&quot; ~ &quot;2019&quot;
+        )
+      ) %&gt;%
+  unnest() %&gt;%
+  left_join(
+    users_gender %&gt;%
+      select(user_id, gender) %&gt;%
+      mutate(
+        user_id = as.character(user_id)
+        , gender = factor(gender, levels = c(&quot;Female&quot;,&quot;Male&quot;))
+      )
+    , by = &#39;user_id&#39;
+  ) %&gt;%
+  select(thread, user_id, nickname, image_url, id, muted, gender) %&gt;%
+  arrange(user_id)
+
+users %&gt;% glimpse()</code></pre>
+<pre><code>## Observations: 1,815
+## Variables: 7
+## $ thread    &lt;chr&gt; &quot;2018&quot;, &quot;2019&quot;, &quot;2018&quot;, &quot;2019&quot;, &quot;2018&quot;, &quot;2019&quot;, &quot;201...
+## $ user_id   &lt;chr&gt; &quot;10006049&quot;, &quot;10035936&quot;, &quot;100773&quot;, &quot;10140688&quot;, &quot;10161...
+## $ nickname  &lt;chr&gt; &quot;Jared Horvitz&quot;, &quot;Carl Chan&quot;, &quot;Alula Selassie&quot;, &quot;Pat...
+## $ image_url &lt;chr&gt; &quot;https://i.groupme.com/748x748.jpeg.c88a057e4b5b4c94...
+## $ id        &lt;chr&gt; &quot;146603512&quot;, &quot;207892698&quot;, &quot;172611969&quot;, &quot;238457662&quot;, ...
+## $ muted     &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, TRUE, TRUE, TRUE, FALSE,...
+## $ gender    &lt;fctr&gt; Male, NA, Male, NA, Male, NA, Female, NA, NA, Male,...</code></pre>
+<p>We have created a users table with 7 columns. Below is a preview of 10 rows and 3 columns.</p>
+<pre class="r"><code>users %&gt;%
+  select(thread, user_id, nickname, muted) %&gt;%
+  head(10)</code></pre>
+<table>
+<caption><span id="tab:print-users-table-table">Table 3.1: </span>Sample rows from the user table</caption>
+<thead>
+<tr class="header">
+<th align="left">thread</th>
+<th align="left">user_id</th>
+<th align="left">nickname</th>
+<th align="left">muted</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">2018</td>
+<td align="left">10006049</td>
+<td align="left">Jared Horvitz</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">2019</td>
+<td align="left">10035936</td>
+<td align="left">Carl Chan</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="left">2018</td>
+<td align="left">100773</td>
+<td align="left">Alula Selassie</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">2019</td>
+<td align="left">10140688</td>
+<td align="left">Patricio Brito</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="left">2018</td>
+<td align="left">10161622</td>
+<td align="left">Anderson 辛安</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="left">2019</td>
+<td align="left">10203143</td>
+<td align="left">Shruti Shah</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td align="left">2018</td>
+<td align="left">10217059</td>
+<td align="left">Kirtika Challa</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="left">2019</td>
+<td align="left">10269672</td>
+<td align="left">Nikhil Raghuveera</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="left">2019</td>
+<td align="left">10297047</td>
+<td align="left">Alex Daniels</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">2018</td>
+<td align="left">10467730</td>
+<td align="left">RJ Martin</td>
+<td align="left">FALSE</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="messages-1" class="section level2">
+<h2><span class="header-section-number">3.2</span> Messages</h2>
+<p>GroupMe records each event (e.g. message post, a user entering the group, creating an event, changing nickname within the group), so we isolate only the messages sent my users and create a <a href="https://en.wikipedia.org/wiki/Fact_table">fact table</a> which is keyed on <code>msg_id</code>.</p>
+<pre class="r"><code>msgs_cleaned &lt;-
+  all_messages %&gt;%
+  filter(system == FALSE &amp; is.na(event.type)) %&gt;%
+  select(thread, id, created_at, user_id, name, text) %&gt;%
+  rename(msg_id = id) %&gt;%
+  mutate(created_at = lubridate::as_datetime(created_at, tz = &quot;America/New_York&quot;)) %&gt;%
+  select(thread, msg_id, created_at, user_id, name, text)</code></pre>
+<p>We will add some more derived columns to the messages table in a moment.</p>
+</div>
+<div id="likes" class="section level2">
+<h2><span class="header-section-number">3.3</span> Likes</h2>
+<p>Each message can have many likes so it’s best to store this information as a separate table. In likes table, each row represents a person and <code>liked_by</code> is a <code>user_id</code> - person who liked that <code>msg_id</code>.</p>
+<pre class="r"><code>msg_likes &lt;-
+  all_messages %&gt;% 
+  filter(system == FALSE &amp; is.na(event.type)) %&gt;%
+  rowwise() %&gt;%
+  filter(class(favorited_by) != &quot;list&quot;) %&gt;%
+  ungroup() %&gt;%
+  select(thread, id, favorited_by) %&gt;% 
+  unnest() %&gt;%
+  rename(
+      msg_id = id
+    , liked_by = favorited_by
+  )</code></pre>
+<pre class="r"><code>msg_likes %&gt;%
+  head(10)</code></pre>
+<table>
+<caption><span id="tab:print-likes-table-table">Table 3.2: </span>Sample rows from the message likes table</caption>
+<thead>
+<tr class="header">
+<th align="left">thread</th>
+<th align="left">msg_id</th>
+<th align="left">liked_by</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">2018</td>
+<td align="left">151693702666740099</td>
+<td align="left">32530123</td>
+</tr>
+<tr class="even">
+<td align="left">2018</td>
+<td align="left">151693691456624897</td>
+<td align="left">22614230</td>
+</tr>
+<tr class="odd">
+<td align="left">2018</td>
+<td align="left">151693691456624897</td>
+<td align="left">25728066</td>
+</tr>
+<tr class="even">
+<td align="left">2018</td>
+<td align="left">151693691456624897</td>
+<td align="left">40286396</td>
+</tr>
+<tr class="odd">
+<td align="left">2018</td>
+<td align="left">151693691456624897</td>
+<td align="left">5264490</td>
+</tr>
+<tr class="even">
+<td align="left">2018</td>
+<td align="left">151693691456624897</td>
+<td align="left">5339851</td>
+</tr>
+<tr class="odd">
+<td align="left">2018</td>
+<td align="left">151693688143682856</td>
+<td align="left">22614230</td>
+</tr>
+<tr class="even">
+<td align="left">2018</td>
+<td align="left">151693688143682856</td>
+<td align="left">3756827</td>
+</tr>
+<tr class="odd">
+<td align="left">2018</td>
+<td align="left">151693688143682856</td>
+<td align="left">40286396</td>
+</tr>
+<tr class="even">
+<td align="left">2018</td>
+<td align="left">151693407843354645</td>
+<td align="left">19796318</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="media-pics-videos-gifs" class="section level2">
+<h2><span class="header-section-number">3.4</span> Media (pics, videos, gifs)</h2>
+<p>The media (images, videos, and gifs) sent in a message is buried in another part of the json file. We unnest the the media and store individual links in a separate table. Surprisingly, all of these links are public (not behind a password).</p>
+<pre class="r"><code>msg_media &lt;-
+  all_messages %&gt;%
+  filter(system == FALSE &amp; is.na(event.type)) %&gt;%
+  rowwise() %&gt;%
+  filter(class(attachments) != &quot;list&quot;) %&gt;%
+  ungroup() %&gt;%
+  select(thread, id, attachments) %&gt;%
+  unnest() %&gt;%
+  filter(type %in% c(&quot;linked_image&quot;, &quot;image&quot;,&quot;video&quot;)) %&gt;%
+  select(thread, msg_id = id, type, url) %&gt;%
+  mutate(type = ifelse(type == &quot;linked_image&quot;, &quot;gif&quot;, type)) </code></pre>
+<pre class="r"><code>msg_media %&gt;%
+  head(10)</code></pre>
+<table>
+<caption><span id="tab:print-msg-media-table">Table 3.3: </span>Sample rows from the message media table which contains links to images, videos, and gifs</caption>
+<thead>
+<tr class="header">
+<th align="left">thread</th>
+<th align="left">msg_id</th>
+<th align="left">type</th>
+<th align="left">url</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">2018</td>
+<td align="left">151690057742991174</td>
+<td align="left">image</td>
+<td align="left"><a href="https://i.groupme.com/1334x1000.jpeg.15939bc2e6e049d18ff36e963930277a" class="uri">https://i.groupme.com/1334x1000.jpeg.15939bc2e6e049d18ff36e963930277a</a></td>
+</tr>
+<tr class="even">
+<td align="left">2018</td>
+<td align="left">151676379943246890</td>
+<td align="left">image</td>
+<td align="left"><a href="https://i.groupme.com/1125x1500.jpeg.411991ef873f4124b53a39e4e641f00b" class="uri">https://i.groupme.com/1125x1500.jpeg.411991ef873f4124b53a39e4e641f00b</a></td>
+</tr>
+<tr class="odd">
+<td align="left">2018</td>
+<td align="left">151676379574536890</td>
+<td align="left">image</td>
+<td align="left"><a href="https://i.groupme.com/1125x1500.jpeg.755e1499b23e45ccbde3e25bf36bdc4c" class="uri">https://i.groupme.com/1125x1500.jpeg.755e1499b23e45ccbde3e25bf36bdc4c</a></td>
+</tr>
+<tr class="even">
+<td align="left">2018</td>
+<td align="left">151675731689691903</td>
+<td align="left">image</td>
+<td align="left"><a href="https://i.groupme.com/759x1012.png.6fa08f0f26404b118d9a566ecdb45f92" class="uri">https://i.groupme.com/759x1012.png.6fa08f0f26404b118d9a566ecdb45f92</a></td>
+</tr>
+<tr class="odd">
+<td align="left">2018</td>
+<td align="left">151668678578436773</td>
+<td align="left">image</td>
+<td align="left"><a href="https://i.groupme.com/1103x1500.jpeg.77a1c39df8ad433485ee3770e85ab12d" class="uri">https://i.groupme.com/1103x1500.jpeg.77a1c39df8ad433485ee3770e85ab12d</a></td>
+</tr>
+<tr class="even">
+<td align="left">2018</td>
+<td align="left">151668592092540099</td>
+<td align="left">image</td>
+<td align="left"><a href="https://i.groupme.com/893x1454.jpeg.b6e2182d1a9a4694b4ac044ce39607cf" class="uri">https://i.groupme.com/893x1454.jpeg.b6e2182d1a9a4694b4ac044ce39607cf</a></td>
+</tr>
+<tr class="odd">
+<td align="left">2018</td>
+<td align="left">151668573130740629</td>
+<td align="left">image</td>
+<td align="left"><a href="https://i.groupme.com/1053x1500.jpeg.666f79152491490d8530ceb2b77d135a" class="uri">https://i.groupme.com/1053x1500.jpeg.666f79152491490d8530ceb2b77d135a</a></td>
+</tr>
+<tr class="even">
+<td align="left">2018</td>
+<td align="left">151659192262290622</td>
+<td align="left">image</td>
+<td align="left"><a href="https://i.groupme.com/1125x1500.jpeg.dd015489bb1d47c6810ef9bf7b939a2b" class="uri">https://i.groupme.com/1125x1500.jpeg.dd015489bb1d47c6810ef9bf7b939a2b</a></td>
+</tr>
+<tr class="odd">
+<td align="left">2018</td>
+<td align="left">151659158488915002</td>
+<td align="left">image</td>
+<td align="left"><a href="https://i.groupme.com/670x594.jpeg.f583aee372f24d14aa9e56622ac8e3a8" class="uri">https://i.groupme.com/670x594.jpeg.f583aee372f24d14aa9e56622ac8e3a8</a></td>
+</tr>
+<tr class="even">
+<td align="left">2018</td>
+<td align="left">151649038251759445</td>
+<td align="left">image</td>
+<td align="left"><a href="https://i.groupme.com/1688x2250.jpeg.bd11ad29ddb847599a5ff5197068355c" class="uri">https://i.groupme.com/1688x2250.jpeg.bd11ad29ddb847599a5ff5197068355c</a></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="message-mentions" class="section level2">
+<h2><span class="header-section-number">3.5</span> Message Mentions</h2>
+<p>Within each mesage, a user can mention someone else (@’ing another user, which sends them an alert) so we separate this into another table. Each record represents a message and the user mentioned. So, there will be multiple <code>message_id</code>s with different <code>user_id</code>s mentioned.</p>
+<pre class="r"><code>msg_mentions &lt;-
+  all_messages %&gt;%
+  filter(system == FALSE &amp; is.na(event.type)) %&gt;%
+  rowwise() %&gt;%
+  filter(class(attachments) != &quot;list&quot;) %&gt;%
+  ungroup() %&gt;%
+  select(thread, id, attachments) %&gt;%
+  unnest() %&gt;%
+  filter(type %in% c(&quot;mentions&quot;)) %&gt;%
+  select(thread, msg_id = id, user_id = user_ids) %&gt;% 
+  unnest()</code></pre>
+<pre class="r"><code>msg_mentions %&gt;%
+  head(10)</code></pre>
+<table>
+<caption><span id="tab:print-msg-mentions-table">Table 3.4: </span>Sample rows from the message media table contains links to images, videos, and gifs</caption>
+<thead>
+<tr class="header">
+<th align="left">thread</th>
+<th align="left">msg_id</th>
+<th align="left">user_id</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">2018</td>
+<td align="left">151693691456624897</td>
+<td align="left">5264490</td>
+</tr>
+<tr class="even">
+<td align="left">2018</td>
+<td align="left">151693691456624897</td>
+<td align="left">40277126</td>
+</tr>
+<tr class="odd">
+<td align="left">2018</td>
+<td align="left">151693691456624897</td>
+<td align="left">24072692</td>
+</tr>
+<tr class="even">
+<td align="left">2018</td>
+<td align="left">151693403929874645</td>
+<td align="left">4930762</td>
+</tr>
+<tr class="odd">
+<td align="left">2018</td>
+<td align="left">151693403929874645</td>
+<td align="left">6127309</td>
+</tr>
+<tr class="even">
+<td align="left">2018</td>
+<td align="left">151693403929874645</td>
+<td align="left">24072692</td>
+</tr>
+<tr class="odd">
+<td align="left">2018</td>
+<td align="left">151693403929874645</td>
+<td align="left">4814978</td>
+</tr>
+<tr class="even">
+<td align="left">2018</td>
+<td align="left">151690674207602856</td>
+<td align="left">4135589</td>
+</tr>
+<tr class="odd">
+<td align="left">2018</td>
+<td align="left">151690674207602856</td>
+<td align="left">19643548</td>
+</tr>
+<tr class="even">
+<td align="left">2018</td>
+<td align="left">151676455001749334</td>
+<td align="left">20712535</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="messages-with-meta-info" class="section level2">
+<h2><span class="header-section-number">3.6</span> Messages with Meta-Info</h2>
+<p>Finally, we will add a few derived columns to the cleaned messages data.frame such as</p>
+<ol style="list-style-type: decimal">
+<li><code>likes</code> - count of likes received for a message</li>
+<li><code>contains_media</code> - boolean of whether message contained an image, video, or gif</li>
+<li><code>num_mentions</code> - count of the users mentioned in post (0, 1, 2, …)</li>
+</ol>
+<pre class="r"><code>msgs &lt;- 
+  msgs_cleaned %&gt;%
+  left_join(
+    msg_likes %&gt;%
+      count(msg_id) %&gt;%
+      rename(likes = n)
+    , by = &#39;msg_id&#39;
+  ) %&gt;%
+  left_join(
+    msg_media %&gt;%
+      select(msg_id) %&gt;%
+      mutate(contains_media = TRUE)
+    , by = &#39;msg_id&#39;
+  ) %&gt;%
+  left_join(
+    msg_mentions %&gt;%
+      count(msg_id) %&gt;%
+      rename(num_mentions = n)
+    , by = &#39;msg_id&#39;
+  ) %&gt;%
+  replace_na(list(likes = 0, contains_media = FALSE, num_mentions = 0)) %&gt;%
+  select(thread, msg_id, created_at, user_id, username = name, likes, 
+         contains_media, num_mentions, msg_text = text) %&gt;%
+  sample_frac() # randomizes rows</code></pre>
+</div>
+</div>
+<div id="loading-into-aws-redshift" class="section level1">
+<h1><span class="header-section-number">4</span> Loading into AWS Redshift</h1>
+<p>With a set of cleaned data.frames, we will load them into an AWS Redshift database as tables. Our final database structure looks like:</p>
+<div class="figure" style="text-align: center"><span id="fig:img-erd"></span>
+<img src="../../img/posts/groupme_data_etl/groupme_erd.png" alt="GroupMe database ERD (Entity Relationship Diagram)" width="75%" />
+<p class="caption">
+Figure 4.1: GroupMe database ERD (Entity Relationship Diagram)
+</p>
+</div>
+<p>First, we create a connection to the Redshift cluster I set up. The database name, user, and password are all securely saved as enviornment variables.</p>
+<pre class="r"><code>con &lt;- DBI::dbConnect(
+            drv = RPostgreSQL::PostgreSQL()
+          , dbname = Sys.getenv(&quot;redshift_db_name&quot;)
+          , host = paste0(&quot;groupme-stats.&quot;, Sys.getenv(&quot;redshift_host&quot;), 
+                          &quot;.us-east-1.redshift.amazonaws.com&quot;)
+          , user = Sys.getenv(&quot;redshift_user&quot;)
+          , password = Sys.getenv(&quot;redshift_pwd&quot;)
+          , port = &quot;5439&quot;
+        )</code></pre>
+<p>Then we create two functions:</p>
+<ol style="list-style-type: decimal">
+<li><code>redshift_datatypes</code> - returns the character of the Redshift column type for a given data.frame column</li>
+<li><code>upload_to_redshift</code> - loads a tibble into Redshift</li>
+</ol>
+<pre class="r"><code>redshift_datatypes &lt;- function(column) {
+  class &lt;- class(column)[1]
+  case_when(
+      class == &#39;factor&#39; ~ &#39;VARCHAR(256)&#39;
+    , class == &#39;character&#39; &amp;&amp; max(nchar(column), na.rm = TRUE) &lt;= 256  ~ &#39;VARCHAR(256)&#39;
+    , class == &#39;character&#39; ~ &#39;VARCHAR(65535)&#39;
+    , class == &#39;logical&#39; ~ &#39;boolean&#39;
+    , class == &#39;numeric&#39; ~ &#39;float&#39;
+    , class == &#39;integer&#39; ~ &#39;int&#39;
+    , TRUE ~ &#39;timestamp&#39;
+  )
+}
+
+upload_to_redshift &lt;- function(con, df, tbl_name) {
+ 
+  dplyr::copy_to(con
+               , df = df
+               , name = tbl_name 
+               , overwrite = TRUE
+               , temporary = FALSE
+               , types = map_chr(df, redshift_datatypes)
+               ) 
+}</code></pre>
+<p>We create a list of the R data.frames to move and then apply the functions above to perform the transfer.</p>
+<pre class="r"><code>groupme_tbls &lt;- 
+  list(users = users
+     , msgs = msgs
+     , msg_likes = msg_likes %&gt;% mutate(like_id = row_number())
+     , msg_media = msg_media %&gt;% mutate(media_id = row_number())
+     , msg_mentions = msg_mentions %&gt;% mutate(mention_id = row_number())
+  ) 
+
+walk2(groupme_tbls, names(groupme_tbls), upload_to_redshift, con = con)</code></pre>
+<p>We use the same connection to query the Redshift database. The query below returns all my messages to the Wharton 2018 GroupMe thread.</p>
+<pre class="sql"><code>SELECT      CONVERT_TIMEZONE(&#39;America/New_York&#39;, created_at) AS created_at
+          , contains_media
+          , msg_text
+FROM      public.msgs 
+WHERE     username = &#39;Jordan Farrer&#39;
+ORDER BY  created_at</code></pre>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-3">Table 4.1: </span>3 records</caption>
+<thead>
+<tr class="header">
+<th align="left">created_at</th>
+<th align="left">contains_media</th>
+<th align="left">msg_text</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">2017-06-14 00:50:53</td>
+<td align="left">FALSE</td>
+<td align="left">Assumed there’d be a filter <span class="citation">@Shilpa</span> Kumar</td>
+</tr>
+<tr class="even">
+<td align="left">2017-11-02 23:16:32</td>
+<td align="left">FALSE</td>
+<td align="left">Not the arbiter <span class="citation">@Shu</span> Haur</td>
+</tr>
+<tr class="odd">
+<td align="left">2017-11-02 23:58:25</td>
+<td align="left">TRUE</td>
+<td align="left">NA</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+      </div>
+
+      
+
+
+<div class="article-tags">
+  
+  <a class="btn btn-primary btn-outline" href="../../tags/r">R</a>
+  
+  <a class="btn btn-primary btn-outline" href="../../tags/groupme">GroupMe</a>
+  
+  <a class="btn btn-primary btn-outline" href="../../tags/sql">SQL</a>
+  
+</div>
+
+
+
+    </div>
+  </div>
+
+</article>
+
+
+
+<div class="article-container article-widget">
+  <div class="hr-light"></div>
+  <h3>Related</h3>
+  <ul>
+    
+    <li><a href="../../post/sync-canvas-files/">Sync Canvas Files</a></li>
+    
+    <li><a href="../../post/how-to-build-a-mobile-shiny-app-in-an-hour/">How to Build a Mobile Shiny App in an Hour</a></li>
+    
+    <li><a href="../../post/how-to-setup-rstudio-on-amazon-lightsail/">How to Setup RStudio on Amazon Lightsail</a></li>
+    
+  </ul>
+</div>
+
+
+
+
+<div class="article-container">
+  
+
+</div>
+
+<footer class="site-footer">
+  <div class="container">
+    <p class="powered-by">
+
+      &copy; 2017 Jordan Farrer &middot; 
+      
+      Built with
+      <a href="https://bookdown.org/yihui/blogdown/" target="_blank" rel="noopener">blogdown</a>
+
+      <span class="pull-right" aria-hidden="true">
+        <a href="#" id="back_to_top">
+          <span class="button_icon">
+            <i class="fa fa-chevron-up fa-2x"></i>
+          </span>
+        </a>
+      </span>
+
+    </p>
+  </div>
+</footer>
+
+
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close btn-large" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Cite</h4>
+      </div>
+      <div>
+        <pre><code class="modal-body tex"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-primary btn-outline js-copy-cite" href="#" target="_blank">
+          <i class="fa fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-primary btn-outline js-download-cite" href="#" target="_blank">
+          <i class="fa fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+    
+
+    
+
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" integrity="sha512-3P8rXCuGJdNZOnUx/03c1jOTnMn3rP63nBip5gOP2qmUh5YAdVAvFZ1E+QLZZbC1rtMrQb+mah3AfYW11RUrWA==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.3/imagesloaded.pkgd.min.js" integrity="sha512-umsR78NN0D23AzgoZ11K7raBD+R6hqKojyBZs1w8WvYlsI+QuKRGBx3LFCwhatzBunCjDuJpDHwxD13sLMbpRA==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha512-iztkobsvnjKfAtTNdHkGVjAYTrrtlC7mGp/54c40wowO7LhURYl3gVzzcEqGl/qKXQltJ2HwMrdLcNUdo+N/RQ==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.4/isotope.pkgd.min.js" integrity="sha512-VDBOIlDbuC4VWxGJNmuFRQ0Li0SKkDpmGyuhAG5LTDLd/dJ/S0WMVxriR2Y+CyPL5gzjpN4f/6iqWVBJlht0tQ==" crossorigin="anonymous"></script>
+    
+    
+    <script src="../../js/hugo-academic.js"></script>
+    
+
+    
+    
+      
+      
+      <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+      
+
+      
+
+      
+
+      <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+    </script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML" integrity="sha512-tOav5w1OjvsSJzePRtt2uQPFwBoHt1VZcUq8l8nm5284LEKE9FSJBQryzMBzHxY5P0zRdNqEcpLIRVYFNgu1jw==" crossorigin="anonymous"></script>
+    
+    
+
+  </body>
+</html>
+
